@@ -1,0 +1,4 @@
+add_subdirectory( libs )
+add_subdirectory( modules )
+add_subdirectory( programs )
+add_subdirectory( test )
