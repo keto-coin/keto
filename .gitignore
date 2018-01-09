@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# ignore the build directory
+build/
