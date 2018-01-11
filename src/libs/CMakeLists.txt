@@ -1,4 +1,5 @@
+add_subdirectory( common )
 add_subdirectory( chain )
-add_subdirectory( configuration )
+add_subdirectory( environment )
 add_subdirectory( event_manager )
 add_subdirectory( module_manager )

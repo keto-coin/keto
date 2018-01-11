@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
 ##########################################################################
-# This is EOS bootstrapper script for Linux and OS X.
-# This file was downloaded from https://github.com/EOSIO/eos
-# Feel free to change this file to fit your needs.
+# This is KETO bootstrapper script for Linux and OS X.
 ##########################################################################
 
 VERSION=1.0
@@ -70,7 +68,7 @@ if [ $ARCH == "darwin" ]; then
 fi
 
 # Debug flags
-COMPILE_EOS=1
+COMPILE_KETO=1
 COMPILE_CONTRACTS=1
 
 # Define default arguments.
@@ -97,6 +95,6 @@ if [ $ARCH == "darwin" ]; then
   C_COMPILER=clang
 fi
 
-# Build EOS
+# Build KETO 
 cmake -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DCMAKE_C_COMPILER=${C_COMPILER} -DWASM_LLVM_CONFIG=${WASM_LLVM_CONFIG} -DBINARYEN_BIN=${BINARYEN_BIN} -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR} -DOPENSSL_LIBRARIES=${OPENSSL_LIBRARIES} ..
 make -j4

@@ -33,3 +33,11 @@
 
 # ignore the build directory
 build/
+nbproject/
+.anjuta/
+.anjuta_sym_db.db
+
+cmake_install.cmake
+Makefile
+compile_commands.json
+keto.anjuta
