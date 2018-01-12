@@ -1,35 +1,34 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
- * File:   Exception.cpp
+ * File:   EnvironmentManager.cpp
  * Author: ubuntu
  * 
- * Created on January 11, 2018, 11:08 AM
+ * Created on January 10, 2018, 12:15 PM
  */
 
+
 #include "keto/common/Exception.hpp"
-#include "include/keto/common/Exception.hpp"
 
 namespace keto {
-namespace common {
+namespace common {  
 
-Exception::Exception() noexcept {
+Exception::Exception() noexcept : msg("Exception"){}
+
+Exception::Exception(const std::string& msg) noexcept : msg(msg) {}
+
+Exception::Exception(const Exception& orig) noexcept : std::exception(orig), boost::exception(orig), msg(orig.msg) {}
+
+Exception::~Exception() {
 }
 
-Exception::Exception(std::string msg) noexcept : msg(msg) {
+Exception& Exception::operator= (const Exception& orig) noexcept {
+	this->msg = orig.msg;
+	return *this;
 }
-
-Exception::Exception(const Exception& orig) noexcept : std::exception(orig), boost::exception(orig), msg(orig.msg) {
-    
-}
-
+	
 const char* Exception::what() const noexcept {
-    return this->msg.c_str();
+	return this->msg.c_str();
 }
+
 
 }
 }

@@ -41,3 +41,6 @@ cmake_install.cmake
 Makefile
 compile_commands.json
 keto.anjuta
+CMakeFiles
+CPackConfig.cmake
+CPackSourceConfig.cmake

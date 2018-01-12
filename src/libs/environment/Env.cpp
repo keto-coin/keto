@@ -6,16 +6,18 @@
 
 #include <cstdlib>
 #include "keto/environment/Env.hpp"
+#include "keto/environment/Exception.hpp"
+#include "keto/environment/Constants.hpp"
 
 namespace keto {
 namespace environment {
 
 
 Env::Env() {
-    this->installDir = std::getenv("KETO_HOME");
-    if (this->installDir.empty()) {
-        
+    if (!std::getenv(Constants::KETO_HOME)) {
+        BOOST_THROW_EXCEPTION(keto::environment::HomeNotSet());
     }
+    this->installDir = std::getenv(Constants::KETO_HOME);
     
 }
 

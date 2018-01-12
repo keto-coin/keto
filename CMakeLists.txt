@@ -43,7 +43,9 @@ if (USE_PCH)
 endif(USE_PCH)
 
 SET(BOOST_COMPONENTS)
-LIST(APPEND BOOST_COMPONENTS thread
+LIST(APPEND BOOST_COMPONENTS 
+                            log
+                            thread
                              date_time
                              system
                              filesystem
@@ -182,6 +184,7 @@ endif()
 #add_subdirectory( scripts )
 #add_subdirectory( tests )
 add_subdirectory( src )
+add_subdirectory( scripts )
 
 if (ENABLE_INSTALLER)
 
@@ -247,14 +250,14 @@ else()
   else(DOXYGEN_DOT_FOUND)
     set(DOXY_HAVE_DOT "NO" CACHE STRING "Doxygen to use dot for diagrams.")
   endif(DOXYGEN_DOT_FOUND)
-  configure_file("eos.doxygen.in" "${CMAKE_BINARY_DIR}/eos.doxygen")
+  configure_file("keto.doxygen.in" "${CMAKE_BINARY_DIR}/eos.doxygen")
   if(BUILD_DOXYGEN) 
      # !! Core developers who don't want to see the doxygen output on every build
      # !! should remove the 'ALL' option from both commands below.
      # Doxygen has issues making destination directories more than one level deep, so do it for it.
      add_custom_target(make_doc_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory "${DOXY_DOC_DEST_DIR}")
      add_custom_target(contract_documentation ALL
-         COMMAND "${DOXYGEN_EXECUTABLE}" "${CMAKE_BINARY_DIR}/eos.doxygen"
+         COMMAND "${DOXYGEN_EXECUTABLE}" "${CMAKE_BINARY_DIR}/keto.doxygen"
          DEPENDS make_doc_dir
          WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
          COMMENT "Building doxygen documentation into ${DOXY_DOC_DEST_DIR}..."
