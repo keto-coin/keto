@@ -29,12 +29,12 @@ endif()
 target_include_directories(keto_cli PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries( keto_cli 
-        PRIVATE keto_environment
+        PRIVATE keto_environment keto_common
 #        PRIVATE account_history_api_plugin net_api_plugin account_history_plugin db_plugin
 #        PRIVATE chain_api_plugin producer_plugin chain_plugin wallet_api_plugin
 #        PRIVATE net_plugin http_plugin txn_test_gen_plugin faucet_testnet_plugin
 #        PRIVATE eos_chain fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
-        PRIVATE ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
+        PRIVATE ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} ${Boost_LIBRARIES} )
 
 install( TARGETS
    keto_cli

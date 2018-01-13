@@ -15,10 +15,12 @@ SET(VERSION_MAJOR 0)
 SET(VERSION_MINOR 0)
 SET(VERSION_PATCH 1)
 
-SET( CLI_CLIENT_EXECUTABLE_NAME keto_client )
-SET( GUI_CLIENT_EXECUTABLE_NAME keto )
-SET( CUSTOM_URL_SCHEME "gcs" )
-SET( INSTALLER_APP_ID "68ad7005-8eee-49c9-95ce-9eed97e5b347" )
+SET(COPY_RIGHT MIT)
+
+#SET( CLI_CLIENT_EXECUTABLE_NAME keto_client )
+#SET( GUI_CLIENT_EXECUTABLE_NAME keto )
+#SET( CUSTOM_URL_SCHEME "gcs" )
+#SET( INSTALLER_APP_ID "68ad7005-8eee-49c9-95ce-9eed97e5b347" )
 
 # http://stackoverflow.com/a/18369825
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -178,13 +180,9 @@ else()
   message(STATUS "--------------------------------------------------------------------")
 endif()
 
-#add_subdirectory( libraries )
-#add_subdirectory( programs )
-#add_subdirectory( plugins )
-#add_subdirectory( scripts )
-#add_subdirectory( tests )
 add_subdirectory( src )
 add_subdirectory( scripts )
+add_subdirectory( resources )
 
 if (ENABLE_INSTALLER)
 

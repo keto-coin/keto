@@ -1,0 +1,28 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   MetaInfo.cpp
+ * Author: ubuntu
+ * 
+ * Created on January 13, 2018, 3:03 AM
+ */
+
+#include "keto/common/MetaInfo.hpp"
+
+namespace keto {
+namespace common {
+
+static constexpr const char* MetaInfo::COPY_RIGHT = "${COPY_RIGHT}";
+static constexpr const char* MetaInfo::VERSION = "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
+static constexpr const char* MetaInfo::NETWORK_VERSION = "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
+static constexpr const char* MetaInfo::BLOCKCHAIN_NAME = "${BLOCKCHAIN_NAME}";
+
+    
+}
+
+}
+

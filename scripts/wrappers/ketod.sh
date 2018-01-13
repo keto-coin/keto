@@ -1,7 +1,7 @@
 #!/bin/bash
 # 
-# File:   ketod.sh.bash
-# Author: ubuntu
+# File:   ketod.sh
+# Author: brett chaldecott
 #
 # Created on Jan 12, 2018, 5:44:49 PM
 #

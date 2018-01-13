@@ -21,6 +21,10 @@ namespace environment {
 class Constants {
 public:
     static constexpr const char* KETO_HOME = "KETO_HOME";
+    static constexpr const char* CONFIG_PATH = "config/config.in";
+    
+    // log configuration
+    static constexpr const char* LOG_CONFIG_PATH = "log-path";
     
 private:
 };

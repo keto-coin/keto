@@ -1,9 +1,13 @@
 file(GLOB HEADERS "include/keto/common/*.hpp")
 
+# parse the configuration file
+configure_file(MetaInfo.cpp.in MetaInfo.cpp)
+
 ## SORT .cpp by most likely to change / break compile
 add_library( keto_common
             
 			Exception.cpp
+                        MetaInfo.cpp
 
              ${HEADERS}
            )
