@@ -46,6 +46,7 @@ endif(USE_PCH)
 
 SET(BOOST_COMPONENTS)
 LIST(APPEND BOOST_COMPONENTS 
+                            log_setup
                             log
                             thread
                              date_time

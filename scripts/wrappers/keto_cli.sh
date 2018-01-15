@@ -12,7 +12,6 @@ SOURCE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Assume the source ends in /bin and strip that off
 KETO_HOME=${SOURCE_DIR%%/bin}
 export KETO_HOME
-echo "Setting KETO_HOME=${KETO_HOME}"
 
 # execute ketod
 ${KETO_HOME}/bin/keto_cli $@

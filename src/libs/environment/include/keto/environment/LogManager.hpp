@@ -16,6 +16,7 @@
 
 #include <memory>
 
+#include "keto/environment/Env.hpp"
 #include "keto/environment/Config.hpp"
 
 namespace keto {
@@ -23,10 +24,13 @@ namespace environment {
 
 class LogManager {
 public:
-    LogManager(const std::shared_ptr<Config>& configPtr);
+    LogManager(
+            const std::shared_ptr<Env>& envPtr,
+            const std::shared_ptr<Config>& configPtr);
     LogManager(const LogManager& orig) = delete;
     virtual ~LogManager();
 private:
+    std::shared_ptr<Env> envPtr;
     std::shared_ptr<Config> configPtr;
 
 };

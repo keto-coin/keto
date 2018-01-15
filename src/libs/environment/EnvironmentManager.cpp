@@ -27,7 +27,7 @@ EnvironmentManager::EnvironmentManager(const std::string& config,
     envPtr = std::make_shared<Env>();
     configPtr = std::make_shared<Config>(envPtr->getInstallDir(),config,optionDescription,argc,
             argv);
-    logManagerPtr = std::make_shared<LogManager>(configPtr);
+    logManagerPtr = std::make_shared<LogManager>(envPtr,configPtr);
     
 }
 

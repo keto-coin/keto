@@ -27,10 +27,10 @@ public:
     MetaInfo(const MetaInfo& orig) = delete;
     virtual ~MetaInfo() = delete;
     
-    static constexpr const char* COPY_RIGHT;
-    static constexpr const char* VERSION;
-    static constexpr const char* NETWORK_VERSION;
-    static constexpr const char* BLOCKCHAIN_NAME;
+    static constexpr const char* COPY_RIGHT = "${COPY_RIGHT}";
+    static constexpr const char* VERSION = "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
+    static constexpr const char* NETWORK_VERSION = "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
+    static constexpr const char* BLOCKCHAIN_NAME = "${BLOCKCHAIN_NAME}";
     
 private:
 

@@ -5,13 +5,20 @@
 #include <boost/exception_ptr.hpp> 
 
 #include "keto/common/Log.hpp"
+#include "keto/common/MetaInfo.hpp"
 #include "keto/common/Exception.hpp"
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/environment/Constants.hpp"
 
+namespace ketoEnv = keto::environment;
+namespace ketoCommon = keto::common;
 
 boost::program_options::options_description generateOptionDescriptions() {
     boost::program_options::options_description optionDescripion;
+    
+    optionDescripion.add_options()
+            ("help,h", "Print this help message and exit.")
+            ("version,v", "Print version information.");
     
     return optionDescripion;
 }
@@ -19,9 +26,26 @@ boost::program_options::options_description generateOptionDescriptions() {
 int main(int argc, char** argv)
 {
     try {
-        keto::environment::EnvironmentManager::init(keto::environment::Constants::KETOD_CONFIG_FILE,
-                generateOptionDescriptions(),argc,argv);
-
+        boost::program_options::options_description optionDescription =
+                generateOptionDescriptions();
+        std::shared_ptr<ketoEnv::EnvironmentManager> manager = 
+                ketoEnv::EnvironmentManager::init(
+                ketoEnv::Constants::KETOD_CONFIG_FILE,
+                optionDescription,argc,argv);
+        
+        std::shared_ptr<ketoEnv::Config> config = manager->getConfig();
+        
+        if (config->getVariablesMap().count(ketoEnv::Constants::KETO_VERSION)) {
+            std::cout << ketoCommon::MetaInfo::VERSION << std::endl;
+            return 0;
+        }
+        
+        if (config->getVariablesMap().count(ketoEnv::Constants::KETO_HELP)) {
+            std::cout <<  optionDescription << std::endl;
+            return 0;
+        }
+        
+        KETO_LOG_INFO << "KETOD Executed and stuff";
         KETO_LOG_INFO << "KETOD Executed";
     } catch (keto::common::Exception& ex) {
         KETO_LOG_ERROR << "Failed to start because : " << ex.what();
