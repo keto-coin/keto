@@ -4,7 +4,10 @@ file(GLOB HEADERS "include/keto/environment/*.hpp")
 add_library( keto_environment
             
             Env.cpp 
+            Config.cpp
+            LogManager.cpp
             EnvironmentManager.cpp
+            
             
              ${HEADERS}
            )

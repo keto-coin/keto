@@ -6,7 +6,7 @@
 
 /* 
  * File:   EnvironmentManager.cpp
- * Author: ubuntu
+ * Author: Brett Chaldecott
  * 
  * Created on January 10, 2018, 12:15 PM
  */
@@ -18,36 +18,49 @@ namespace keto {
 namespace environment {   
 
 
-static std::shared_ptr<EnvironmentManager> singleton = 0;
+static std::shared_ptr<EnvironmentManager> singleton;
 
 
-EnvironmentManager::EnvironmentManager() {
-    envSharedPtr = std::make_shared<Env>();
+EnvironmentManager::EnvironmentManager(const std::string& config,
+        const po::options_description& optionDescription,
+        int argc, char** argv) {
+    envPtr = std::make_shared<Env>();
+    configPtr = std::make_shared<Config>(envPtr->getInstallDir(),config,optionDescription,argc,
+            argv);
+    logManagerPtr = std::make_shared<LogManager>(configPtr);
     
 }
-
 
 EnvironmentManager::~EnvironmentManager() {
 }
 
-std::shared_ptr<EnvironmentManager> EnvironmentManager::init() {
+std::shared_ptr<EnvironmentManager> EnvironmentManager::init(const std::string& config,
+        const po::options_description& optionDescription,
+        int argc, char** argv) {
     if (singleton) {
         return singleton;
     }
-    return singleton = std::make_shared<EnvironmentManager>();
+    return singleton = std::make_shared<EnvironmentManager>(config,optionDescription,argc,argv);
 }
 
+
 std::shared_ptr<EnvironmentManager> EnvironmentManager::getInstance() {
-    if (!singleton) {
-        singleton = std::make_shared<EnvironmentManager>();
-    }
     return singleton;
 }
 
 
 std::shared_ptr<Env> EnvironmentManager::getEnv() {
-    return envSharedPtr;
+    return envPtr;
 }
+
+std::shared_ptr<Config> EnvironmentManager::getConfig() {
+    return configPtr;
+}
+
+std::shared_ptr<LogManager> EnvironmentManager::getLogManager() {
+    return logManagerPtr;
+}
+    
 
 }
 }

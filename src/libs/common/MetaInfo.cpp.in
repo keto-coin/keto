@@ -20,7 +20,6 @@ static constexpr const char* MetaInfo::COPY_RIGHT = "${COPY_RIGHT}";
 static constexpr const char* MetaInfo::VERSION = "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
 static constexpr const char* MetaInfo::NETWORK_VERSION = "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
 static constexpr const char* MetaInfo::BLOCKCHAIN_NAME = "${BLOCKCHAIN_NAME}";
-
     
 }
 
