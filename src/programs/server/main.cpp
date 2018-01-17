@@ -1,4 +1,5 @@
 
+#include <signal.h>
 #include <iostream>
 #include <boost/exception/exception.hpp>
 #include <boost/exception/diagnostic_information.hpp>
@@ -9,9 +10,15 @@
 #include "keto/common/Exception.hpp"
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/environment/Constants.hpp"
+#include "keto/module/ModuleManager.hpp"
 
 namespace ketoEnv = keto::environment;
 namespace ketoCommon = keto::common;
+namespace ketoModule = keto::module;
+
+// the shared ptr for the module manager
+std::shared_ptr<ketoModule::ModuleManager> moduleManagerPtr;
+
 
 boost::program_options::options_description generateOptionDescriptions() {
     boost::program_options::options_description optionDescripion;
@@ -23,9 +30,20 @@ boost::program_options::options_description generateOptionDescriptions() {
     return optionDescripion;
 }
 
+void signalHandler() {
+    if (moduleManagerPtr) {
+        moduleManagerPtr->terminate();
+    }
+}
+
+
 int main(int argc, char** argv)
 {
     try {
+        // setup the signal handler
+        signal(SIGINT, signalHandler);
+        
+        // setup the environment
         boost::program_options::options_description optionDescription =
                 generateOptionDescriptions();
         std::shared_ptr<ketoEnv::EnvironmentManager> manager = 
@@ -45,8 +63,21 @@ int main(int argc, char** argv)
             return 0;
         }
         
-        KETO_LOG_INFO << "KETOD Executed and stuff";
+        KETO_LOG_INFO << "Instantiate the module manager";
+        moduleManagerPtr = ketoModule::ModuleManager::init();
+        
+        KETO_LOG_INFO << "Load the module";
+        moduleManagerPtr->load();
+        
+        KETO_LOG_INFO << "Monitor the modules";
+        moduleManagerPtr->monitor();
+        
+        KETO_LOG_INFO << "Unload the module";
+        moduleManagerPtr->unload();
+        
         KETO_LOG_INFO << "KETOD Executed";
+        
+        
     } catch (keto::common::Exception& ex) {
         KETO_LOG_ERROR << "Failed to start because : " << ex.what();
         KETO_LOG_ERROR << "Cause: " << boost::diagnostic_information(ex,true);

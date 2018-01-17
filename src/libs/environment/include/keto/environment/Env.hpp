@@ -25,7 +25,7 @@ public:
     virtual ~Env();
     Env(const Env& origin) = delete;
 
-    std::string getInstallDir();
+    boost::filesystem::path getInstallDir();
 
 private:
     std::string installDir;

@@ -44,7 +44,7 @@ Config::Config(const std::string& ketoHome, const std::string& file,
             int argc, char** argv) :
     ketoHome(ketoHome),file(file) {
     
-    // default options
+    // default the log level to info by extending out the option descriptions.
     boost::program_options::options_description localOptions(optionDescription); 
     localOptions.add_options()
             ("log-level,l", boost::program_options::value<boost::log::trivial::severity_level>()->default_value( logging::trivial::info ), "The log level [trace,debug,info,warn,error,critical].");
@@ -53,11 +53,12 @@ Config::Config(const std::string& ketoHome, const std::string& file,
     boost::program_options::store(boost::program_options::parse_command_line(
         argc, argv, localOptions), this->variablesMap);
     
-    // parse the configuration file
+    // parse the specified configuration file
     boost::filesystem::path configFilePath = this->ketoHome / Constants::KETO_CONFIG_DIR / file; 
-    
     auto parsedOptions = boost::program_options::parse_config_file<char>(
         configFilePath.string().c_str(), localOptions, true);
+    
+    // parse the unrecognized program options and add them to the options as known options
     std::vector<std::string> unregognisedOptions = boost::program_options::collect_unrecognized(parsedOptions.options, 
             boost::program_options::include_positional);
     for (auto& option : unregognisedOptions) {
@@ -65,9 +66,11 @@ Config::Config(const std::string& ketoHome, const std::string& file,
             (option.c_str(),option.c_str());
     }
     
+    // re-parse the configuration file using the now extended options list.
     boost::program_options::store(boost::program_options::parse_config_file<char>(
         configFilePath.string().c_str(), localOptions, false), this->variablesMap);
     
+    // notify the options so as to update the linking appropriatly
     boost::program_options::notify(this->variablesMap);
 }
 

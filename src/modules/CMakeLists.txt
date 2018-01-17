@@ -3,4 +3,5 @@ add_subdirectory( keystore )
 add_subdirectory( rpc_client )
 add_subdirectory( rpc_server )
 add_subdirectory( sandbox )
-
+add_subdirectory( event_service )
+add_subdirectory( test_module )

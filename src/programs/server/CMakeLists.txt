@@ -29,7 +29,7 @@ endif()
 target_include_directories(ketod PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries( ketod 
-        PRIVATE keto_environment keto_common
+        PRIVATE keto_environment keto_common keto_module_manager
 #        PRIVATE account_history_api_plugin net_api_plugin account_history_plugin db_plugin
 #        PRIVATE chain_api_plugin producer_plugin chain_plugin wallet_api_plugin
 #        PRIVATE net_plugin http_plugin txn_test_gen_plugin faucet_testnet_plugin

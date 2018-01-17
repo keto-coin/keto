@@ -27,7 +27,7 @@ Env::~Env(){
 }
 
 
-std::string Env::getInstallDir() {
+boost::filesystem::path Env::getInstallDir() {
     return this->installDir;
 }
 

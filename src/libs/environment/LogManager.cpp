@@ -36,10 +36,10 @@ LogManager::LogManager(
     const std::shared_ptr<Config>& configPtr) : 
     envPtr(envPtr),configPtr(configPtr) {
     
-    boost::filesystem::path logPath = this->envPtr->getInstallDir() + "/"  + Constants::KETO_LOG_DIR; 
-    
+    // add a log file sink if one is provided
     if (configPtr->getVariablesMap().count(Constants::KETO_LOG_FILE)) {
-        std::string logFile = logPath.string() + "/" + 
+        boost::filesystem::path logPath = this->envPtr->getInstallDir() / Constants::KETO_LOG_DIR; 
+        std::string logFile = logPath.string() + boost::filesystem::path::separator + 
                 configPtr->getVariablesMap()[Constants::KETO_LOG_FILE].as<std::string>();
         logging::add_file_log
         (
