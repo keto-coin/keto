@@ -18,6 +18,8 @@
 #include <string>
 #include <set>
 #include <map>
+#include <mutex>
+#include <condition_variable>
 
 #include "keto/module/ModuleManagementInterface.hpp"
 #include "keto/module/ModuleWrapper.hpp"
@@ -99,7 +101,7 @@ public:
      * 
      * @return The list of modules that have been loaded.
      */
-    std::set<std::string> listModules();
+    std::vector<std::string> listModules();
     
     
     /**
@@ -116,7 +118,7 @@ public:
      * 
      * @return The list of loaded module management interfaces
      */
-    std::set<std::string> listModuleManagementInterfaces();
+    std::vector<std::string> listModuleManagementInterfaces();
     
     
     /**
@@ -134,7 +136,7 @@ public:
      * 
      * @return The list of files that have been loaded.
      */
-    std::set<boost::filesystem::path> listModuleFiles();
+    std::vector<boost::filesystem::path> listModuleFiles();
     
     
     /**
@@ -185,7 +187,7 @@ private:
      * The thread safe method to set the state
      * @param state
      */
-    void setState(State state);
+    void setState(const State& state);
 };
 
     

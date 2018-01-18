@@ -39,7 +39,7 @@ namespace keywords = boost::log::keywords;
 namespace keto {
     namespace environment {
 
-Config::Config(const std::string& ketoHome, const std::string& file,
+Config::Config(const boost::filesystem::path& ketoHome, const std::string& file,
             const boost::program_options::options_description& optionDescription,
             int argc, char** argv) :
     ketoHome(ketoHome),file(file) {

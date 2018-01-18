@@ -30,7 +30,7 @@ namespace environment {
 
 class Config {
 public:
-    Config(const std::string& ketoHome, const std::string& file,
+    Config(const boost::filesystem::path& ketoHome, const std::string& file,
             const boost::program_options::options_description& optionDescription,
             int argc, char** argv);
     Config(const Config& orig) = delete;

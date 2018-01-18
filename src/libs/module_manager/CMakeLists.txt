@@ -10,8 +10,8 @@ add_library( keto_module_manager
              ${HEADERS}
            )
 
-target_link_libraries( keto_environment )
-target_include_directories( keto_environment
+target_link_libraries( keto_module_manager)
+target_include_directories( keto_module_manager
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../environment/include"
@@ -23,7 +23,7 @@ target_include_directories( keto_environment
 #endif(MSVC)
 
 INSTALL( TARGETS
-   keto_environment
+   keto_module_manager
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib

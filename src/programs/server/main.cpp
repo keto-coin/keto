@@ -30,7 +30,7 @@ boost::program_options::options_description generateOptionDescriptions() {
     return optionDescripion;
 }
 
-void signalHandler() {
+void signalHandler(int signal) {
     if (moduleManagerPtr) {
         moduleManagerPtr->terminate();
     }

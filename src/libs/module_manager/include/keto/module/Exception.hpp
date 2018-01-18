@@ -27,11 +27,11 @@ KETO_DECLARE_EXCEPTION( ModuleManagerException, "Environment could not be config
 
 
 // the keto module derived exception
-KETO_DECLARE_DERIVED_EXCEPTION (ModuleLoadException , ModuleManagerException, "Failed to load a module.");
-KETO_DECLARE_DERIVED_EXCEPTION (ModuleUnloadException , ModuleManagerException, "Failed to unload a module.");
-KETO_DECLARE_DERIVED_EXCEPTION (ModuleMonitorException , ModuleManagerException, "An exception while monitoring the modules");        
-KETO_DECLARE_DERIVED_EXCEPTION (ModuleSharedDirException , ModuleManagerException, "The KETO_HOME/shared directory does not exist");
-KETO_DECLARE_DERIVED_EXCEPTION (ModuleTmpDirException , ModuleManagerException, "The KETO_HOME/tmp directory failure");
+KETO_DECLARE_DERIVED_EXCEPTION (ModuleManagerException, ModuleLoadException , "Failed to load a module.");
+KETO_DECLARE_DERIVED_EXCEPTION (ModuleManagerException, ModuleUnloadException , "Failed to unload a module.");
+KETO_DECLARE_DERIVED_EXCEPTION (ModuleManagerException, ModuleMonitorException , "An exception while monitoring the modules");        
+KETO_DECLARE_DERIVED_EXCEPTION (ModuleManagerException, ModuleSharedDirException , "The KETO_HOME/shared directory does not exist");
+KETO_DECLARE_DERIVED_EXCEPTION (ModuleManagerException, ModuleTmpDirException , "The KETO_HOME/tmp directory failure");
 }
 }
 

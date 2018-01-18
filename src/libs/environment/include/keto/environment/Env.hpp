@@ -15,6 +15,8 @@
 #define ENV_HPP
 
 #include <string>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 
 namespace keto {
 namespace environment {

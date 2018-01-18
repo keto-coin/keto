@@ -21,6 +21,9 @@
 #include <boost/dll/shared_library.hpp>
 #include <boost/shared_ptr.hpp>
 
+// keto includes
+#include "keto/module/ModuleManagementInterface.hpp"
+
 namespace keto {
 namespace module {
 
@@ -56,7 +59,7 @@ private:
     std::time_t lastTouchTime;
     
     boost::shared_ptr<ModuleManagementInterface> moduleManagementInterfacePtr;
-    std::shared_ptr<boost::dll::shared_library> sharedLibrary;
+
 };
 
 }

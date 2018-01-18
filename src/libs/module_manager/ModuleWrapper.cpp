@@ -16,7 +16,6 @@
 #include <boost/function.hpp>
 
 #include "keto/module/ModuleWrapper.hpp"
-#include "include/keto/module/ModuleWrapper.hpp"
 
 namespace keto {
 namespace module {
@@ -57,8 +56,7 @@ void ModuleWrapper::load() {
 
     creator = boost::dll::import_alias<module_create_t>(             // type of imported symbol must be explicitly specified
         this->sharedLibrary,                                            // path to library
-        "create_module",                                                // symbol to import
-        boost::dll::load_mode::append_decorations                              // do append extensions and prefixes
+        "create_module"                              // do append extensions and prefixes
     );
 
     this->moduleManagementInterfacePtr = creator();
