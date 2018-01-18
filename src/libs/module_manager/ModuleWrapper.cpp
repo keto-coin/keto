@@ -64,6 +64,7 @@ void ModuleWrapper::load() {
 
 
 void ModuleWrapper::unload() {
+    this->moduleManagementInterfacePtr.reset();
     this->sharedLibrary.unload();
 }
 

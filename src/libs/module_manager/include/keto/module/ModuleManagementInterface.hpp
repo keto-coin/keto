@@ -29,9 +29,9 @@ public:
     friend class ModuleManager;
 
     // meta methods
-    virtual std::string getName() const = 0;
-    virtual std::string getDescription() const = 0;
-    virtual std::string getVersion() const = 0;
+    virtual const std::string getName() const = 0;
+    virtual const std::string getDescription() const = 0;
+    virtual const std::string getVersion() const = 0;
     
     
 protected:
@@ -40,8 +40,8 @@ protected:
     virtual void start() = 0;
     virtual void stop() = 0;
     
-    virtual std::vector<std::string> listModules() = 0;
-    virtual std::shared_ptr<ModuleInterface> getModule(const std::string& name) = 0;
+    virtual const std::vector<std::string> listModules() = 0;
+    virtual const std::shared_ptr<ModuleInterface> getModule(const std::string& name) = 0;
     
 };
     
