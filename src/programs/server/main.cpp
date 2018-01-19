@@ -75,8 +75,7 @@ int main(int argc, char** argv)
         KETO_LOG_INFO << "Unload the module";
         moduleManagerPtr->unload();
         
-        KETO_LOG_INFO << "KETOD Executed";
-        
+        KETO_LOG_INFO << "KETOD Complete";
         
     } catch (keto::common::Exception& ex) {
         KETO_LOG_ERROR << "Failed to start because : " << ex.what();
