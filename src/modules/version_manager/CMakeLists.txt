@@ -1,17 +1,17 @@
-file(GLOB HEADERS "include/keto/http/*.hpp")
+file(GLOB HEADERS "include/keto/version_manager/*.hpp")
 
 ## SORT .cpp by most likely to change / break compile
-add_library( 0050_keto_httpd_module
+add_library( 0070_keto_version_manager_module
             SHARED
 
-            HttpdModuleManager.cpp
-            HttpdModule.cpp
+            VersionManagerModuleManager.cpp
+            VersionManagerModule.cpp
 
              ${HEADERS}
            )
 
-target_link_libraries( 0050_keto_httpd_module )
-target_include_directories( 0050_keto_httpd_module
+target_link_libraries( 0070_keto_version_manager_module )
+target_include_directories( 0070_keto_version_manager_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
@@ -26,10 +26,10 @@ target_include_directories( 0050_keto_httpd_module
 #endif(MSVC)
 
 INSTALL( TARGETS
-   0050_keto_httpd_module
+   0070_keto_version_manager_module
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION shared
    ARCHIVE DESTINATION shared
 )
-INSTALL( FILES ${HEADERS} DESTINATION "include/keto/http" )
+INSTALL( FILES ${HEADERS} DESTINATION "include/keto/version_manager" )

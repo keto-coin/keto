@@ -11,10 +11,15 @@
  * Created on January 15, 2018, 3:12 PM
  */
 
+#include <iterator>
+#include <vector>
+#include <algorithm>
+
 #include <boost/filesystem/operations.hpp>
 #include <condition_variable>
 
 
+#include "keto/common/Log.hpp"
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/module/ModuleManager.hpp"
 #include "keto/module/Constants.hpp"
@@ -66,9 +71,16 @@ std::shared_ptr<ModuleManager>& ModuleManager::getInstance() {
 void ModuleManager::load() {
     // load 
     this->setState(State::loading);
-    for(boost::filesystem::directory_entry& entry : boost::make_iterator_range(
-            boost::filesystem::directory_iterator(this->moduleDir), {})) {
-        load(entry.path());
+    std::vector<boost::filesystem::path> files;                                // so we can sort them later
+
+    std::copy(boost::filesystem::directory_iterator(this->moduleDir), 
+            boost::filesystem::directory_iterator(), std::back_inserter(files));
+
+    std::sort(files.begin(), files.end());
+    
+    for (std::vector<boost::filesystem::path>::const_iterator it(files.begin()), 
+            it_end(files.end()); it != it_end; ++it) {
+        load(*it);
     }
             
     this->setState(State::loaded);
@@ -229,7 +241,9 @@ bool ModuleManager::checkForReload() {
 
 ModuleManager::State ModuleManager::checkState() {
     std::unique_lock<std::mutex> uniqueLock(this->classMutex);
-    this->stateCondition.wait_for(uniqueLock,std::chrono::microseconds(60));
+    KETO_LOG_DEBUG << "Before check state";
+    this->stateCondition.wait_for(uniqueLock,std::chrono::milliseconds(60 * 1000));
+    KETO_LOG_DEBUG << "After check state";
     return this->currentState;
 }
 

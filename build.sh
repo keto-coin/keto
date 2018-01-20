@@ -7,7 +7,7 @@
 VERSION=1.0
 ulimit -u
 # Define directories.
-WORK_DIR=$PWD
+WORK_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BUILD_DIR=${WORK_DIR}/build
 TEMP_DIR=/tmp
 
@@ -58,7 +58,9 @@ if [ $ARCH == "ubuntu" ]; then
     OPENSSL_ROOT_DIR=/usr/local/opt/openssl
     OPENSSL_LIBRARIES=/usr/local/opt/openssl/lib
     WASM_LLVM_CONFIG=${HOME}/opt/wasm/bin/llvm-config
-    export BOOST_ROOT BINARYEN_BIN OPENSSL_ROOT_DIR OPENSSL_LIBRARIES WASM_LLVM_CONFIG
+    ROCKSDB_ROOT=${HOME}/opt/rocksdb
+    BEAST_ROOT=${HOME}/opt/beast
+    export BOOST_ROOT BINARYEN_BIN OPENSSL_ROOT_DIR OPENSSL_LIBRARIES WASM_LLVM_CONFIG ROCKSDB_ROOT BEAST_ROOT
 fi
 
 if [ $ARCH == "darwin" ]; then

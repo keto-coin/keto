@@ -8,7 +8,9 @@ if [ $ARCH == "ubuntu" ]; then
                          libbz2-dev libssl-dev libgmp3-dev \
                          autotools-dev build-essential \
                          libbz2-dev libicu-dev python-dev \
-                         autoconf libtool git curl
+                         autoconf libtool git curl \
+                         libgflags-dev libsnappy-dev \
+                         zlib1g-dev liblz4-dev libzstd-dev 
     OPENSSL_ROOT_DIR=/usr/local/opt/openssl
     OPENSSL_LIBRARIES=/usr/local/opt/openssl/lib
 
@@ -42,6 +44,33 @@ if [ $ARCH == "ubuntu" ]; then
     mv ${TEMP_DIR}/binaryen/bin ${HOME}/opt/binaryen/
     rm -rf ${TEMP_DIR}/binaryen
     BINARYEN_BIN=${HOME}/opt/binaryen/bin
+    
+    # install rocksdb
+    cd ${TEMP_DIR}
+    git clone https://github.com/facebook/rocksdb.git
+    cd rocksdb
+    make static_lib
+    mkdir -p ${HOME}/opt/rocksdb/
+    mkdir -p ${HOME}/opt/rocksdb/lib
+    mkdir -p ${HOME}/opt/rocksdb/lib
+    mv ${TEMP_DIR}/rocksdb/librocksdb.a ${HOME}/opt/rocksdb/lib/
+    cp -rf ${TEMP_DIR}/rocksdb/include ${HOME}/opt/rocksdb/include
+    rm -rf ${TEMP_DIR}/rocksdb
+
+    # install beast
+    cd ${HOME}/opt
+    git clone https://github.com/boostorg/beast.git
+
+    # install protobuf
+    PROTOBUF_VERSION=3.5.1
+    cd ${TEMP_DIR}
+    wget https://github.com/google/protobuf/releases/download/v3.5.1/protobuf-all-${PROTOBUF_VERSION}.tar.gz
+    tar -zxvf protobuf-all-${PROTOBUF_VERSION}.tar.gz
+    mkdir -p ${HOME}/opt/protobuf
+    cd ${TEMP_DIR}/protobuf-${PROTOBUF_VERSION}/
+    ./configure --prefix ${HOME}/opt/protobuf
+    make
+    make install
 
     # build llvm with wasm build target:
     cd ${TEMP_DIR}
@@ -57,6 +86,8 @@ if [ $ARCH == "ubuntu" ]; then
     make -j4 install
     rm -rf ${TEMP_DIR}/wasm-compiler
     WASM_LLVM_CONFIG=${HOME}/opt/wasm/bin/llvm-config
+
+    cd ${HOME}
 fi
 
 if [ $ARCH == "darwin" ]; then
