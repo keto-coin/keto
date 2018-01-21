@@ -414,7 +414,7 @@ public:
         , doc_root_(doc_root)
     {
         boost::system::error_code ec;
-
+        
         // Open the acceptor
         acceptor_.open(endpoint.protocol(), ec);
         if(ec)
@@ -422,6 +422,9 @@ public:
             fail(ec, "open");
             return;
         }
+        
+        // this solves the shut down problem
+        acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
 
         // Bind to the server address
         acceptor_.bind(endpoint, ec);
@@ -449,11 +452,7 @@ public:
             return;
         do_accept();
     }
-    
-    void stop() {
-        acceptor_.close();
-    }
-    
+        
     void
     do_accept()
     {
@@ -477,10 +476,11 @@ public:
         else
         {
             // Create the session and run it
-            std::make_shared<session>(
+            std::shared_ptr<session> sessionPtr = std::make_shared<session>(
                 std::move(socket_),
                 *ctx_,
-                doc_root_)->run();
+                doc_root_);
+            sessionPtr->run();
         }
 
         // Accept another connection
@@ -567,9 +567,8 @@ void HttpdServer::stop() {
             iter != this->threadsVector.end(); iter++) {
         iter->join();
     }
-    
-    listenerPtr->stop();
-    
+
+    listenerPtr.reset();
     
     this->threadsVector.clear();
 }
