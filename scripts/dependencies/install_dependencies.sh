@@ -16,13 +16,13 @@ if [ $ARCH == "ubuntu" ]; then
 
     # install boost
     cd ${TEMP_DIR}
-    export BOOST_ROOT=${HOME}/opt/boost_1_64_0
-    curl -L https://sourceforge.net/projects/boost/files/boost/1.64.0/boost_1_64_0.tar.bz2 > boost_1.64.0.tar.bz2
-    tar xvf boost_1.64.0.tar.bz2
-    cd boost_1_64_0/
+    export BOOST_ROOT=${HOME}/opt/boost_1_66_0
+    curl -L https://sourceforge.net/projects/boost/files/boost/1.66.0/boost_1_66_0.tar.bz2 > boost_1.66.0.tar.bz2
+    tar xvf boost_1.66.0.tar.bz2
+    cd boost_1_66_0/
     ./bootstrap.sh "--prefix=$BOOST_ROOT"
     ./b2 install
-    rm -rf ${TEMP_DIR}/boost_1_64_0/
+    rm -rf ${TEMP_DIR}/boost_1_66_0/
 
     # install secp256k1-zkp (Cryptonomex branch)
     cd ${TEMP_DIR}

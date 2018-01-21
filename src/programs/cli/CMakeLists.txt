@@ -34,7 +34,7 @@ target_link_libraries( keto_cli
 #        PRIVATE chain_api_plugin producer_plugin chain_plugin wallet_api_plugin
 #        PRIVATE net_plugin http_plugin txn_test_gen_plugin faucet_testnet_plugin
 #        PRIVATE eos_chain fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
-        PRIVATE ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} ${Boost_LIBRARIES} )
+        PRIVATE ${Boost_LIBRARIES} ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} ${pthread_library} )
 
 install( TARGETS
    keto_cli

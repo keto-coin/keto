@@ -26,10 +26,13 @@ class Event {
 public:
     Event(const std::string& name,
             const std::string& source,
+            const unsigned char* sourceSignature,
             const unsigned char* message,
             const unsigned char* signature) : 
         name(name),source(source) {
         
+        this->sourceSignature = (unsigned char *)malloc(sizeof(sourceSignature)*sizeof(unsigned char));
+        memcpy(&this->sourceSignature,&sourceSignature,sizeof(sourceSignature));
         this->message = (unsigned char *)malloc(sizeof(message)*sizeof(unsigned char));
         memcpy(&this->message,&message,sizeof(message));
         this->signature = (unsigned char *)malloc(sizeof(signature)*sizeof(unsigned char));
@@ -37,13 +40,16 @@ public:
     }
     
     Event(const Event& orig) : name(orig.name),source(orig.source) {
-        this->message = (unsigned char *)malloc(sizeof(message)*sizeof(unsigned char));
+        this->message = (unsigned char *)malloc(sizeof(orig.sourceSignature)*sizeof(unsigned char));
+        memcpy(&this->sourceSignature, &orig.sourceSignature,sizeof(orig.sourceSignature));
+        this->message = (unsigned char *)malloc(sizeof(orig.message)*sizeof(unsigned char));
         memcpy(&this->message, &orig.message,sizeof(orig.message));
-        this->signature = (unsigned char *)malloc(sizeof(signature)*sizeof(unsigned char));
+        this->signature = (unsigned char *)malloc(sizeof(orig.signature)*sizeof(unsigned char));
         memcpy(&this->signature,&orig.signature,sizeof(orig.signature));
     }
     
     virtual ~Event() {
+        free(this->sourceSignature);
         free(this->message);
         free(this->signature);
     }
@@ -56,6 +62,9 @@ public:
         return this->source;
     }
     
+    unsigned char* getSourceSignature() {
+        return this->sourceSignature;
+    }
     unsigned char* getMessage() {
         return this->message;
     }
@@ -67,6 +76,7 @@ public:
 private:
     std::string name;
     std::string source;
+    unsigned char* sourceSignature;
     unsigned char* message;
     unsigned char* signature;
     

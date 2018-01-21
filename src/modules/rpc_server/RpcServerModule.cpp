@@ -11,6 +11,11 @@
  * Created on January 20, 2018, 2:46 PM
  */
 
+#include <boost/beast.hpp>
+#include <boost/asio/strand.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/ssl/stream.hpp>
+
 #include "keto/rpc_server/RpcServerModule.hpp"
 
 namespace keto {

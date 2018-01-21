@@ -48,7 +48,6 @@ SET(BOOST_COMPONENTS)
 LIST(APPEND BOOST_COMPONENTS 
                             log_setup
                             log
-                            thread
                              date_time
                              system
                              filesystem
@@ -60,7 +59,9 @@ LIST(APPEND BOOST_COMPONENTS
                              unit_test_framework
                              context
                              locale
-                             regex)
+                             regex
+                            thread
+                            )
 
 SET( Boost_USE_STATIC_LIBS ON CACHE STRING "ON or OFF" )
 
@@ -70,7 +71,7 @@ IF( WIN32 )
   set(BOOST_ALL_DYN_LINK OFF) # force dynamic linking for all libraries
 ENDIF(WIN32)
 
-FIND_PACKAGE(Boost 1.64 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+FIND_PACKAGE(Boost 1.66 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
 # For Boost 1.53 on windows, coroutine was not in BOOST_LIBRARYDIR and do not need it to build,  but if boost versin >= 1.54, find coroutine otherwise will cause link errors
 IF(NOT "${Boost_VERSION}" MATCHES "1.53(.*)")
    SET(BOOST_LIBRARIES_TEMP ${Boost_LIBRARIES})
@@ -78,6 +79,8 @@ IF(NOT "${Boost_VERSION}" MATCHES "1.53(.*)")
    LIST(APPEND BOOST_COMPONENTS coroutine)
    SET(Boost_LIBRARIES ${BOOST_LIBRARIES_TEMP} ${Boost_LIBRARIES})
 ENDIF()
+
+find_package(OpenSSL REQUIRED)
 
 if( WIN32 )
 

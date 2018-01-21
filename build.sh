@@ -53,14 +53,15 @@ echo ""
 echo ">>> ARCHITECTURE \"$ARCH\""
 
 if [ $ARCH == "ubuntu" ]; then
-    BOOST_ROOT=${HOME}/opt/boost_1_64_0
+    BOOST_ROOT=${HOME}/opt/boost_1_66_0
     BINARYEN_BIN=${HOME}/opt/binaryen/bin
     OPENSSL_ROOT_DIR=/usr/local/opt/openssl
     OPENSSL_LIBRARIES=/usr/local/opt/openssl/lib
     WASM_LLVM_CONFIG=${HOME}/opt/wasm/bin/llvm-config
     ROCKSDB_ROOT=${HOME}/opt/rocksdb
     BEAST_ROOT=${HOME}/opt/beast
-    export BOOST_ROOT BINARYEN_BIN OPENSSL_ROOT_DIR OPENSSL_LIBRARIES WASM_LLVM_CONFIG ROCKSDB_ROOT BEAST_ROOT
+    BEAST_INCLUDE=${BEAST_ROOT}/include
+    export BOOST_ROOT BINARYEN_BIN OPENSSL_ROOT_DIR OPENSSL_LIBRARIES WASM_LLVM_CONFIG ROCKSDB_ROOT BEAST_ROOT BEAST_INCLUDE
 fi
 
 if [ $ARCH == "darwin" ]; then

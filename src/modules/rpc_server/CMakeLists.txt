@@ -1,5 +1,7 @@
 file(GLOB HEADERS "include/keto/rpc_server/*.hpp")
 
+find_package(OpenSSL REQUIRED)
+
 ## SORT .cpp by most likely to change / break compile
 add_library( 0030_keto_rpc_server_module
             SHARED
@@ -10,13 +12,15 @@ add_library( 0030_keto_rpc_server_module
              ${HEADERS}
            )
 
-target_link_libraries( 0030_keto_rpc_server_module )
+target_link_libraries( 0030_keto_rpc_server_module 
+                            PRIVATE ${OPENSSL_LIBRARIES} )
 target_include_directories( 0030_keto_rpc_server_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
+                            PUBLIC "${BEAST_INCLUDE}"
 
                             ${Boost_INCLUDE_DIRS}
                             )

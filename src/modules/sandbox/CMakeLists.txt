@@ -10,7 +10,8 @@ add_library( 0020_keto_sandbox_module
              ${HEADERS}
            )
 
-target_link_libraries( 0020_keto_sandbox_module )
+target_link_libraries( 0020_keto_sandbox_module 
+                            PRIVATE ${OPENSSL_LIBRARIES} )
 target_include_directories( 0020_keto_sandbox_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
