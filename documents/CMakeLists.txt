@@ -1,0 +1,1 @@
+install(DIRECTORY html/ DESTINATION document_root )

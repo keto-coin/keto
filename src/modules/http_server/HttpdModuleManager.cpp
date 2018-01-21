@@ -17,12 +17,14 @@
 
 #include "keto/common/Log.hpp"
 #include "keto/http/HttpdModuleManager.hpp"
+#include "include/keto/http/HttpdServer.hpp"
 
 namespace keto {
 namespace http {
 
 
 HttpdModuleManager::HttpdModuleManager() {
+    this->httpServer = std::make_shared<HttpdServer>();
 }
 
 HttpdModuleManager::~HttpdModuleManager() {
@@ -43,10 +45,12 @@ const std::string HttpdModuleManager::getVersion() const {
 // lifecycle methods
 void HttpdModuleManager::start() {
     modules["HttpdModuleManager"] = std::make_shared<HttpdModule>();
+    this->httpServer->start();
     KETO_LOG_INFO << "[HttpdModuleManager] Started the HttpdModuleManager";
 
 }
 void HttpdModuleManager::stop() {
+    this->httpServer->stop();
     modules.clear();
     KETO_LOG_INFO << "[HttpdModuleManager] The HttpdModuleManager is being stopped";
 }

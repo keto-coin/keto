@@ -20,6 +20,7 @@
 
 #include "keto/module/ModuleManagementInterface.hpp"
 #include "keto/http/HttpdModule.hpp"
+#include "keto/http/HttpdServer.hpp"
 
 namespace keto {
 namespace http {
@@ -47,6 +48,7 @@ public:
     
 private:
     std::map<std::string,std::shared_ptr<keto::module::ModuleInterface>> modules;
+    std::shared_ptr<HttpdServer> httpServer;
 };
 
 }

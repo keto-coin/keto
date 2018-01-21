@@ -187,6 +187,7 @@ endif()
 add_subdirectory( src )
 add_subdirectory( scripts )
 add_subdirectory( resources )
+add_subdirectory( documents )
 
 if (ENABLE_INSTALLER)
 

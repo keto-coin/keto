@@ -6,6 +6,7 @@ add_library( 0050_keto_httpd_module
 
             HttpdModuleManager.cpp
             HttpdModule.cpp
+            HttpdServer.cpp
 
              ${HEADERS}
            )
@@ -18,6 +19,7 @@ target_include_directories( 0050_keto_httpd_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/ssl/include"
 
                             ${Boost_INCLUDE_DIRS}
                             )
