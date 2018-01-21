@@ -170,6 +170,7 @@ handle_request(
         return send(bad_request("Illegal request-target"));
 
     // Build the path to the requested file
+    
     std::string path = path_cat(doc_root, req.target());
     if(req.target().back() == '/')
         path.append("index.html");
