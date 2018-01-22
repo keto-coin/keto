@@ -18,11 +18,14 @@
 #include "keto/common/Log.hpp"
 
 #include "keto/rpc_server/RpcServerModuleManager.hpp"
+#include "include/keto/rpc_server/RpcServerModuleManager.hpp"
+#include "include/keto/rpc_server/RpcServer.hpp"
 
 namespace keto {
 namespace rpc_server {
 
 RpcServerModuleManager::RpcServerModuleManager() {
+    this->rpcServerPtr = std::make_shared<RpcServer>();
 }
 
 RpcServerModuleManager::~RpcServerModuleManager() {
@@ -44,10 +47,12 @@ const std::string RpcServerModuleManager::getVersion() const {
 // lifecycle methods
 void RpcServerModuleManager::start() {
     modules["RpcServerModuleManager"] = std::make_shared<RpcServerModule>();
+    this->rpcServerPtr->start();
     KETO_LOG_INFO << "[RpcServerModuleManager] Started the RpcServerModuleManager";
 }
 
 void RpcServerModuleManager::stop() {
+    this->rpcServerPtr->stop();
     modules.clear();
     KETO_LOG_INFO << "[RpcServerModuleManager] The RpcServerModuleManager is being stopped";
 

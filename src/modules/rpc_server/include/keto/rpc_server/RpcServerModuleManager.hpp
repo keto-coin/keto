@@ -20,6 +20,7 @@
 
 #include "keto/module/ModuleManagementInterface.hpp"
 #include "keto/rpc_server/RpcServerModule.hpp"
+#include "keto/rpc_server/RpcServer.hpp"
 
 namespace keto {
 namespace rpc_server {
@@ -46,6 +47,7 @@ public:
 
 private:
     std::map<std::string,std::shared_ptr<keto::module::ModuleInterface>> modules;
+    RpcServerPtr rpcServerPtr;
 };
 
 }

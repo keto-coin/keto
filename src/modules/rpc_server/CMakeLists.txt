@@ -8,6 +8,7 @@ add_library( 0030_keto_rpc_server_module
 
             RpcServerModuleManager.cpp
             RpcServerModule.cpp
+            RpcServer.cpp
 
              ${HEADERS}
            )
@@ -20,6 +21,7 @@ target_include_directories( 0030_keto_rpc_server_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/ssl/include"
                             PUBLIC "${BEAST_INCLUDE}"
 
                             ${Boost_INCLUDE_DIRS}
