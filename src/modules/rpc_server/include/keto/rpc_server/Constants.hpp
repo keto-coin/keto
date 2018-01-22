@@ -11,8 +11,8 @@
  * Created on January 22, 2018, 10:21 AM
  */
 
-#ifndef CONSTANTS_HPP
-#define CONSTANTS_HPP
+#ifndef RPC_SERVER_CONSTANTS_HPP
+#define RPC_SERVER_CONSTANTS_HPP
 
 namespace keto {
 namespace rpc_server {

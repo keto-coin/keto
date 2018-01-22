@@ -20,6 +20,7 @@
 
 #include "keto/module/ModuleManagementInterface.hpp"
 #include "keto/rpc_client/RpcClientModule.hpp"
+#include "keto/rpc_client/RpcSessionManager.hpp"
 
 namespace keto {
 namespace rpc_client {
@@ -47,6 +48,7 @@ public:
     
 private:
     std::map<std::string,std::shared_ptr<keto::module::ModuleInterface>> modules;
+    RpcSessionManagerPtr rpcSessionManager;
 
 };
 

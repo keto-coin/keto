@@ -18,12 +18,14 @@
 #include "keto/common/Log.hpp"
 
 #include "keto/rpc_client/RpcClientModuleManager.hpp"
+#include "include/keto/rpc_client/RpcSessionManager.hpp"
 
 namespace keto {
 namespace rpc_client {
 
     
 RpcClientModuleManager::RpcClientModuleManager() {
+    rpcSessionManager = std::make_shared<RpcSessionManager>();
 }
 
 RpcClientModuleManager::~RpcClientModuleManager() {
@@ -45,11 +47,13 @@ const std::string RpcClientModuleManager::getVersion() const {
 // lifecycle methods
 void RpcClientModuleManager::start() {
     modules["RpcClientModule"] = std::make_shared<RpcClientModule>();
+    rpcSessionManager->start();
     KETO_LOG_INFO << "[RpcClientModuleManager] Started the RpcClientModuleManager";
 }
 
 void RpcClientModuleManager::stop() {
     modules.clear();
+    rpcSessionManager->stop();
     KETO_LOG_INFO << "[RpcClientModuleManager] The RpcClientModuleManager is being stopped";
 }
 
