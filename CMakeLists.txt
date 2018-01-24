@@ -81,6 +81,7 @@ IF(NOT "${Boost_VERSION}" MATCHES "1.53(.*)")
 ENDIF()
 
 find_package(OpenSSL REQUIRED)
+find_package(Protobuf REQUIRED)
 
 if( WIN32 )
 
