@@ -67,6 +67,9 @@ if [ $ARCH == "ubuntu" ]; then
     PROTOBUF_LIBRARY=${PROTOBUF_SRC_ROOT_FOLDER}/lib/
     PROTOBUF_IMPORT_DIRS=${PROTOBUF_SRC_ROOT_FOLDER}/include/
     export PROTOBUF_SRC_ROOT_FOLDER PROTOBUF_LIBRARY PROTOBUF_IMPORT_DIRS
+
+    ASN1_ROOT_FOLDER=${HOME}/opt/asn1c/
+    export ASN1_ROOT_FOLDER
 fi
 
 if [ $ARCH == "darwin" ]; then

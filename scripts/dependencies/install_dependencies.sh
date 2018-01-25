@@ -10,7 +10,8 @@ if [ $ARCH == "ubuntu" ]; then
                          libbz2-dev libicu-dev python-dev \
                          autoconf libtool git curl \
                          libgflags-dev libsnappy-dev \
-                         zlib1g-dev liblz4-dev libzstd-dev 
+                         zlib1g-dev liblz4-dev libzstd-dev \
+                         bison libbison-dev flex libfl-dev
     OPENSSL_ROOT_DIR=/usr/local/opt/openssl
     OPENSSL_LIBRARIES=/usr/local/opt/openssl/lib
 
@@ -71,6 +72,20 @@ if [ $ARCH == "ubuntu" ]; then
     ./configure --prefix ${HOME}/opt/protobuf
     make
     make install
+    cd ${HOME}
+    rm -rf ${TEMP_DIR}/protobuf-${PROTOBUF_VERSION}
+    
+    # asn1 required for serialization of transaction and blockchain formats
+    cd ${TEMP_DIR}
+    git clone https://github.com/vlm/asn1c.git
+    mkdir -p ${HOME}/opt/asn1c
+    cd ${TEMP_DIR}/asn1c
+    test -f configure || autoreconf -iv
+    ./configure --prefix ${HOME}/opt/asn1c
+    make
+    make install
+    cd ${HOME}
+    rm -rf ${TEMP_DIR}/asn1c
 
     # build llvm with wasm build target:
     cd ${TEMP_DIR}
