@@ -103,22 +103,22 @@ function(ASN1_GENERATE_CPP SRCS HDRS)
 
   set(${SRCS})
   set(${HDRS})
+  set(ABSFILES "")
+  list(APPEND ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/asn_bit_data.c")
+  list(APPEND ${HDRS} "${CMAKE_CURRENT_BINARY_DIR}/asn_bit_data.h")
+     
   foreach(FIL ${ARGN})
-    message(STATUS "Generate file for " ${FIL})
-    get_filename_component(ABS_FIL ${FIL} ABSOLUTE)
+    get_filename_component(ABS_FILE ${FIL} ABSOLUTE)
     get_filename_component(FIL_WE ${FIL} NAME_WE)
-    
-    list(APPEND ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/${FIL_WE}.c")
-    list(APPEND ${HDRS} "${CMAKE_CURRENT_BINARY_DIR}/${FIL_WE}.h")
-    
-    add_custom_command(
-      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FIL_WE}.c"
-             "${CMAKE_CURRENT_BINARY_DIR}/${FIL_WE}.h"
-      COMMAND  ${ASN1_EXECUTABLE} ARGS -D ${CMAKE_CURRENT_BINARY_DIR} ${ABS_FIL}
-      DEPENDS ${ABS_FIL} ${ASN1_EXECUTABLE}
-      COMMENT "Running C++ ASN1 compiler on ${FIL}"
-      VERBATIM )
+    list(APPEND ABSFILES "${ABS_FILE}")
   endforeach()
+  
+  message(STATUS "The list of files is " ${ABSFILES})
+  # execute the asn1 process as we need to update the dependencies after this
+  # is complete.
+  execute_process(
+      COMMAND  ${ASN1_EXECUTABLE} -D ${CMAKE_CURRENT_BINARY_DIR} ${ABSFILES})
+
   file (GLOB ASN_SOURCE_FILES "${CMAKE_CURRENT_BINARY_DIR}/*.c")
   message(STATUS "Generated the source files")
   foreach(FIL ${ASN_SOURCE_FILES})
@@ -130,8 +130,6 @@ function(ASN1_GENERATE_CPP SRCS HDRS)
     message(STATUS "Add header file " ${FIL})
     list(APPEND ${HDRS} "${FIL}")
   endforeach()
-  #list(APPEND ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/${FIL_WE}.c")
-  #list(APPEND ${HDRS} "${CMAKE_CURRENT_BINARY_DIR}/${FIL_WE}.h")
 
   set_source_files_properties(${${SRCS}} ${${HDRS}} PROPERTIES GENERATED TRUE)
   set(${SRCS} ${${SRCS}} PARENT_SCOPE)

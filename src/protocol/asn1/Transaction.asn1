@@ -1,0 +1,15 @@
+Transaction DEFINITIONS ::=
+BEGIN
+
+Transaction ::= SEQUENCE {
+    transObjectId   OBJECT IDENTIFIER,
+    transSeqOf      SEQUENCE OF TransactionInt,
+    transBitString  BIT STRING {
+                        muxToken(0), 
+                        modemToken(1)
+                 }
+}
+
+TransactionInt ::= INTEGER (0..65535)
+
+END

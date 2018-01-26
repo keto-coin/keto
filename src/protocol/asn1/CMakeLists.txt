@@ -2,11 +2,12 @@ find_package(Asn1 REQUIRED)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-asn1_generate_cpp(ASN1_SRCS ASN1_HDRS BlockChain.asn1)
+asn1_generate_cpp(ASN1_SRCS ASN1_HDRS BlockChain.asn1 Transaction.asn1)
 
 add_library(keto_asn1_protocol ${ASN1_SRCS} )
 
-SET_TARGET_PROPERTIES(keto_asn1_protocol PROPERTIES LINKER_LANGUAGE C)
+# set the necessary compile commands
+target_compile_options(keto_asn1_protocol PUBLIC "-DASN_PDU_COLLECTION")
 
 target_include_directories( keto_asn1_protocol
                 PUBLIC "${ASN1_HDRS}")
