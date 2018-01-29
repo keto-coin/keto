@@ -1,0 +1,22 @@
+ContractModule DEFINITIONS ::= BEGIN
+    IMPORTS Version, Hash, Key 
+        FROM BasicModule
+        Roll
+        FROM SecurityModule
+        Account
+        FROM AccountModule;
+
+
+Contract ::= SEQUENCE {
+    version         Version,
+    id              Hash,
+    name            UTF8String,
+    owner           Account,
+    parent          Contract,
+    permissions     SEQUENCE OF Roll,
+    code            OCTET STRING
+}
+
+
+
+END

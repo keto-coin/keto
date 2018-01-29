@@ -1,0 +1,8 @@
+BasicModule DEFINITIONS ::= BEGIN
+
+Number  ::= INTEGER (0..10000000000000)
+Version ::= INTEGER
+Hash    ::= OCTET STRING (SIZE(0..64))
+Key     ::= OCTET STRING (SIZE(0..256))
+
+END

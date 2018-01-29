@@ -2,7 +2,7 @@
 # FindAsn1
 # ------------
 #
-# Locate and configure the Google Protocol Buffers library.
+# Locate and configure the ASN1 library.
 #
 # The following variables can be set and are optional:
 #
@@ -117,7 +117,7 @@ function(ASN1_GENERATE_CPP SRCS HDRS)
   # execute the asn1 process as we need to update the dependencies after this
   # is complete.
   execute_process(
-      COMMAND  ${ASN1_EXECUTABLE} -D ${CMAKE_CURRENT_BINARY_DIR} ${ABSFILES})
+      COMMAND  ${ASN1_EXECUTABLE} -fcompound-names -no-gen-example -D ${CMAKE_CURRENT_BINARY_DIR} ${ABSFILES})
 
   file (GLOB ASN_SOURCE_FILES "${CMAKE_CURRENT_BINARY_DIR}/*.c")
   message(STATUS "Generated the source files")

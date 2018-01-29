@@ -1,0 +1,49 @@
+AccountModule DEFINITIONS ::= BEGIN
+    IMPORTS Version, Hash, Key, Number
+        FROM BasicModule
+        Roll
+        FROM SecurityModule;
+
+
+AccountType ::= ENUMERATED {
+    individual,
+    organisation,
+    proxy,
+    blockChain
+}
+
+Account ::= SEQUENCE {
+    version                 Version,
+    id                      Hash,
+    name                    UTF8String,
+    publicKey               Key,
+    accountType             AccountType,
+    accountInfo             SEQUENCE OF ANY,
+    roll                    SEQUENCE OF Roll,
+    permissions             SEQUENCE OF Roll
+}
+
+AccountLink ::= SEQUENCE {
+    version         Version,
+    id              Hash,
+    name            UTF8String,
+    linkKey         Key,
+    linkId          Hash
+}
+
+AccountBlockChain ::= SEQUENCE {
+    version         Version,
+    id              Hash,
+    name            UTF8String,
+    private         BOOLEAN,
+    blockId         Hash,
+    blockKey        Key
+}
+
+AccountBalance ::= SEQUENCE {
+    version         Version,
+    lastTransaction Hash,
+    value           Number
+}
+
+END

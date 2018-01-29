@@ -1,15 +1,29 @@
-Transaction DEFINITIONS ::=
-BEGIN
+TransactionModule DEFINITIONS ::= BEGIN
+    IMPORTS Number, Hash, Version, Key
+        FROM BasicModule
+        Account 
+        FROM AccountModule
+        Action
+        FROM ActionModule;
 
 Transaction ::= SEQUENCE {
-    transObjectId   OBJECT IDENTIFIER,
-    transSeqOf      SEQUENCE OF TransactionInt,
-    transBitString  BIT STRING {
-                        muxToken(0), 
-                        modemToken(1)
-                 }
+    version         Version,
+    id              Hash,
+    date            UTCTime,
+    value           Number,
+    parent          Transaction,
+    sourceAccount   Account,
+    targetAccount   Account,
+    actions         SEQUENCE OF Action
 }
 
-TransactionInt ::= INTEGER (0..65535)
+SignedTransaction ::= SEQUENCE {
+    version         Version,
+    id              Hash,
+    transaction     Transaction,
+    hash            Hash,
+    signature       Key
+}
+
 
 END

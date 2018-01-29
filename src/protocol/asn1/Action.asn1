@@ -1,0 +1,19 @@
+ActionModule DEFINITIONS ::= BEGIN
+    IMPORTS Number, Version, Hash 
+    FROM BasicModule
+    Account 
+    FROM AccountModule;
+
+Action ::= SEQUENCE {
+    version         Version,
+    id              Hash,
+    date            UTCTime,
+    contractId      Hash,
+    sourceAccount   Account,
+    targetAccount   Account,
+    value           Number,
+    parent          Action,
+    model           ANY
+}
+
+END

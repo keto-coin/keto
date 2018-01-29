@@ -1,15 +1,29 @@
-BlockChain DEFINITIONS ::=
-BEGIN
+BlockChainModule DEFINITIONS ::= BEGIN
+    IMPORTS Number, Hash, Version, Key
+        FROM BasicModule
+        Account 
+        FROM AccountModule
+        Action
+        FROM ActionModule
+        Transaction, SignedTransaction
+        FROM TransactionModule;
 
-BlockChain ::= SEQUENCE {
-    myObjectId   OBJECT IDENTIFIER,
-    mySeqOf      SEQUENCE OF MyInt,
-    myBitString  BIT STRING {
-                        muxToken(0), 
-                        modemToken(1)
-                 }
+
+Block ::= SEQUENCE {
+    version         Version,
+    id              Hash,
+    date            UTCTime,
+    parent          Hash,
+    transactions    SEQUENCE OF SignedTransaction,
+    merkelRoot      Hash
 }
 
-MyInt ::= INTEGER (0..65535)
+SignedBlock ::= SEQUENCE {
+    version         Version,
+    id              Hash,
+    block           Block,
+    hash            Hash,
+    signature       Key
+}
 
 END

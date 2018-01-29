@@ -1,0 +1,12 @@
+SecurityModule DEFINITIONS ::= BEGIN
+    IMPORTS Version, Hash
+        FROM BasicModule;
+
+Roll ::= SEQUENCE {
+    version         Version,
+    id              Hash,
+    name            UTF8String
+}
+
+
+END
