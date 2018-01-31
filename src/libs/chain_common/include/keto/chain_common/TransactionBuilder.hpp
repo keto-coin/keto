@@ -15,6 +15,7 @@
 #define TRANSACTIONBUILDER_HPP
 
 #include <memory>
+#include <vector>
 
 #include "Transaction.h"
 
@@ -29,7 +30,7 @@ public:
     
     static std::shared_ptr<TransactionBuilder> createTransaction();
     
-    unsigned char* getBytes();
+    std::vector<unsigned char> getBytes();
 private:
     Transaction* transaction;
     

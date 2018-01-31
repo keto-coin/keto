@@ -16,6 +16,7 @@
 
 #include "keto/chain_common/TransactionBuilder.hpp"
 #include "keto/common/MetaInfo.hpp"
+#include "keto/asn1/TimeHelper.hpp"
 
 namespace keto {
 namespace chain_common {
@@ -24,10 +25,11 @@ namespace chain_common {
 TransactionBuilder::TransactionBuilder() {
     this->transaction = (Transaction*)calloc(1, sizeof *transaction);
     this->transaction->version = keto::common::MetaInfo::PROTOCOL_VERSION;
+    this->transaction->date = *(UTCTime_t*)keto::asn1::TimeHelper();
 }
 
 TransactionBuilder::~TransactionBuilder() {
-    free(this->transaction);
+    asn_DEF_Transaction.op->free_struct(&asn_DEF_Transaction, this->transaction, ASFM_FREE_EVERYTHING);
 }
 
 std::shared_ptr<TransactionBuilder> TransactionBuilder::createTransaction() {
@@ -35,8 +37,10 @@ std::shared_ptr<TransactionBuilder> TransactionBuilder::createTransaction() {
 }
 
 
-unsigned char* TransactionBuilder::getBytes() {
-    return NULL;
+std::vector<unsigned char> TransactionBuilder::getBytes() {
+    //std::vector<unsigned char> buffer;
+    //der_encoder(&asn_DEF_Transaction,this->transaction)
+    //return NULL;
 }
 
 
