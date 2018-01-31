@@ -16,6 +16,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "keto/common/Log.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 #include "keto/sandbox/SandboxModuleManager.hpp"
 
@@ -38,7 +39,7 @@ const std::string SandboxModuleManager::getDescription() const {
 }
 
 const std::string SandboxModuleManager::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
 
 // lifecycle methods

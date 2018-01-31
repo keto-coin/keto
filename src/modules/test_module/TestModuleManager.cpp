@@ -18,8 +18,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include "keto/test/TestModuleManager.hpp"
-
+#include "keto/common/MetaInfo.hpp"
 #include "keto/common/Log.hpp"
+
 #include "include/keto/test/TestModuleManager.hpp"
 
 namespace keto {
@@ -42,7 +43,7 @@ const std::string TestModuleManager::getDescription() const {
 }
 
 const std::string TestModuleManager::getVersion() const {
-    return "0.0.1";
+    return keto::common::MetaInfo::VERSION;
 }
 
 // lifecycle methods

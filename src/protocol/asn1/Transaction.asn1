@@ -8,12 +8,11 @@ TransactionModule DEFINITIONS ::= BEGIN
 
 Transaction ::= SEQUENCE {
     version         Version,
-    id              Hash,
     date            UTCTime,
     value           Number,
-    parent          Transaction,
-    sourceAccount   Account,
-    targetAccount   Account,
+    parent          Hash,
+    sourceAccount   Hash,
+    targetAccount   Hash,
     actions         SEQUENCE OF Action
 }
 
@@ -21,7 +20,7 @@ SignedTransaction ::= SEQUENCE {
     version         Version,
     id              Hash,
     transaction     Transaction,
-    hash            Hash,
+    transactionHash Hash,
     signature       Key
 }
 

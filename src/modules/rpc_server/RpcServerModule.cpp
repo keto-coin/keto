@@ -17,6 +17,7 @@
 #include <boost/asio/ssl/stream.hpp>
 
 #include "keto/rpc_server/RpcServerModule.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 namespace keto {
 namespace rpc_server {
@@ -38,7 +39,7 @@ const std::string RpcServerModule::getDescription() const {
 }
 
 const std::string RpcServerModule::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
 
 

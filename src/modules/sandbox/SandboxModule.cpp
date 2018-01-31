@@ -12,6 +12,7 @@
  */
 
 #include "keto/sandbox/SandboxModule.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 namespace keto{
 namespace sandbox {
@@ -32,7 +33,7 @@ const std::string SandboxModule::getDescription() const {
 }
 
 const std::string SandboxModule::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
 
 

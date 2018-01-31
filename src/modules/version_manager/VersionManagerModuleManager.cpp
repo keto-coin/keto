@@ -16,6 +16,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "keto/common/Log.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 #include "keto/version_manager/VersionManagerModuleManager.hpp"
 
@@ -39,7 +40,7 @@ const std::string VersionManagerModuleManager::getDescription() const {
 }
 
 const std::string VersionManagerModuleManager::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
 
 // lifecycle methods

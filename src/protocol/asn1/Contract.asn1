@@ -11,9 +11,9 @@ Contract ::= SEQUENCE {
     version         Version,
     id              Hash,
     name            UTF8String,
-    owner           Account,
-    parent          Contract,
-    permissions     SEQUENCE OF Roll,
+    owner           Hash,
+    parent          Hash,
+    permissions     SEQUENCE OF Hash,
     code            OCTET STRING
 }
 

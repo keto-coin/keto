@@ -16,6 +16,7 @@ target_include_directories( 0001_keto_test_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
 
                             ${Boost_INCLUDE_DIRS}
                             )

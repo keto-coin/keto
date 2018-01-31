@@ -15,6 +15,7 @@
 #include <boost/optional/optional.hpp>
 
 #include "keto/event/EventServiceModule.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 namespace keto {
 namespace event {
@@ -35,7 +36,7 @@ const std::string EventServiceModule::getDescription() const {
 }
 
 const std::string EventServiceModule::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
     
 

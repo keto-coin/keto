@@ -18,6 +18,8 @@
 #include "keto/common/Log.hpp"
 #include "keto/http/HttpdModuleManager.hpp"
 #include "include/keto/http/HttpdServer.hpp"
+#include "keto/common/MetaInfo.hpp"
+
 
 namespace keto {
 namespace http {
@@ -39,7 +41,7 @@ const std::string HttpdModuleManager::getDescription() const {
 }
 
 const std::string HttpdModuleManager::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
     
 // lifecycle methods

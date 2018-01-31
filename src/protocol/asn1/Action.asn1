@@ -8,11 +8,11 @@ Action ::= SEQUENCE {
     version         Version,
     id              Hash,
     date            UTCTime,
-    contractId      Hash,
-    sourceAccount   Account,
-    targetAccount   Account,
+    contract        Hash,
+    sourceAccount   Hash,
+    targetAccount   Hash,
     value           Number,
-    parent          Action,
+    parent          Hash,
     model           ANY
 }
 

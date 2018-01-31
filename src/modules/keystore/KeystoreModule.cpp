@@ -12,6 +12,7 @@
  */
 
 #include "keto/keystore/KeystoreModule.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 namespace keto {
 namespace keystore {
@@ -33,7 +34,7 @@ const std::string KeystoreModule::getDescription() const {
 }
 
 const std::string KeystoreModule::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
 
 }

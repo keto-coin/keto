@@ -20,6 +20,7 @@
 #include "keto/rpc_server/RpcServerModuleManager.hpp"
 #include "include/keto/rpc_server/RpcServerModuleManager.hpp"
 #include "include/keto/rpc_server/RpcServer.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 namespace keto {
 namespace rpc_server {
@@ -41,7 +42,7 @@ const std::string RpcServerModuleManager::getDescription() const {
 }
 
 const std::string RpcServerModuleManager::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
 
 // lifecycle methods

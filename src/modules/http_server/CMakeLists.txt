@@ -20,6 +20,7 @@ target_include_directories( 0050_keto_httpd_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/ssl/include"
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
 
                             ${Boost_INCLUDE_DIRS}
                             )

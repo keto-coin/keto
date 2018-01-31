@@ -1,3 +1,5 @@
+add_subdirectory( asn1 )
+add_subdirectory( chain_common )
 add_subdirectory( common )
 add_subdirectory( chain )
 add_subdirectory( environment )

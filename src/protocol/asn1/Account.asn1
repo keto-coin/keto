@@ -19,8 +19,8 @@ Account ::= SEQUENCE {
     publicKey               Key,
     accountType             AccountType,
     accountInfo             SEQUENCE OF ANY,
-    roll                    SEQUENCE OF Roll,
-    permissions             SEQUENCE OF Roll
+    roll                    SEQUENCE OF Hash,
+    permissions             SEQUENCE OF Hash
 }
 
 AccountLink ::= SEQUENCE {

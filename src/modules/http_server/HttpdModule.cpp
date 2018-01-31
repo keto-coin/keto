@@ -12,6 +12,7 @@
  */
 
 #include "keto/http/HttpdModule.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 
 namespace keto {
@@ -34,7 +35,7 @@ const std::string HttpdModule::getDescription() const {
 }
 
 const std::string HttpdModule::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
 
 

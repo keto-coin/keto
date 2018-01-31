@@ -13,6 +13,7 @@
 
 #include "keto/common/Log.hpp"
 #include "keto/test/TestModule.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 namespace keto {
 namespace test {
@@ -36,7 +37,7 @@ const std::string TestModule::getDescription() const {
 }
 
 const std::string TestModule::getVersion() const {
-    return "0.0.1";
+    return keto::common::MetaInfo::VERSION;
 }
 
 }

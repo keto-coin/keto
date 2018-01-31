@@ -19,6 +19,7 @@
 
 #include "keto/rpc_client/RpcClientModuleManager.hpp"
 #include "include/keto/rpc_client/RpcSessionManager.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 namespace keto {
 namespace rpc_client {
@@ -41,7 +42,7 @@ const std::string RpcClientModuleManager::getDescription() const {
 }
 
 const std::string RpcClientModuleManager::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
 
 // lifecycle methods

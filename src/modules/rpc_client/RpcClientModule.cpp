@@ -12,6 +12,7 @@
  */
 
 #include "keto/rpc_client/RpcClientModule.hpp"
+#include "keto/common/MetaInfo.hpp"
 
 namespace keto {
 namespace rpc_client {
@@ -32,7 +33,7 @@ const std::string RpcClientModule::getDescription() const {
 }
 
 const std::string RpcClientModule::getVersion() const {
-    return "0.1.0";
+    return keto::common::MetaInfo::VERSION;
 }
 
 

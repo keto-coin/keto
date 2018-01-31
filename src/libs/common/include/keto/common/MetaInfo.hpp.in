@@ -27,6 +27,7 @@ public:
     MetaInfo(const MetaInfo& orig) = delete;
     virtual ~MetaInfo() = delete;
     
+    static constexpr const long PROTOCOL_VERSION = ${PROTOCOL_VERSION};
     static constexpr const char* COPY_RIGHT = "${COPY_RIGHT}";
     static constexpr const char* VERSION = "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
     static constexpr const char* NETWORK_VERSION = "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
