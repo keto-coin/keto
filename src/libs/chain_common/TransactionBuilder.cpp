@@ -25,7 +25,7 @@ namespace chain_common {
 TransactionBuilder::TransactionBuilder() {
     this->transaction = (Transaction*)calloc(1, sizeof *transaction);
     this->transaction->version = keto::common::MetaInfo::PROTOCOL_VERSION;
-    this->transaction->date = *(UTCTime_t*)keto::asn1::TimeHelper();
+    this->transaction->date = (UTCTime_t)keto::asn1::TimeHelper();
 }
 
 TransactionBuilder::~TransactionBuilder() {

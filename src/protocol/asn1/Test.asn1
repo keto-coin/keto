@@ -1,0 +1,10 @@
+TestModule DEFINITIONS ::= BEGIN
+    IMPORTS Version, Hash
+        FROM BasicModule;
+
+TestEntity ::= SEQUENCE {
+    version         Version,
+    date            UTCTime
+}
+
+END

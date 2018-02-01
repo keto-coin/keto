@@ -7,7 +7,7 @@
 #define BOOST_TEST_MODULE AsnTest
 #include <boost/test/unit_test.hpp>
 #include <iostream>
-#include "Transaction.h"
+#include "TestEntity.h"
 #include "keto/common/MetaInfo.hpp"
 #include "keto/asn1/TimeHelper.hpp"
 #include "keto/asn1/SerializationHelper.hpp"
@@ -21,8 +21,8 @@ BOOST_AUTO_TEST_CASE( asn1_test ) {
     keto::asn1::TimeHelper timeHelper2;
     
     // this performs a slice
-    timeHelper2 = (UTCTime_t*)timeHelper1;
-    timeHelper1 = (UTCTime_t*)timeHelper2;
+    timeHelper2 = (UTCTime_t)timeHelper1;
+    timeHelper1 = (UTCTime_t)timeHelper2;
     
     std::cout << "The duration is : " << ((std::chrono::system_clock::time_point)timeHelper2).time_since_epoch().count() << std::endl;
     std::cout << "The duration is : " << ((std::chrono::system_clock::time_point)timeHelper1).time_since_epoch().count() << std::endl;
@@ -32,32 +32,56 @@ BOOST_AUTO_TEST_CASE( asn1_test ) {
     
     
     // instanciate a transaction
-    Transaction* transaction = (Transaction*)calloc(1, sizeof *transaction);
-    transaction->version = keto::common::MetaInfo::PROTOCOL_VERSION;
-    transaction->date = *(UTCTime_t*)keto::asn1::TimeHelper();
-    //xer_fprint(stdout, &asn_DEF_Transaction, transaction);
+    TestEntity* testEntity = 0;
+    testEntity = (TestEntity*)calloc(1, sizeof *testEntity);
+    testEntity->version = keto::common::MetaInfo::PROTOCOL_VERSION;
+    testEntity->date = (UTCTime_t)keto::asn1::TimeHelper();
     
-    unsigned char* buffer = (unsigned char*)keto::asn1::SerializationHelper<Transaction>(transaction,&asn_DEF_Transaction);
-    keto::asn1::DeserializationHelper<Transaction> deserializeHelper(
-            buffer,&asn_DEF_Transaction);
-    Transaction* transaction2 = (Transaction*)deserializeHelper;
-    //xer_fprint(stdout, &asn_DEF_Transaction, transaction2);
+    std::cout << "The pre serialized state is " << std::endl;
+    xer_fprint(stdout, &asn_DEF_TestEntity, testEntity);
+    std::cout << std::endl;
     
-    timeHelper1 = &transaction->date;
-    timeHelper2 = &transaction2->date;
+    keto::asn1::SerializationHelper<TestEntity> serializationHelper(testEntity,&asn_DEF_TestEntity);
+    uint8_t* buffer = (uint8_t*)serializationHelper;
+    keto::asn1::DeserializationHelper<TestEntity> deserializeHelper(
+            buffer,serializationHelper.size(),&asn_DEF_TestEntity);
+    TestEntity* testEntity2 = (TestEntity*)deserializeHelper;
+    std::cout << "The deserialized state is " << std::endl;
+    xer_fprint(stdout, &asn_DEF_TestEntity, testEntity2);
+    std::cout << std::endl;
+    
+    timeHelper1 = testEntity->date;
+    timeHelper2 = testEntity2->date;
     
     BOOST_CHECK( ((std::chrono::system_clock::time_point)timeHelper2).time_since_epoch().count() == 
             ((std::chrono::system_clock::time_point)timeHelper1).time_since_epoch().count() );
     
     free(buffer);
     
-    std::vector<unsigned char> vectorBuffer = (std::vector<unsigned char>)keto::asn1::SerializationHelper<Transaction>(transaction,&asn_DEF_Transaction);
-    keto::asn1::DeserializationHelper<Transaction> deserializeHelper2(
-            vectorBuffer,&asn_DEF_Transaction);
-    Transaction* transaction3 = (Transaction*)deserializeHelper;
-    xer_fprint(stdout, &asn_DEF_Transaction, transaction3);
+    keto::asn1::SerializationHelper<TestEntity> serializationHelper2(testEntity,&asn_DEF_TestEntity);
     
-    timeHelper2 = &transaction3->date;
+    std::vector<uint8_t> vectorBuffer2 = (std::vector<uint8_t>)serializationHelper2;
+    keto::asn1::DeserializationHelper<TestEntity> deserializeHelper3(
+            vectorBuffer2,&asn_DEF_TestEntity);
+    TestEntity* testEntity4 = (TestEntity*)deserializeHelper3;
+    std::cout << "The deserialized state is " << std::endl;
+    xer_fprint(stdout, &asn_DEF_TestEntity, testEntity4);
+    std::cout << std::endl;
+    
+    
+    keto::asn1::DeserializationHelper<TestEntity> deserializeHelper2(
+            (std::vector<uint8_t>)keto::asn1::SerializationHelper<TestEntity>(testEntity,&asn_DEF_TestEntity),
+            &asn_DEF_TestEntity);
+    //uint8_t* buffer2 = (uint8_t*)serializationHelper;
+    //keto::asn1::DeserializationHelper<TestEntity> deserializeHelper2(
+    //        buffer2,serializationHelper.size(),&asn_DEF_TestEntity);
+    
+    TestEntity* testEntity3 = (TestEntity*)deserializeHelper2;
+    std::cout << "The deserialized state is " << std::endl;
+    xer_fprint(stdout, &asn_DEF_TestEntity, testEntity3);
+    std::cout << std::endl;
+    
+    timeHelper2 = testEntity3->date;
     
     BOOST_CHECK( ((std::chrono::system_clock::time_point)timeHelper2).time_since_epoch().count() == 
             ((std::chrono::system_clock::time_point)timeHelper1).time_since_epoch().count() );

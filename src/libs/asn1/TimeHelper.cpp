@@ -6,7 +6,7 @@
 
 /* 
  * File:   TimeHelper.cpp
- * Author: ubuntu
+ * Author: brett chaldecott
  * 
  * Created on January 31, 2018, 8:12 AM
  */
@@ -23,20 +23,35 @@ TimeHelper::TimeHelper() {
 TimeHelper::~TimeHelper() {
 }
 
+TimeHelper& TimeHelper::operator =(const UTCTime_t& time) {
+    std::tm timeinfo;
+    asn_UT2time(&time, &timeinfo, 1);
+    this->time_point = 
+            std::chrono::system_clock::from_time_t (
+            std::mktime(&timeinfo));
+    return (*this);
+}
+
 TimeHelper& TimeHelper::operator =(const UTCTime_t* time) {
     std::tm timeinfo;
     asn_UT2time(time, &timeinfo, 1);
-    return (*this)=std::mktime (&timeinfo);
+    this->time_point = 
+            std::chrono::system_clock::from_time_t (
+            std::mktime(&timeinfo));
+    return (*this);
 }
 
-TimeHelper::operator UTCTime_t*() const {
+TimeHelper::operator UTCTime_t() const {
     // standard time
-    std::time_t timeT = (std::time_t)(*this);
+    std::time_t timeT = 
+            std::chrono::system_clock::to_time_t(this->time_point);
     
     // convert to uct time
-    UTCTime_t* uctTime_t;
-    uctTime_t = (UTCTime_t*)calloc(1, sizeof *uctTime_t);
-    return asn_time2UT(uctTime_t, localtime(&timeT), 1);
+    UTCTime_t* uctTime_t = (UTCTime_t*)calloc(1, sizeof *uctTime_t);
+    asn_time2UT(uctTime_t, localtime(&timeT), 1);
+    UTCTime_t result = *uctTime_t;
+    free(uctTime_t);
+    return result;
 }
 
 TimeHelper& TimeHelper::operator =(const std::time_t& time) {

@@ -17,9 +17,10 @@
 #include <vector>
 #include <stdlib.h>
 #include <sstream>
+#include <iostream>
 
 #include "ber_decoder.h"
-#include "Exception.hpp"
+#include "keto/asn1/Exception.hpp"
 
 namespace keto {
 namespace asn1 {
@@ -28,11 +29,10 @@ namespace asn1 {
 template <typename Data> 
 class DeserializationHelper {
 public:
-    DeserializationHelper(const unsigned char* buffer, 
-            const struct asn_TYPE_descriptor_s *type_descriptor) :type_descriptor(type_descriptor) {
+    DeserializationHelper(const uint8_t* buffer, size_t size,
+            const struct asn_TYPE_descriptor_s *type_descriptor) : type_descriptor(type_descriptor) {
         instance = 0;
-        asn_dec_rval_t rval;
-        rval = ber_decode(0,type_descriptor,(void **)&instance,buffer,sizeof(buffer));
+        asn_dec_rval_t rval = ber_decode(0,type_descriptor,(void **)&instance,buffer,size);
         if (rval.code == RC_WMORE) {
             type_descriptor->op->free_struct(type_descriptor,instance, ASFM_FREE_EVERYTHING);
             BOOST_THROW_EXCEPTION(keto::asn1::IncompleteDataException());
@@ -44,11 +44,12 @@ public:
         }
     }
     
-    DeserializationHelper(const std::vector<unsigned char> buffer,
+    DeserializationHelper(const std::vector<uint8_t>& buffer,
             const struct asn_TYPE_descriptor_s *type_descriptor) : type_descriptor(type_descriptor) {
-        unsigned char* charBuff = (unsigned char*)malloc(buffer.size());
-        std::copy(buffer.begin(), buffer.end(), charBuff);
-        asn_dec_rval_t rval = ber_decode(0,type_descriptor,(void **)&instance,charBuff,buffer.size());
+        instance = 0;
+        uint8_t byteBuff[buffer.size()];
+        std::copy(buffer.begin(), buffer.end(), byteBuff);
+        asn_dec_rval_t rval = ber_decode(0,type_descriptor,(void **)&instance,byteBuff,buffer.size());
         if (rval.code == RC_WMORE) {
             type_descriptor->op->free_struct(type_descriptor,instance, ASFM_FREE_EVERYTHING);
             BOOST_THROW_EXCEPTION(keto::asn1::IncompleteDataException());
@@ -63,7 +64,7 @@ public:
     DeserializationHelper(const DeserializationHelper& orig) = delete;
     
     virtual ~DeserializationHelper() {
-        type_descriptor->op->free_struct(type_descriptor,instance, ASFM_FREE_EVERYTHING);
+        ASN_STRUCT_FREE(*type_descriptor,instance);
     }
     
     operator const Data& () {
@@ -76,6 +77,7 @@ public:
 private:
     const struct asn_TYPE_descriptor_s *type_descriptor;
     Data* instance;
+    
 };
 
 }

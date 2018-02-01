@@ -27,8 +27,9 @@ public:
     virtual ~TimeHelper();
     
     
+    TimeHelper& operator =(const UTCTime_t& time);
     TimeHelper& operator =(const UTCTime_t* time);
-    operator UTCTime_t*() const;
+    operator UTCTime_t() const;
     TimeHelper& operator =(const std::time_t& time);
     operator std::time_t() const;
     TimeHelper& operator =(const std::chrono::system_clock::time_point& time);

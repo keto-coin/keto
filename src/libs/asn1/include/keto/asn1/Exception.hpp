@@ -25,6 +25,7 @@ namespace asn1 {
 KETO_DECLARE_EXCEPTION( ASN1Exception, "ASN1 Encoding failed." );
 
 // the keto environment derived exception
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, SerializationException , "Failed to serialize.");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, DeserializationException , "Failed to deserialize.");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, IncompleteDataException , "Cannot deserialize as the data is incomplete.");
 
