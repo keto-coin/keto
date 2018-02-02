@@ -3,7 +3,8 @@ file(GLOB HEADERS "include/keto/asn1/*.hpp")
 ## SORT .cpp by most likely to change / break compile
 add_library( keto_asn1_common
             
-            TimeHelper.cpp 
+            TimeHelper.cpp
+            NumberHelper.cpp
             
              ${HEADERS}
            )

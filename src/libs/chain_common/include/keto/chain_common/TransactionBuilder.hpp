@@ -16,8 +16,13 @@
 
 #include <memory>
 #include <vector>
+#include <iostream>
+#include <cerrno>
+#include <cstring>
 
 #include "Transaction.h"
+#include "keto/asn1/SerializationHelper.hpp"
+#include "keto/asn1/NumberHelper.hpp"
 
 namespace keto {
 namespace chain_common {
@@ -30,11 +35,23 @@ public:
     
     static std::shared_ptr<TransactionBuilder> createTransaction();
     
-    std::vector<unsigned char> getBytes();
+    TransactionBuilder& setValue(const keto::asn1::NumberHelper& numberHelper);
+    keto::asn1::NumberHelper getValue();
+    
+    operator std::vector<uint8_t>&();
+    
+    operator uint8_t*();
+    
+    size_t size();
+    
+    
 private:
     Transaction* transaction;
+    std::shared_ptr<keto::asn1::SerializationHelper<Transaction>> serializationHelperPtr;
     
     TransactionBuilder();
+    
+    void serializeTransaction();
     
 };
 

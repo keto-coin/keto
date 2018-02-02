@@ -1,4 +1,4 @@
-add_executable( asn_test asn_test.cpp )
+add_executable( chain_commons_test chain_commons_test.cpp )
 if( UNIX AND NOT APPLE )
   set(rt_library rt )
 endif()
@@ -26,16 +26,16 @@ endif()
 
 #configure_file(config.hpp.in config.hpp ESCAPE_QUOTES)
 
-target_include_directories(asn_test PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(chain_commons_test PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-target_link_libraries( asn_test 
+target_link_libraries( chain_commons_test 
         PRIVATE keto_environment keto_common keto_asn1_common keto_asn1_protocol
         PRIVATE ${Boost_LIBRARIES} ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS}
         PRIVATE ${pthread_library} )
 
 
 install( TARGETS
-   asn_test
+   chain_commons_test
 
    RUNTIME DESTINATION test
    LIBRARY DESTINATION lib

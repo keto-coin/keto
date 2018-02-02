@@ -29,6 +29,12 @@ public:
     
     TimeHelper& operator =(const UTCTime_t& time);
     TimeHelper& operator =(const UTCTime_t* time);
+    /**
+     * The internal memory is assumed to be owned by the last person in the row
+     * and thus must be freed by that code.
+     * 
+     * @return A utc time copy.
+     */
     operator UTCTime_t() const;
     TimeHelper& operator =(const std::time_t& time);
     operator std::time_t() const;

@@ -6,7 +6,7 @@
 
 /* 
  * File:   DeserializationHelper.hpp
- * Author: ubuntu
+ * Author: Brett Chaldecott
  *
  * Created on January 31, 2018, 4:07 PM
  */
@@ -71,7 +71,7 @@ public:
         return *instance;
     }
     
-    operator Data* () {
+    operator Data* () const {
         return instance;
     }
 private:

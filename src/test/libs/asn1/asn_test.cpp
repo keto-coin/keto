@@ -10,6 +10,7 @@
 #include "TestEntity.h"
 #include "keto/common/MetaInfo.hpp"
 #include "keto/asn1/TimeHelper.hpp"
+#include "keto/asn1/NumberHelper.hpp"
 #include "keto/asn1/SerializationHelper.hpp"
 #include "keto/asn1/DeserializationHelper.hpp"
 
@@ -86,4 +87,16 @@ BOOST_AUTO_TEST_CASE( asn1_test ) {
     BOOST_CHECK( ((std::chrono::system_clock::time_point)timeHelper2).time_since_epoch().count() == 
             ((std::chrono::system_clock::time_point)timeHelper1).time_since_epoch().count() );
     
+    long value = 10;
+    Number_t number = (Number_t)keto::asn1::NumberHelper(value);
+    long value2 = (long)keto::asn1::NumberHelper(number);
+    std::cout << "Value 1: " << value << " Value 2 : " << value2 << std::endl;
+    BOOST_CHECK(value == value2);
+    
+    keto::asn1::NumberHelper numberHelper(10);
+    Number_t number2 = (Number_t)numberHelper = numberHelper + 20;
+    numberHelper += number2;
+    number2 = (Number_t)numberHelper;
+    long value3 = (long)keto::asn1::NumberHelper(number2);
+    std::cout << "Value 3: " << value3 << std::endl;
 }
