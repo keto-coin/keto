@@ -70,6 +70,9 @@ if [ $ARCH == "ubuntu" ]; then
 
     ASN1_ROOT_FOLDER=${HOME}/opt/asn1c/
     export ASN1_ROOT_FOLDER
+    
+    BOTAN_ROOT=${HOME}/opt/botan/
+    export BOTAN_ROOT
 fi
 
 if [ $ARCH == "darwin" ]; then

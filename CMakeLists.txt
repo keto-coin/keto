@@ -84,6 +84,7 @@ ENDIF()
 find_package(OpenSSL REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(Asn1 REQUIRED)
+find_package(Botan REQUIRED)
 
 if( WIN32 )
 

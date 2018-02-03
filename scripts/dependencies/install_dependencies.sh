@@ -26,15 +26,15 @@ if [ $ARCH == "ubuntu" ]; then
     rm -rf ${TEMP_DIR}/boost_1_66_0/
 
     # install secp256k1-zkp (Cryptonomex branch)
-    cd ${TEMP_DIR}
-    git clone https://github.com/cryptonomex/secp256k1-zkp.git
-    cd secp256k1-zkp
-    ./autogen.sh
-    ./configure
-    make
-    sudo make install
-    rm -rf cd ${TEMP_DIR}/secp256k1-zkp
-
+    #cd ${TEMP_DIR}
+    #git clone https://github.com/cryptonomex/secp256k1-zkp.git
+    #cd secp256k1-zkp
+    #./autogen.sh
+    #./configure
+    #make
+    #sudo make install
+    #rm -rf cd ${TEMP_DIR}/secp256k1-zkp
+    
     # install binaryen
     cd ${TEMP_DIR}
     git clone https://github.com/WebAssembly/binaryen
@@ -86,6 +86,17 @@ if [ $ARCH == "ubuntu" ]; then
     make install
     cd ${HOME}
     rm -rf ${TEMP_DIR}/asn1c
+
+    # botan required for encryption, hashing and 
+    cd ${TEMP_DIR}
+    git clone https://github.com/randombit/botan.git
+    mkdir -p ${HOME}/opt/botan
+    cd ${TEMP_DIR}/botan
+    ./configure.py --prefix=${HOME}/opt/botan --with-openssl --disable-shared-library
+    make
+    make install
+    cd ${HOME}
+    rm -rf ${TEMP_DIR}/botan
 
     # build llvm with wasm build target:
     cd ${TEMP_DIR}
