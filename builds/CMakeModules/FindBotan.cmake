@@ -27,8 +27,8 @@ ENDIF (NOT WIN32)
 
 # attempt to find the botan include directory using the standard KETO build process
 # fall back to the installed packages
-FIND_PATH(BOTAN_INCLUDE_DIR botan-2/botan/botan.h
-    PATHS "${BOTAN_ROOT_FOLDER}/include"
+FIND_PATH(BOTAN_INCLUDE_DIR botan/botan.h
+    PATHS "${BOTAN_ROOT_FOLDER}/include/botan-2/"
 )
 IF (NOT BOTAN_INCLUDE_DIR)
     FIND_PATH(BOTAN_INCLUDE_DIR botan/botan.h
@@ -36,6 +36,8 @@ IF (NOT BOTAN_INCLUDE_DIR)
         ${PC_BOTAN_INCLUDEDIR}
         ${PC_BOTAN_INCLUDE_DIRS}
         )
+ELSE (NOT BOTAN_INCLUDE_DIR)
+    set (BOTAN_INCLUDE_DIR "${BOTAN_INCLUDE_DIR}/botan-2")
 ENDIF (NOT BOTAN_INCLUDE_DIR)
 
 # find the library, first be optimist and this is being built with a standard KETO build,

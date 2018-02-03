@@ -6,12 +6,15 @@
 
 /* 
  * File:   HashHelper.cpp
- * Author: ubuntu
+ * Author: Brett Chaldecott
  * 
  * Created on February 2, 2018, 4:03 AM
  */
 
-#include "HashHelper.hpp"
+#include "keto/asn1/HashHelper.hpp"
+
+namespace keto {
+namespace asn1 {
 
 HashHelper::HashHelper() {
 }
@@ -22,3 +25,5 @@ HashHelper::HashHelper(const HashHelper& orig) {
 HashHelper::~HashHelper() {
 }
 
+}
+}

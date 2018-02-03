@@ -14,7 +14,10 @@
 #ifndef HASHHELPER_HPP
 #define HASHHELPER_HPP
 
+#include <botan/secmem.h>
 
+namespace keto {
+namespace asn1 {
 
 class HashHelper {
 public:
@@ -24,9 +27,14 @@ public:
     
     
 private:
-    uint8_t* hash;
+    Botan::secure_vector<uint8_t> hash;
     
 };
+
+
+}
+}
+
 
 #endif /* HASHHELPER_HPP */
 

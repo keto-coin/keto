@@ -5,6 +5,7 @@ add_library( keto_asn1_common
             
             TimeHelper.cpp
             NumberHelper.cpp
+            HashHelper.cpp
             
              ${HEADERS}
            )
@@ -16,6 +17,7 @@ target_include_directories( keto_asn1_common
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/" 
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/" 
                             ${Boost_INCLUDE_DIRS}
+                            ${BOTAN_INCLUDE_DIR}
                             )
 
 #if(MSVC)
