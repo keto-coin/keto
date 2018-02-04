@@ -1,24 +1,17 @@
-file(GLOB HEADERS "include/keto/asn1/*.hpp")
+file(GLOB HEADERS "include/keto/cryto/*.hpp")
 
 ## SORT .cpp by most likely to change / break compile
-add_library( keto_asn1_common
+add_library( keto_cryto
             
-            TimeHelper.cpp
-            NumberHelper.cpp
-            HashHelper.cpp
-            KeyHelper.cpp
-            AnyHelper.cpp
-            TestEntityHelper.cpp
-
+            PrivateKeyHelper.cpp
+            
              ${HEADERS}
            )
 
-target_link_libraries( keto_asn1_common )
-target_include_directories( keto_asn1_common
+target_link_libraries( keto_cryto )
+target_include_directories( keto_cryto
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../common/include"
-                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../crypto/include/"
-                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/" 
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/" 
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}
@@ -29,10 +22,10 @@ target_include_directories( keto_asn1_common
 #endif(MSVC)
 
 INSTALL( TARGETS
-   keto_asn1_common
+   keto_cryto
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
 )
-INSTALL( FILES ${HEADERS} DESTINATION "include/keto/asn1" )
+INSTALL( FILES ${HEADERS} DESTINATION "include/keto/cryto" )

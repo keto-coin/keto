@@ -33,7 +33,9 @@ TransactionBuilder::TransactionBuilder() {
 }
 
 TransactionBuilder::~TransactionBuilder() {
-    ASN_STRUCT_FREE(asn_DEF_Transaction, this->transaction);
+    if (this->transaction) {
+        ASN_STRUCT_FREE(asn_DEF_Transaction, this->transaction);
+    }
 }
 
 std::shared_ptr<TransactionBuilder> TransactionBuilder::createTransaction() {
@@ -118,6 +120,12 @@ void* TransactionBuilder::getPtr() {
 
 struct asn_TYPE_descriptor_s* TransactionBuilder::getType() {
     return &asn_DEF_Transaction;
+}
+
+Transaction* TransactionBuilder::takePtr() {
+    Transaction* result = this->transaction;
+    transaction = 0;
+    return result;
 }
 
 void TransactionBuilder::serializeTransaction() {

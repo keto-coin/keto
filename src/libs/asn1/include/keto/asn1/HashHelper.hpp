@@ -16,10 +16,9 @@
 
 #include <string>
 
-#include <botan/secmem.h>
-
 #include "Hash.h"
 #include "keto/common/StringCodec.hpp"
+#include "keto/crypto/Containers.hpp"
 
 namespace keto {
 namespace asn1 {
@@ -27,7 +26,7 @@ namespace asn1 {
 class HashHelper {
 public:
     HashHelper();
-    HashHelper(const Botan::secure_vector<uint8_t>& hash);
+    HashHelper(const keto::crypto::SecureVector& hash);
     HashHelper(const Hash_t& hash);
     HashHelper(const std::string& hash,keto::common::StringEncoding stringEncoding);
     
@@ -38,18 +37,18 @@ public:
     HashHelper& operator=(const Hash_t& hash);
     operator Hash_t() const;
     
-    HashHelper& operator =(const Botan::secure_vector<uint8_t>& hash);
-    operator Botan::secure_vector<uint8_t>() const;
+    HashHelper& operator =(const keto::crypto::SecureVector& hash);
+    operator keto::crypto::SecureVector() const;
     
     HashHelper& setHash(const std::string& hash,keto::common::StringEncoding stringEncoding);
     std::string getHash(keto::common::StringEncoding stringEncoding);
     
     
 private:
-    Botan::secure_vector<uint8_t> hash;
+    keto::crypto::SecureVector hash;
     
     
-    void copyHashToVector(const Hash_t& hash, Botan::secure_vector<uint8_t>& vector);
+    void copyHashToVector(const Hash_t& hash, keto::crypto::SecureVector& vector);
 };
 
 

@@ -18,7 +18,6 @@ Transaction ::= SEQUENCE {
 
 SignedTransaction ::= SEQUENCE {
     version         Version,
-    id              Hash,
     transaction     Transaction,
     transactionHash Hash,
     signature       Key

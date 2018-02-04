@@ -25,7 +25,7 @@ namespace asn1 {
 HashHelper::HashHelper() {
 }
 
-HashHelper::HashHelper(const Botan::secure_vector<uint8_t>& hash) {
+HashHelper::HashHelper(const keto::crypto::SecureVector& hash) {
     this->hash = hash;
 }
 
@@ -72,13 +72,13 @@ HashHelper::operator Hash_t() const {
 }
 
 
-HashHelper& HashHelper::operator =(const Botan::secure_vector<uint8_t>& hash) {
+HashHelper& HashHelper::operator =(const keto::crypto::SecureVector& hash) {
     this->hash = hash;
     return (*this);
 }
 
 
-HashHelper::operator Botan::secure_vector<uint8_t>() const {
+HashHelper::operator keto::crypto::SecureVector() const {
     return this->hash;
 }
 
@@ -106,7 +106,7 @@ std::string HashHelper::getHash(keto::common::StringEncoding stringEncoding) {
 }
 
 
-void HashHelper::copyHashToVector(const Hash_t& hash,Botan::secure_vector<uint8_t>& vector) {
+void HashHelper::copyHashToVector(const Hash_t& hash,keto::crypto::SecureVector& vector) {
     for (int index = 0; index < hash.size; index++) {
         vector.push_back(hash.buf[index]);
     }

@@ -35,6 +35,8 @@ namespace chain_common {
 
 class TransactionBuilder : virtual public keto::asn1::AnyInterface {
 public:
+    friend class SignedTransactionBuilder;
+    
     TransactionBuilder(const TransactionBuilder& orig) = delete;
     virtual ~TransactionBuilder();
     
@@ -68,6 +70,9 @@ public:
     
     virtual void* getPtr();
     virtual struct asn_TYPE_descriptor_s* getType();
+
+protected:
+    Transaction* takePtr();
     
 private:
     Transaction* transaction;
