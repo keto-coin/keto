@@ -30,6 +30,7 @@
 namespace keto {
 namespace asn1 {
 
+
 class AnyHelper {
 public:
     /**
@@ -38,13 +39,13 @@ public:
      * 
      * @param anyInterface The pointer to the any interface
      */
-    AnyHelper(const AnyInterface* anyInterface);
+    AnyHelper(AnyInterface* anyInterface);
     
     /**
      * The constructor taking a pointer reference to 
      * @param any
      */
-    AnyHelper(const ANY_t* any);
+    AnyHelper(ANY_t* any);
     
     /**
      * The default copy constructor
@@ -60,12 +61,12 @@ public:
      * @return NULL if extraction failed. Object pointer reference if successful.
      */
     template<typename T>
-    T* extract (const struct asn_TYPE_descriptor_s *type_descriptor) {
+    T* extract (struct asn_TYPE_descriptor_s *type_descriptor) {
         if (!any) {
             BOOST_THROW_EXCEPTION(keto::asn1::InvalidAnyValueException());
         }
         T* result = 0;
-        if (-1 == ANY_to_type(any, type_descriptor, &result)) {
+        if (-1 == ANY_to_type(any, type_descriptor, (void**)&result)) {
             return NULL;
         }
         return result;

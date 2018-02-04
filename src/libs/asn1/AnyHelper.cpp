@@ -11,7 +11,7 @@
  * Created on February 3, 2018, 11:15 AM
  */
 
-#include "AnyHelper.hpp"
+#include "keto/asn1/AnyHelper.hpp"
 #include "include/keto/asn1/AnyInterface.hpp"
 #include <stdlib.h>
 
@@ -19,26 +19,30 @@ namespace keto {
 namespace asn1 {
 
     
-AnyHelper::AnyHelper(const AnyInterface* anyInterface) : 
-    anyInterface(anyInterface), any(0)  {
+AnyHelper::AnyHelper(AnyInterface* anyInterface) : 
+    anyInterface(anyInterface)  {
+    this->any = 0;
     
 }
 
-AnyHelper::AnyHelper(const ANY_t* any) : 
-    anyInterface(0), any(any)  {
-    
+AnyHelper::AnyHelper(ANY_t* any) : 
+    any(any)  {
+    this->anyInterface = 0;
 }
 
 AnyHelper::~AnyHelper() {
 }
 
 AnyHelper::operator ANY_t() {
-    ANY_t* ptr = (ANY)calloc(1, sizeof result);
+    if (any) {
+        return *any;
+    }
+    ANY_t* ptr = (ANY_t*)calloc(1, sizeof ptr);
     if (!anyInterface) {
         BOOST_THROW_EXCEPTION(keto::asn1::NoAnyTypeInfoFailedException());
     }
     if (ANY_fromType(ptr, anyInterface->getType(), anyInterface->getPtr()) == -1) {
-        free(result);
+        free(ptr);
         BOOST_THROW_EXCEPTION(keto::asn1::TypeToAnyConversionFailedException());
     }
     ANY_t result = (*ptr);

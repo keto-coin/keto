@@ -6,7 +6,9 @@ add_library( keto_asn1_common
             TimeHelper.cpp
             NumberHelper.cpp
             HashHelper.cpp
-            
+            AnyHelper.cpp
+            TestEntityHelper.cpp
+
              ${HEADERS}
            )
 

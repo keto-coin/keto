@@ -14,6 +14,8 @@
 #include "keto/asn1/HashHelper.hpp"
 #include "keto/asn1/SerializationHelper.hpp"
 #include "keto/asn1/DeserializationHelper.hpp"
+#include "keto/asn1/TestEntityHelper.hpp"
+#include "keto/asn1/AnyHelper.hpp"
 
 
 
@@ -112,4 +114,19 @@ BOOST_AUTO_TEST_CASE( asn1_test ) {
     std::cout << "Hash value : " << hashHelper2.getHash(keto::common::HEX) << std::endl;
     BOOST_CHECK(0 == hashHelper.getHash(keto::common::HEX).compare(
             hashHelper2.getHash(keto::common::HEX)));
+    
+    
+    keto::asn1::TestEntityHelper testEntityHelper(*testEntity);
+    keto::asn1::AnyHelper anyHelper(&testEntityHelper);
+    ANY_t any = (ANY_t)anyHelper;
+    
+    keto::asn1::AnyHelper anyHelper2(&any);
+    TestEntity* testEntity5 = (TestEntity*)anyHelper2.extract<TestEntity>(&asn_DEF_TestEntity);
+    
+    keto::asn1::TimeHelper timeHelper3 = testEntity5->date;
+    
+    BOOST_CHECK( ((std::chrono::system_clock::time_point)timeHelper3).time_since_epoch().count() == 
+            ((std::chrono::system_clock::time_point)timeHelper1).time_since_epoch().count() );
+    xer_fprint(stdout, &asn_DEF_TestEntity, testEntity5);
+    
 }
