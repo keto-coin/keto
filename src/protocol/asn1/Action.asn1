@@ -6,7 +6,6 @@ ActionModule DEFINITIONS ::= BEGIN
 
 Action ::= SEQUENCE {
     version         Version,
-    id              Hash,
     date            UTCTime,
     contract        Hash,
     sourceAccount   Hash,

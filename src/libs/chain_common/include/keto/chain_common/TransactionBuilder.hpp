@@ -23,20 +23,41 @@
 #include "Transaction.h"
 #include "keto/asn1/SerializationHelper.hpp"
 #include "keto/asn1/NumberHelper.hpp"
+#include "keto/asn1/TimeHelper.hpp"
+#include "keto/asn1/HashHelper.hpp"
+#include "keto/asn1/AnyInterface.hpp"
+#include "keto/chain_common/ActionBuilder.hpp"
+
 
 namespace keto {
 namespace chain_common {
 
 
-class TransactionBuilder {
+class TransactionBuilder : virtual public keto::asn1::AnyInterface {
 public:
     TransactionBuilder(const TransactionBuilder& orig) = delete;
     virtual ~TransactionBuilder();
     
     static std::shared_ptr<TransactionBuilder> createTransaction();
     
+    long getVersion();
+    
+    keto::asn1::TimeHelper getDate();
+    
     TransactionBuilder& setValue(const keto::asn1::NumberHelper& numberHelper);
     keto::asn1::NumberHelper getValue();
+    
+    TransactionBuilder& setParent(const keto::asn1::HashHelper& hashHelper);
+    keto::asn1::HashHelper getParent();
+    
+    TransactionBuilder& setSourceAccount(const keto::asn1::HashHelper& hashHelper);
+    keto::asn1::HashHelper getSourceAccount();
+    
+    TransactionBuilder& setTargetAccount(const keto::asn1::HashHelper& hashHelper);
+    keto::asn1::HashHelper getTargetAccount();
+    
+    TransactionBuilder& addAction(const std::shared_ptr<ActionBuilder> action);
+    
     
     operator std::vector<uint8_t>&();
     
@@ -44,6 +65,9 @@ public:
     
     size_t size();
     
+    
+    virtual void* getPtr();
+    virtual struct asn_TYPE_descriptor_s* getType();
     
 private:
     Transaction* transaction;

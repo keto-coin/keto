@@ -23,6 +23,7 @@ namespace asn1 {
 class TimeHelper {
 public:
     TimeHelper();
+    TimeHelper(const UTCTime_t& time);
     TimeHelper(const TimeHelper& orig) = default;
     virtual ~TimeHelper();
     

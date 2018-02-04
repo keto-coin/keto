@@ -20,6 +20,14 @@ TimeHelper::TimeHelper() {
     this->time_point = std::chrono::system_clock::now();
 }
 
+TimeHelper::TimeHelper(const UTCTime_t& time) {
+    std::tm timeinfo;
+    asn_UT2time(&time, &timeinfo, 1);
+    this->time_point = 
+            std::chrono::system_clock::from_time_t (
+            std::mktime(&timeinfo));
+}
+
 TimeHelper::~TimeHelper() {
 }
 

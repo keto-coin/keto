@@ -16,6 +16,7 @@ target_include_directories( keto_chain_common
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/" 
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
                             ${Boost_INCLUDE_DIRS}
+                            ${BOTAN_INCLUDE_DIR}
                             )
 
 #if(MSVC)

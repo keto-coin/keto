@@ -39,14 +39,56 @@ std::shared_ptr<TransactionBuilder> TransactionBuilder::createTransaction() {
     return std::shared_ptr<TransactionBuilder>(new TransactionBuilder());
 }
 
+long TransactionBuilder::getVersion() {
+    return this->transaction->version;
+}
+
+keto::asn1::TimeHelper TransactionBuilder::getDate() {
+    return this->transaction->date;
+}
+
 TransactionBuilder& TransactionBuilder::setValue(const keto::asn1::NumberHelper& numberHelper) {
     this->transaction->value = (Number_t)numberHelper;
     return (*this);
 }
 
-
 keto::asn1::NumberHelper TransactionBuilder::getValue() {
     return this->transaction->value;
+}
+
+TransactionBuilder& TransactionBuilder::setParent(const keto::asn1::HashHelper& hashHelper) {
+    this->transaction->parent = (Hash_t)hashHelper;
+    return (*this);
+}
+
+keto::asn1::HashHelper TransactionBuilder::getParent() {
+    return this->transaction->parent;
+}
+
+
+TransactionBuilder& TransactionBuilder::setSourceAccount(const keto::asn1::HashHelper& hashHelper) {
+    this->transaction->sourceAccount = (Hash_t)hashHelper;
+    return (*this);
+}
+
+
+keto::asn1::HashHelper TransactionBuilder::getSourceAccount() {
+    return this->transaction->sourceAccount;
+}
+
+TransactionBuilder& TransactionBuilder::setTargetAccount(const keto::asn1::HashHelper& hashHelper) {
+    this->transaction->targetAccount = (Hash_t)hashHelper;
+    return (*this);
+}
+
+
+keto::asn1::HashHelper TransactionBuilder::getTargetAccount() {
+    return this->transaction->targetAccount;
+}
+
+TransactionBuilder& TransactionBuilder::addAction(const std::shared_ptr<ActionBuilder> action) {
+    ASN_SEQUENCE_ADD(&this->transaction->actions,action->takePtr());
+    return (*this);
 }
 
 
@@ -67,7 +109,13 @@ size_t TransactionBuilder::size() {
     return this->serializationHelperPtr->size();
 }
 
+void* TransactionBuilder::getPtr() {
+    return this->transaction;
+}
 
+struct asn_TYPE_descriptor_s* TransactionBuilder::getType() {
+    return &asn_DEF_Transaction;
+}
 
 void TransactionBuilder::serializeTransaction() {
     if (!this->serializationHelperPtr) {

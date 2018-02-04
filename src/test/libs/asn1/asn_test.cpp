@@ -11,6 +11,7 @@
 #include "keto/common/MetaInfo.hpp"
 #include "keto/asn1/TimeHelper.hpp"
 #include "keto/asn1/NumberHelper.hpp"
+#include "keto/asn1/HashHelper.hpp"
 #include "keto/asn1/SerializationHelper.hpp"
 #include "keto/asn1/DeserializationHelper.hpp"
 
@@ -99,4 +100,16 @@ BOOST_AUTO_TEST_CASE( asn1_test ) {
     number2 = (Number_t)numberHelper;
     long value3 = (long)keto::asn1::NumberHelper(number2);
     std::cout << "Value 3: " << value3 << std::endl;
+    
+    
+    keto::asn1::HashHelper 
+        hashHelper(
+        "3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+        keto::common::HEX);
+    Hash_t hash_t = (Hash_t)hashHelper;
+    keto::asn1::HashHelper hashHelper2(hash_t);
+    std::cout << "Hash value : " << hashHelper.getHash(keto::common::HEX) << std::endl;
+    std::cout << "Hash value : " << hashHelper2.getHash(keto::common::HEX) << std::endl;
+    BOOST_CHECK(0 == hashHelper.getHash(keto::common::HEX).compare(
+            hashHelper2.getHash(keto::common::HEX)));
 }

@@ -28,8 +28,12 @@ KETO_DECLARE_EXCEPTION( ASN1Exception, "ASN1 Encoding failed." );
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, SerializationException , "Failed to serialize.");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, DeserializationException , "Failed to deserialize.");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, IncompleteDataException , "Cannot deserialize as the data is incomplete.");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, UnsupportedStringFormatException , "The string contains data in an unsupported format.");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, InvalidAnyValueException , "Invalid any cannot extract");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, TypeToAnyConversionFailedException , "Failed to convert the type to an any");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, NoAnyTypeInfoFailedException , "No any type information was provided");
 
-    
+
 }
 }
 
