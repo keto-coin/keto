@@ -29,9 +29,9 @@ endif()
 target_include_directories(chain_commons_test PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries( chain_commons_test 
-        PRIVATE keto_environment keto_common keto_asn1_common keto_asn1_protocol
+        PRIVATE keto_chain_common keto_environment keto_common keto_asn1_common keto_asn1_protocol
         PRIVATE ${Boost_LIBRARIES} ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS}
-        PRIVATE ${pthread_library} )
+        PRIVATE ${pthread_library} ${BOTAN_LIBRARIES} )
 
 
 install( TARGETS

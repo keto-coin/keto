@@ -4,6 +4,7 @@ file(GLOB HEADERS "include/keto/chain_common/*.hpp")
 add_library( keto_chain_common
             
             TransactionBuilder.cpp 
+            ActionBuilder.cpp 
             
              ${HEADERS}
            )

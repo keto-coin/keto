@@ -14,15 +14,23 @@
 #include "keto/asn1/SerializationHelper.hpp"
 #include "keto/asn1/DeserializationHelper.hpp"
 
-
+#include "keto/chain_common/TransactionBuilder.hpp"
+#include "keto/chain_common/ActionBuilder.hpp"
 
 BOOST_AUTO_TEST_CASE( chain_commons_test ) {
 
-    Number_t* value = (Number_t*)calloc(1,sizeof value);
-    asn_long2INTEGER(value,100000000000000000);
+    std::vector<uint8_t> transactionBytes = 
+    keto::chain_common::TransactionBuilder::createTransaction()->setParent(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+        keto::common::HEX)).setSourceAccount(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+        keto::common::HEX)).setTargetAccount(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+        keto::common::HEX)).setValue(keto::asn1::NumberHelper(20)).operator std::vector<uint8_t>&();
     
-    long lvalue;
-    asn_INTEGER2long(value, &lvalue);
+    keto::asn1::DeserializationHelper<Transaction> deserializeHelper(
+            transactionBytes,&asn_DEF_Transaction);
     
-    std::cout << "The integer values is : " << lvalue << std::endl; 
+    Transaction* transaction = (Transaction*)deserializeHelper;
+    xer_fprint(stdout, &asn_DEF_Transaction, transaction);
 }

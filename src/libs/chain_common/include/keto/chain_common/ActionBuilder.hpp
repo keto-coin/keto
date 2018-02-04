@@ -16,8 +16,15 @@
 
 #include <memory>
 
+#include "Hash.h"
+#include "Number.h"
+#include "ANY.h"
+
 #include "Action.h"
+#include "keto/common/MetaInfo.hpp"
 #include "keto/asn1/TimeHelper.hpp"
+#include "keto/asn1/HashHelper.hpp"
+#include "keto/asn1/NumberHelper.hpp"
 #include "keto/asn1/AnyInterface.hpp"
 #include "keto/asn1/AnyHelper.hpp"
 
@@ -57,7 +64,7 @@ public:
     
     
     keto::asn1::AnyHelper getModel();
-    ActionBuilder& setModel(const keto::asn1::AnyHelper& anyHelper);
+    ActionBuilder& setModel(keto::asn1::AnyHelper& anyHelper);
     
     virtual void* getPtr();
     virtual struct asn_TYPE_descriptor_s* getType();

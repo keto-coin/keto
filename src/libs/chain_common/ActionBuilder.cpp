@@ -32,7 +32,7 @@ ActionBuilder::~ActionBuilder() {
     }
 }
 
-static std::shared_ptr<ActionBuilder> ActionBuilder::createAction() {
+std::shared_ptr<ActionBuilder> ActionBuilder::createAction() {
     return std::shared_ptr<ActionBuilder>(new ActionBuilder());
 }
 
@@ -83,7 +83,7 @@ ActionBuilder& ActionBuilder::setTargetAccount(const keto::asn1::HashHelper& tar
 }
 
 keto::asn1::NumberHelper ActionBuilder::getValue() {
-    return this->action->targetAccount;
+    return this->action->value;
 }
 
 
@@ -105,12 +105,12 @@ ActionBuilder& ActionBuilder::setParent(const keto::asn1::HashHelper& parent) {
 
 
 keto::asn1::AnyHelper ActionBuilder::getModel() {
-    return this->action->model;
+    return &this->action->model;
 }
 
 
-ActionBuilder& ActionBuilder::setModel(const keto::asn1::AnyHelper& anyHelper) {
-    this->action->model = anyHelper;
+ActionBuilder& ActionBuilder::setModel(keto::asn1::AnyHelper& anyHelper) {
+    this->action->model = (ANY_t)anyHelper;
     return (*this);
 }
 

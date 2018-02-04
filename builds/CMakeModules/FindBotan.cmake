@@ -36,8 +36,6 @@ IF (NOT BOTAN_INCLUDE_DIR)
         ${PC_BOTAN_INCLUDEDIR}
         ${PC_BOTAN_INCLUDE_DIRS}
         )
-ELSE (NOT BOTAN_INCLUDE_DIR)
-    set (BOTAN_INCLUDE_DIR "${BOTAN_INCLUDE_DIR}/botan-2")
 ENDIF (NOT BOTAN_INCLUDE_DIR)
 
 # find the library, first be optimist and this is being built with a standard KETO build,
