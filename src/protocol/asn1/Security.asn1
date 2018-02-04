@@ -1,4 +1,4 @@
-SecurityModule DEFINITIONS ::= BEGIN
+SecurityModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
     IMPORTS Version, Hash
         FROM BasicModule;
 

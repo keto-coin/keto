@@ -47,9 +47,10 @@ public:
     DeserializationHelper(const std::vector<uint8_t>& buffer,
             const struct asn_TYPE_descriptor_s *type_descriptor) : type_descriptor(type_descriptor) {
         instance = 0;
-        uint8_t byteBuff[buffer.size()];
+        uint8_t* byteBuff = (uint8_t*)calloc(1,buffer.size());
         std::copy(buffer.begin(), buffer.end(), byteBuff);
         asn_dec_rval_t rval = ber_decode(0,type_descriptor,(void **)&instance,byteBuff,buffer.size());
+        free(byteBuff);
         if (rval.code == RC_WMORE) {
             type_descriptor->op->free_struct(type_descriptor,instance, ASFM_FREE_EVERYTHING);
             BOOST_THROW_EXCEPTION(keto::asn1::IncompleteDataException());

@@ -1,4 +1,4 @@
-AccountModule DEFINITIONS ::= BEGIN
+AccountModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
     IMPORTS Version, Hash, Key, Number
         FROM BasicModule
         Roll

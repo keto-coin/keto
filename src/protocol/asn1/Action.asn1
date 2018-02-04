@@ -1,4 +1,4 @@
-ActionModule DEFINITIONS ::= BEGIN
+ActionModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
     IMPORTS Number, Version, Hash 
     FROM BasicModule
     Account 

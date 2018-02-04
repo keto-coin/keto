@@ -1,4 +1,4 @@
-ContractModule DEFINITIONS ::= BEGIN
+ContractModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
     IMPORTS Version, Hash, Key 
         FROM BasicModule
         Roll

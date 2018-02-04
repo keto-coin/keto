@@ -19,6 +19,7 @@
 #include "keto/chain_common/TransactionBuilder.hpp"
 #include "keto/common/MetaInfo.hpp"
 #include "keto/asn1/TimeHelper.hpp"
+#include "keto/chain_common/Exception.hpp"
 
 
 namespace keto {
@@ -87,7 +88,9 @@ keto::asn1::HashHelper TransactionBuilder::getTargetAccount() {
 }
 
 TransactionBuilder& TransactionBuilder::addAction(const std::shared_ptr<ActionBuilder> action) {
-    ASN_SEQUENCE_ADD(&this->transaction->actions,action->takePtr());
+    if (0!= ASN_SEQUENCE_ADD(&this->transaction->actions,action->takePtr())) {
+        BOOST_THROW_EXCEPTION(keto::chain_common::ActionSequenceAddFailedException());
+    }
     return (*this);
 }
 

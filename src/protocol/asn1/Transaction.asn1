@@ -1,4 +1,4 @@
-TransactionModule DEFINITIONS ::= BEGIN
+TransactionModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
     IMPORTS Number, Hash, Version, Key
         FROM BasicModule
         Account 

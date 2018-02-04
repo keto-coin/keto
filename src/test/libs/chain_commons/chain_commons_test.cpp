@@ -18,16 +18,47 @@
 #include "keto/chain_common/ActionBuilder.hpp"
 
 BOOST_AUTO_TEST_CASE( chain_commons_test ) {
-
-    std::vector<uint8_t> transactionBytes = 
-    keto::chain_common::TransactionBuilder::createTransaction()->setParent(
+    
+    std::shared_ptr<keto::chain_common::ActionBuilder> actionPtr =
+            keto::chain_common::ActionBuilder::createAction();
+    actionPtr->setContract(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+                keto::common::HEX)).setParent(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+                keto::common::HEX)).setSourceAccount(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+                keto::common::HEX)).setTargetAccount(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+                keto::common::HEX)).setValue(keto::asn1::NumberHelper(20));
+    
+    std::shared_ptr<keto::chain_common::ActionBuilder> actionPtr2 =
+            keto::chain_common::ActionBuilder::createAction();
+    actionPtr2->setContract(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+                keto::common::HEX)).setParent(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+                keto::common::HEX)).setSourceAccount(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+                keto::common::HEX)).setTargetAccount(
+            keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
+                keto::common::HEX)).setValue(keto::asn1::NumberHelper(20));
+    
+    
+    std::shared_ptr<keto::chain_common::TransactionBuilder> transactionPtr =
+        keto::chain_common::TransactionBuilder::createTransaction();
+    transactionPtr->setParent(
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
         keto::common::HEX)).setSourceAccount(
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
         keto::common::HEX)).setTargetAccount(
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
-        keto::common::HEX)).setValue(keto::asn1::NumberHelper(20)).operator std::vector<uint8_t>&();
+        keto::common::HEX)).setValue(keto::asn1::NumberHelper(20)).addAction(actionPtr).addAction(actionPtr2);
     
+    xer_fprint(stdout, &asn_DEF_Transaction, transactionPtr->getPtr());
+    
+    std::vector<uint8_t> transactionBytes = transactionPtr->operator std::vector<uint8_t>&();
+    
+    std::cout << "The transaction bytes are [" << transactionBytes.size() << "]" << std::endl;
     keto::asn1::DeserializationHelper<Transaction> deserializeHelper(
             transactionBytes,&asn_DEF_Transaction);
     
