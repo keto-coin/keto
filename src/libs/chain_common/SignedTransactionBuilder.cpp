@@ -22,6 +22,7 @@ namespace keto {
 SignedTransactionBuilder::~SignedTransactionBuilder() {
     if (this->signedTransaction) {
         ASN_STRUCT_FREE(asn_DEF_SignedTransaction, this->signedTransaction);
+        this->signedTransaction = 0;
     }
 }
 
@@ -33,20 +34,28 @@ std::shared_ptr<SignedTransactionBuilder>
 }
 
 SignedTransactionBuilder& SignedTransactionBuilder::setTransaction(
-    const std::shared_ptr<TransactionBuilder> transactionBuilder) {
+    const std::shared_ptr<TransactionBuilder>& transactionBuilder) {
     std::unique_ptr<Botan::HashFunction> hash256(Botan::HashFunction::create("SHA-256"));
-    keto::crypto::SecureVector vector = 
-            hash256->process((const std::vector<uint8_t>)*transactionBuilder);
-    this->signedTransaction->transactionHash = keto::asn1::HashHelper(vector);
+    keto::crypto::SecureVector vector(
+        hash256->process(transactionBuilder->operator std::vector<uint8_t>&()));
+    keto::asn1::HashHelper hashHelper(vector);
+    this->signedTransaction->transactionHash = hashHelper;
     Transaction* transaction = transactionBuilder->takePtr();
     this->signedTransaction->transaction = *transaction;
     free(transaction);
     return (*this);
 }
 
+std::string SignedTransactionBuilder::getHash() {
+    keto::asn1::HashHelper hashHelper(this->signedTransaction->transactionHash);
+    return hashHelper.getHash(keto::common::HEX);
+}
+
 void SignedTransactionBuilder::sign() {
     
 }
+
+
 
 SignedTransactionBuilder::operator std::vector<uint8_t>&() {
     serializeTransaction();

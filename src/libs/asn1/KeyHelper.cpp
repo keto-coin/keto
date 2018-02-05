@@ -62,15 +62,12 @@ KeyHelper& KeyHelper::operator=(const Key_t& key) {
 }
 
 KeyHelper::operator Key_t() const {
-    Key_t keyT;
-    keyT.buf = (uint8_t*)malloc(this->key.size());
-    keyT.size = this->key.size();
-    for (int index = 0; index < this->key.size(); index++) {
-        keyT.buf[index] = this->key[index];
-    }
-    return keyT;
+    Key_t* keyT = (Key_t*)OCTET_STRING_new_fromBuf(&asn_DEF_Key,
+            (const char *)this->key.data(),this->key.size());
+    Key_t result = *keyT;
+    free(keyT);
+    return result;
 }
-
 
 KeyHelper& KeyHelper::operator =(const keto::crypto::SecureVector& key) {
     this->key = key;

@@ -44,7 +44,9 @@ public:
     
     
     SignedTransactionBuilder& setTransaction(
-        const std::shared_ptr<keto::chain_common::TransactionBuilder> transactionBuilder);
+        const std::shared_ptr<keto::chain_common::TransactionBuilder>& transactionBuilder);
+    
+    std::string getHash();
     
     void sign();
     

@@ -1,15 +1,15 @@
 file(GLOB HEADERS "include/keto/cryto/*.hpp")
 
 ## SORT .cpp by most likely to change / break compile
-add_library( keto_cryto
+add_library( keto_crypto
             
             PrivateKeyHelper.cpp
             
              ${HEADERS}
            )
 
-target_link_libraries( keto_cryto )
-target_include_directories( keto_cryto
+target_link_libraries( keto_crypto )
+target_include_directories( keto_crypto
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../common/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/" 
@@ -22,7 +22,7 @@ target_include_directories( keto_cryto
 #endif(MSVC)
 
 INSTALL( TARGETS
-   keto_cryto
+   keto_crypto
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib

@@ -5,6 +5,8 @@
  */
 
 #define BOOST_TEST_MODULE ChainCommonsTest
+
+#include <botan/hash.h>
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 #include "TestEntity.h"
@@ -15,6 +17,7 @@
 #include "keto/asn1/DeserializationHelper.hpp"
 
 #include "keto/chain_common/TransactionBuilder.hpp"
+#include "keto/chain_common/SignedTransactionBuilder.hpp"
 #include "keto/chain_common/ActionBuilder.hpp"
 
 BOOST_AUTO_TEST_CASE( chain_commons_test ) {
@@ -64,4 +67,19 @@ BOOST_AUTO_TEST_CASE( chain_commons_test ) {
     
     Transaction* transaction = (Transaction*)deserializeHelper;
     xer_fprint(stdout, &asn_DEF_Transaction, transaction);
+    
+    std::unique_ptr<Botan::HashFunction> hash256(Botan::HashFunction::create("SHA-256"));
+    keto::crypto::SecureVector vector256 = 
+            hash256->process(transactionPtr->operator std::vector<uint8_t>&());
+    keto::asn1::HashHelper hashHelper256(vector256);
+    std::string string256 = hashHelper256.getHash(keto::common::HEX);
+    
+    std::shared_ptr<keto::chain_common::SignedTransactionBuilder> signedTransBuild = 
+            keto::chain_common::SignedTransactionBuilder::createTransaction(
+                keto::crypto::PrivateKeyHelper());
+    signedTransBuild->setTransaction(transactionPtr);
+    
+    std::cout << "The sha is [" << string256 << "]" << std::endl;
+    std::cout << "The sha is [" << signedTransBuild->getHash() << "]" << std::endl;
+    
 }

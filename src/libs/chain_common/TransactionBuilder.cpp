@@ -124,7 +124,7 @@ struct asn_TYPE_descriptor_s* TransactionBuilder::getType() {
 
 Transaction* TransactionBuilder::takePtr() {
     Transaction* result = this->transaction;
-    transaction = 0;
+    this->transaction = 0;
     return result;
 }
 

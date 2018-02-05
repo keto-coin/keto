@@ -62,13 +62,11 @@ HashHelper& HashHelper::operator=(const Hash_t& hash) {
 }
 
 HashHelper::operator Hash_t() const {
-    Hash_t hashT;
-    hashT.buf = (uint8_t*)malloc(this->hash.size());
-    hashT.size = this->hash.size();
-    for (int index = 0; index < this->hash.size(); index++) {
-        hashT.buf[index] = this->hash[index];
-    }
-    return hashT;
+    Hash_t* hashT= (Hash_t*)OCTET_STRING_new_fromBuf(&asn_DEF_Hash,
+            (const char *)this->hash.data(),this->hash.size());
+    Hash_t result = *hashT;
+    free(hashT);
+    return result;
 }
 
 
