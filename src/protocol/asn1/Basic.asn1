@@ -1,8 +1,11 @@
 BasicModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
 
-Number  ::= INTEGER (-100000000000000000..100000000000000000)
-Version ::= INTEGER
-Hash    ::= OCTET STRING (SIZE(1..64))
-Key     ::= OCTET STRING (SIZE(1..256))
+Number          ::= INTEGER (-100000000000000000..100000000000000000)
+Version         ::= INTEGER
+Hash            ::= OCTET STRING (SIZE(1..64))
+Key             ::= OCTET STRING (SIZE(1..256))
+Signature       ::= OCTET STRING
+BerEncoding     ::= OCTET STRING
+
 
 END

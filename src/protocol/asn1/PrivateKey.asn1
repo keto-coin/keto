@@ -1,0 +1,11 @@
+PrivateKeyModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
+    IMPORTS Version, BerEncoding
+        FROM BasicModule;
+
+PrivateKey ::= SEQUENCE {
+    version         Version,
+    key             BerEncoding
+}
+
+
+END

@@ -11,9 +11,18 @@
  * Created on January 31, 2018, 7:24 AM
  */
 
+#include <botan/pkcs8.h>
 #include <botan/hash.h>
+#include <botan/data_src.h>
+#include <botan/pubkey.h>
+#include <botan/rng.h>
+#include <botan/auto_rng.h>
+
+#include "PrivateKey.h"
+#include "keto/asn1/BerEncodingHelper.hpp"
+#include "keto/asn1/SignatureHelper.hpp"
+#include "keto/crypto/SignatureGenerator.hpp"
 #include "keto/chain_common/SignedTransactionBuilder.hpp"
-#include "include/keto/chain_common/TransactionBuilder.hpp"
 
 namespace keto {
     namespace chain_common {
@@ -28,7 +37,7 @@ SignedTransactionBuilder::~SignedTransactionBuilder() {
 
 std::shared_ptr<SignedTransactionBuilder> 
     SignedTransactionBuilder::createTransaction(
-        const keto::crypto::PrivateKeyHelper& privateKeyHelper) {
+        const keto::asn1::PrivateKeyHelper& privateKeyHelper) {
     return std::shared_ptr<SignedTransactionBuilder>(
             new SignedTransactionBuilder(privateKeyHelper));
 }
@@ -51,10 +60,20 @@ std::string SignedTransactionBuilder::getHash() {
     return hashHelper.getHash(keto::common::HEX);
 }
 
-void SignedTransactionBuilder::sign() {
-    
+std::string SignedTransactionBuilder::getSignature() {
+    keto::asn1::SignatureHelper signatureHelper(this->signedTransaction->signature);
+    return signatureHelper.getSignature(keto::common::HEX);
 }
 
+
+void SignedTransactionBuilder::sign() {
+    
+    keto::asn1::BerEncodingHelper key = this->privateKeyHelper.getKey();
+    keto::crypto::SignatureGenerator generator((keto::crypto::SecureVector)key);
+    keto::asn1::HashHelper hashHelper(this->signedTransaction->transactionHash);
+    keto::asn1::SignatureHelper signatureHelper(generator.sign(hashHelper));
+    this->signedTransaction->signature = signatureHelper;
+}
 
 
 SignedTransactionBuilder::operator std::vector<uint8_t>&() {
@@ -75,7 +94,7 @@ size_t SignedTransactionBuilder::size() {
 
 
 SignedTransactionBuilder::SignedTransactionBuilder(
-    const keto::crypto::PrivateKeyHelper& privateKeyHelper) : 
+    const keto::asn1::PrivateKeyHelper& privateKeyHelper) : 
     privateKeyHelper(privateKeyHelper) {
     
     this->signedTransaction = (SignedTransaction*)calloc(1, sizeof *signedTransaction);

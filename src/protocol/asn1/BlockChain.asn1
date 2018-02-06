@@ -1,5 +1,5 @@
 BlockChainModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
-    IMPORTS Number, Hash, Version, Key
+    IMPORTS Number, Hash, Version, Signature
         FROM BasicModule
         Account 
         FROM AccountModule
@@ -23,7 +23,7 @@ SignedBlock ::= SEQUENCE {
     id              Hash,
     block           Block,
     hash            Hash,
-    signature       Key
+    signature       Signature
 }
 
 END

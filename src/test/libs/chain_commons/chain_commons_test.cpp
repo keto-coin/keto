@@ -6,7 +6,16 @@
 
 #define BOOST_TEST_MODULE ChainCommonsTest
 
+#include <thread>         // std::this_thread::sleep_for
+#include <chrono>
+
 #include <botan/hash.h>
+#include <botan/rsa.h>
+#include <botan/rng.h>
+#include <botan/p11_randomgenerator.h>
+#include <botan/auto_rng.h>
+#include <botan/pkcs8.h>
+
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 #include "TestEntity.h"
@@ -20,8 +29,7 @@
 #include "keto/chain_common/SignedTransactionBuilder.hpp"
 #include "keto/chain_common/ActionBuilder.hpp"
 
-BOOST_AUTO_TEST_CASE( chain_commons_test ) {
-    
+std::shared_ptr<keto::chain_common::TransactionBuilder> buildTransaction() {
     std::shared_ptr<keto::chain_common::ActionBuilder> actionPtr =
             keto::chain_common::ActionBuilder::createAction();
     actionPtr->setContract(
@@ -57,6 +65,14 @@ BOOST_AUTO_TEST_CASE( chain_commons_test ) {
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
         keto::common::HEX)).setValue(keto::asn1::NumberHelper(20)).addAction(actionPtr).addAction(actionPtr2);
     
+    return transactionPtr;
+}
+
+
+BOOST_AUTO_TEST_CASE( chain_commons_test ) {
+    std::shared_ptr<keto::chain_common::TransactionBuilder> transactionPtr = 
+            buildTransaction();
+    
     xer_fprint(stdout, &asn_DEF_Transaction, transactionPtr->getPtr());
     
     std::vector<uint8_t> transactionBytes = transactionPtr->operator std::vector<uint8_t>&();
@@ -74,12 +90,33 @@ BOOST_AUTO_TEST_CASE( chain_commons_test ) {
     keto::asn1::HashHelper hashHelper256(vector256);
     std::string string256 = hashHelper256.getHash(keto::common::HEX);
     
+    
+    std::unique_ptr<Botan::RandomNumberGenerator> rng(new Botan::AutoSeeded_RNG);
+    Botan::RSA_PrivateKey privateKey(*rng.get(), 2048);
+    keto::asn1::PrivateKeyHelper privateKeyHelper;
+    privateKeyHelper.setKey(
+        Botan::PKCS8::BER_encode( privateKey ));
+    
     std::shared_ptr<keto::chain_common::SignedTransactionBuilder> signedTransBuild = 
             keto::chain_common::SignedTransactionBuilder::createTransaction(
-                keto::crypto::PrivateKeyHelper());
+                privateKeyHelper);
     signedTransBuild->setTransaction(transactionPtr);
+    signedTransBuild->sign();
     
     std::cout << "The sha is [" << string256 << "]" << std::endl;
     std::cout << "The sha is [" << signedTransBuild->getHash() << "]" << std::endl;
+    std::cout << "The signature is [" << signedTransBuild->getSignature() << "]" << std::endl;
+    
+    std::this_thread::sleep_for (std::chrono::seconds(1));
+    
+    std::shared_ptr<keto::chain_common::SignedTransactionBuilder> signedTransBuild2 = 
+            keto::chain_common::SignedTransactionBuilder::createTransaction(
+                privateKeyHelper);
+    signedTransBuild2->setTransaction(buildTransaction());
+    signedTransBuild2->sign();
+    
+    //std::cout << "The sha is [" << string256 << "]" << std::endl;
+    std::cout << "The sha is [" << signedTransBuild2->getHash() << "]" << std::endl;
+    std::cout << "The signature is [" << signedTransBuild2->getSignature() << "]" << std::endl;
     
 }

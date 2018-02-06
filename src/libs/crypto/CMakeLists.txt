@@ -2,8 +2,9 @@ file(GLOB HEADERS "include/keto/cryto/*.hpp")
 
 ## SORT .cpp by most likely to change / break compile
 add_library( keto_crypto
-            
-            PrivateKeyHelper.cpp
+               
+            SignatureGenerator.cpp
+            SignatureVerification.cpp
             
              ${HEADERS}
            )

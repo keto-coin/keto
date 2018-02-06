@@ -22,8 +22,8 @@
 
 #include "Transaction.h"
 #include "SignedTransaction.h"
-#include "keto/crypto/PrivateKeyHelper.hpp"
 #include "keto/crypto/Containers.hpp"
+#include "keto/asn1/PrivateKeyHelper.hpp"
 #include "keto/asn1/SerializationHelper.hpp"
 #include "keto/asn1/HashHelper.hpp"
 #include "keto/asn1/KeyHelper.hpp"
@@ -40,13 +40,14 @@ public:
     virtual ~SignedTransactionBuilder();
     
     static std::shared_ptr<SignedTransactionBuilder> createTransaction(
-        const keto::crypto::PrivateKeyHelper& privateKeyHelper);
+        const keto::asn1::PrivateKeyHelper& privateKeyHelper);
     
     
     SignedTransactionBuilder& setTransaction(
         const std::shared_ptr<keto::chain_common::TransactionBuilder>& transactionBuilder);
     
     std::string getHash();
+    std::string getSignature();
     
     void sign();
     
@@ -58,10 +59,10 @@ public:
     
 private:
     SignedTransaction* signedTransaction;
-    keto::crypto::PrivateKeyHelper privateKeyHelper;
+    keto::asn1::PrivateKeyHelper privateKeyHelper;
     std::shared_ptr<keto::asn1::SerializationHelper<SignedTransaction>> serializationHelperPtr;
     
-    SignedTransactionBuilder(const keto::crypto::PrivateKeyHelper& privateKeyHelper);
+    SignedTransactionBuilder(const keto::asn1::PrivateKeyHelper& privateKeyHelper);
     
     void serializeTransaction();
 };

@@ -2,7 +2,9 @@ AccountModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
     IMPORTS Version, Hash, Key, Number
         FROM BasicModule
         Roll
-        FROM SecurityModule;
+        FROM SecurityModule
+        PrivateKey
+        FROM PrivateKeyModule;
 
 
 AccountType ::= ENUMERATED {
@@ -27,7 +29,7 @@ AccountLink ::= SEQUENCE {
     version         Version,
     id              Hash,
     name            UTF8String,
-    linkKey         Key,
+    linkKey         PrivateKey,
     linkId          Hash
 }
 
@@ -37,7 +39,7 @@ AccountBlockChain ::= SEQUENCE {
     name            UTF8String,
     private         BOOLEAN,
     blockId         Hash,
-    blockKey        Key
+    blockKey        PrivateKey
 }
 
 AccountBalance ::= SEQUENCE {

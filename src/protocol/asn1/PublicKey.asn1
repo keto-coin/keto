@@ -1,0 +1,11 @@
+PublicKeyModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
+    IMPORTS Version, BerEncoding
+        FROM BasicModule;
+
+PublicKey ::= SEQUENCE {
+    version         Version,
+    key             BerEncoding
+}
+
+
+END

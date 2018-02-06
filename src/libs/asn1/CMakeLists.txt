@@ -9,6 +9,9 @@ add_library( keto_asn1_common
             KeyHelper.cpp
             AnyHelper.cpp
             TestEntityHelper.cpp
+            PrivateKeyHelper.cpp
+            SignatureHelper.cpp
+            BerEncodingHelper.cpp
 
              ${HEADERS}
            )

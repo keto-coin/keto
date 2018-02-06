@@ -22,6 +22,7 @@
 
 #include "der_encoder.h"
 #include "keto/asn1/Exception.hpp"
+#include "keto/crypto/Containers.hpp"
 
 
 namespace keto {
@@ -61,6 +62,20 @@ public:
      */
     operator std::vector<uint8_t>&() {
         return this->buffer;
+    }
+    
+    /**
+     * This method returns the reference to the vector buffer.
+     * 
+     * @return The vector buffer containing the serialized object.
+     */
+    operator keto::crypto::SecureVector() {
+        keto::crypto::SecureVector vector;
+        for (std::vector<uint8_t>::iterator iter = this->buffer.begin();
+                iter != this->buffer.end(); iter++) {
+            vector.push_back(*iter);
+        }
+        return vector;
     }
     
     /**
