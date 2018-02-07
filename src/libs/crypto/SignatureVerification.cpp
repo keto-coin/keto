@@ -23,16 +23,26 @@ namespace keto {
 namespace crypto {
 
 
-SignatureVerification::SignatureVerification(std::vector<uint8_t>& key) : key(key) {
+SignatureVerification::SignatureVerification(const std::vector<uint8_t>& key, 
+        keto::crypto::SecureVector source) : key(key) {
+    for (keto::crypto::SecureVector::iterator iter = source.begin();
+            iter != source.end(); iter++) {
+        this->source.push_back(*iter);
+    }
+}
+
+SignatureVerification::SignatureVerification(const std::vector<uint8_t>& key, 
+        const std::vector<uint8_t>& source) : key(key), source(source) {
 }
 
 SignatureVerification::~SignatureVerification() {
 }
 
-bool SignatureVerification::check(std::vector<uint8_t>& signature) {
+bool SignatureVerification::check(const std::vector<uint8_t>& signature) {
     std::shared_ptr<Botan::Public_Key> publicKey(
              Botan::X509::load_key(key));
     Botan::PK_Verifier verify(*publicKey,Constants::SIGNATURE_TYPE);
+    verify.update(this->source);
     return verify.check_signature(signature);
 }
 

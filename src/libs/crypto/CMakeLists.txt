@@ -5,6 +5,7 @@ add_library( keto_crypto
                
             SignatureGenerator.cpp
             SignatureVerification.cpp
+            HashGenerator.cpp
             
              ${HEADERS}
            )

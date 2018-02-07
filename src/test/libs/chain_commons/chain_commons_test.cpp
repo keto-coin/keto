@@ -15,9 +15,11 @@
 #include <botan/p11_randomgenerator.h>
 #include <botan/auto_rng.h>
 #include <botan/pkcs8.h>
+#include <botan/hex.h>
 
 #include <boost/test/unit_test.hpp>
 #include <iostream>
+#include <botan/x509_key.h>
 #include "TestEntity.h"
 #include "Number.h"
 #include "keto/common/MetaInfo.hpp"
@@ -28,6 +30,7 @@
 #include "keto/chain_common/TransactionBuilder.hpp"
 #include "keto/chain_common/SignedTransactionBuilder.hpp"
 #include "keto/chain_common/ActionBuilder.hpp"
+#include "keto/crypto/SignatureVerification.hpp"
 
 std::shared_ptr<keto::chain_common::TransactionBuilder> buildTransaction() {
     std::shared_ptr<keto::chain_common::ActionBuilder> actionPtr =
@@ -93,6 +96,9 @@ BOOST_AUTO_TEST_CASE( chain_commons_test ) {
     
     std::unique_ptr<Botan::RandomNumberGenerator> rng(new Botan::AutoSeeded_RNG);
     Botan::RSA_PrivateKey privateKey(*rng.get(), 2048);
+    Botan::RSA_PublicKey publicKey(privateKey);
+    std::vector<uint8_t> publicKeyVector = Botan::X509::BER_encode(publicKey);
+    
     keto::asn1::PrivateKeyHelper privateKeyHelper;
     privateKeyHelper.setKey(
         Botan::PKCS8::BER_encode( privateKey ));
@@ -119,4 +125,11 @@ BOOST_AUTO_TEST_CASE( chain_commons_test ) {
     std::cout << "The sha is [" << signedTransBuild2->getHash() << "]" << std::endl;
     std::cout << "The signature is [" << signedTransBuild2->getSignature() << "]" << std::endl;
     
+    keto::crypto::SecureVector hashBytes = Botan::hex_decode_locked(signedTransBuild2->getHash(),true);
+    std::vector<uint8_t> signatureBytes = Botan::hex_decode(signedTransBuild2->getSignature(),true);
+    
+    std::cout << "Validation says " << keto::crypto::SignatureVerification(publicKeyVector,hashBytes).check(
+            signatureBytes) << std::endl;
+    BOOST_CHECK(keto::crypto::SignatureVerification(publicKeyVector,hashBytes).check(
+            signatureBytes));
 }

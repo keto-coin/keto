@@ -17,19 +17,25 @@
 #include <vector>
 #include <memory>
 
+#include "keto/crypto/Containers.hpp"
+
 namespace keto {
 namespace crypto {
 
 
 class SignatureVerification {
 public:
-    SignatureVerification(std::vector<uint8_t>& key);
+    SignatureVerification(const std::vector<uint8_t>& key,
+            keto::crypto::SecureVector source);
+    SignatureVerification(const std::vector<uint8_t>& key,
+            const std::vector<uint8_t>& source);
     SignatureVerification(const SignatureVerification& orig) = default;
     virtual ~SignatureVerification();
     
-    bool check(std::vector<uint8_t>& signature);
+    bool check(const std::vector<uint8_t>& signature);
 private:
     std::vector<uint8_t> key;
+    std::vector<uint8_t> source;
 
 };
 

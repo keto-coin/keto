@@ -22,7 +22,9 @@
 #include "keto/asn1/BerEncodingHelper.hpp"
 #include "keto/asn1/SignatureHelper.hpp"
 #include "keto/crypto/SignatureGenerator.hpp"
+#include "keto/crypto/HashGenerator.hpp"
 #include "keto/chain_common/SignedTransactionBuilder.hpp"
+
 
 namespace keto {
     namespace chain_common {
@@ -44,10 +46,9 @@ std::shared_ptr<SignedTransactionBuilder>
 
 SignedTransactionBuilder& SignedTransactionBuilder::setTransaction(
     const std::shared_ptr<TransactionBuilder>& transactionBuilder) {
-    std::unique_ptr<Botan::HashFunction> hash256(Botan::HashFunction::create("SHA-256"));
-    keto::crypto::SecureVector vector(
-        hash256->process(transactionBuilder->operator std::vector<uint8_t>&()));
-    keto::asn1::HashHelper hashHelper(vector);
+    keto::asn1::HashHelper hashHelper(
+        keto::crypto::HashGenerator().generateHash(
+        transactionBuilder->operator std::vector<uint8_t>&()));
     this->signedTransaction->transactionHash = hashHelper;
     Transaction* transaction = transactionBuilder->takePtr();
     this->signedTransaction->transaction = *transaction;
@@ -64,7 +65,6 @@ std::string SignedTransactionBuilder::getSignature() {
     keto::asn1::SignatureHelper signatureHelper(this->signedTransaction->signature);
     return signatureHelper.getSignature(keto::common::HEX);
 }
-
 
 void SignedTransactionBuilder::sign() {
     
