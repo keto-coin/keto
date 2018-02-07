@@ -6,6 +6,7 @@ Hash            ::= OCTET STRING (SIZE(1..64))
 Key             ::= OCTET STRING (SIZE(1..256))
 Signature       ::= OCTET STRING
 BerEncoding     ::= OCTET STRING
+EncyptedData    ::= OCTET STRING
 
 
 END

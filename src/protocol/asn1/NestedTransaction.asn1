@@ -1,0 +1,21 @@
+NestedTransactionModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
+    IMPORTS Number, EncyptedData
+        FROM BasicModule
+        SignedTransaction, Transaction
+        FROM TransactionModule;
+
+TransactionData ::= CHOICE {
+    signedTransaction  SignedTransaction,
+    encryptedTransaction    EncryptedData
+}
+
+
+NestedTransaction ::= SEQUENCE {
+    version         Version,
+    transaction     TransactionData
+}
+
+
+END
+
+
