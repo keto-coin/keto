@@ -16,6 +16,7 @@ AccountType ::= ENUMERATED {
 
 Account ::= SEQUENCE {
     version                 Version,
+    -- hash of public key
     id                      Hash,
     name                    UTF8String,
     publicKey               Key,
