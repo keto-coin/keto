@@ -39,11 +39,11 @@ std::shared_ptr<keto::chain_common::TransactionBuilder> buildTransaction() {
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
                 keto::common::HEX)).setParent(
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
-                keto::common::HEX)).setSourceAccount(
+                keto::common::HEX))/*.setSourceAccount(
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
                 keto::common::HEX)).setTargetAccount(
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
-                keto::common::HEX)).setValue(keto::asn1::NumberHelper(30));
+                keto::common::HEX)).setValue(keto::asn1::NumberHelper(30))*/;
     
     std::shared_ptr<keto::chain_common::ActionBuilder> actionPtr2 =
             keto::chain_common::ActionBuilder::createAction();
@@ -51,11 +51,11 @@ std::shared_ptr<keto::chain_common::TransactionBuilder> buildTransaction() {
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
                 keto::common::HEX)).setParent(
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
-                keto::common::HEX)).setSourceAccount(
+                keto::common::HEX))/*.setSourceAccount(
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
                 keto::common::HEX)).setTargetAccount(
             keto::asn1::HashHelper("3D89018355E055923478E8E816D82A26A8AA10A2AE5B497847084AB7F54B9238",
-                keto::common::HEX)).setValue(keto::asn1::NumberHelper(40));
+                keto::common::HEX)).setValue(keto::asn1::NumberHelper(40))*/;
     
     
     std::shared_ptr<keto::chain_common::TransactionBuilder> transactionPtr =

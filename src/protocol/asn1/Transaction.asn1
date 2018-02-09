@@ -11,7 +11,9 @@ Transaction ::= SEQUENCE {
     date            UTCTime,
     value           Number,
     parent          Hash,
+    -- the source account for the transaction
     sourceAccount   Hash,
+    -- the target account for the transaction
     targetAccount   Hash,
     actions         SEQUENCE OF Action
 }
@@ -22,6 +24,38 @@ SignedTransaction ::= SEQUENCE {
     transactionHash Hash,
     signature       Signature
 }
+
+TransactionTrace ::= SEQUENCE {
+    traceHash       Hash,
+    signature       Signature
+}
+
+
+LedgerEntry ::= SEQUENCE {
+    version         Version,
+    date            UTCTime,
+    value           Number,
+    transaction     Hash,
+    -- the source account for the transaction
+    account         Hash
+}
+
+
+TransactionMessage ::= SEQUENCE {
+    version             Version,
+    -- transaction header information
+    sourceAccount       Hash,
+    targetAccount       Hash,
+    transactionHash     Hash,
+    signature           Signature,
+    -- transaction 
+    signedTransaction   ANY,
+    debits              SEQUENCE OF ANY,
+    credits             SEQUENCE OF ANY,
+    transactionTrace    SEQUENCE OF TransactionTrace
+}
+
+
 
 
 END

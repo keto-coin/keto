@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+// push the service list managed by this node to a slave node.
+message PushServiceList {
+    bytes account = 1;
+    repeated string servie_name = 2;
+}
+
+// push the account list managed by this slave to the master.
+message PushAccountList {
+    // the list of accounts managed by the down stream peer
+    bytes session_key = 1;
+    repeated bytes accounts = 2;
+}
+
+// push a new account to 
+message PushAccount {
+    // the list of accounts managed by the down stream peer
+    bytes session_key = 1;
+    bytes account = 2;
+}
+
+/**
+ * This is an example of a protobuf message.
+ */
+message MessageName {
+    uint32 message_field = 1;
+}

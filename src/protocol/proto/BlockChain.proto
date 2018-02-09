@@ -1,8 +1,45 @@
 syntax = "proto3";
 
+package keto;
+
+enum TransactionStatus {
+    INIT = 0;
+    ROUTE = 1;
+    CR_BLOCK_BALANCE = 2;
+    PRE_CR_BLOCK = 3;
+    POST_CR_BLOCK = 4;
+    PRE_PROCESS_BALANCE = 5;
+    PROCESS = 6;
+    WAIT = 7;
+    POST_WAIT = 8;
+    DR_BLOCK_BALANCE = 9;
+    PRE_DR_BLOCK = 10;
+    POST_DR_BLOCK = 11;
+    COMPLETE = 12;
+    
+    FAILURE = 100;
+    REJECT = 200;
+    
+}
+
 /**
- * This is an example of a protobuf message.
+ * The transaction definition
  */
-message MessageName {
-    uint32 message_field = 1;
+message Transaction {
+    bytes transaction_hash = 1;
+    bytes transaction_signature = 2;
+    bytes activeAccount = 3;
+    TransactionStatus status = 4;
+    bytes asn1_transaction_message = 5;
+}
+
+
+/**
+ * The block definition
+ */
+message Block {
+    bytes block_hash = 1;
+    bytes block_parent_hash = 2;
+    bytes block_signature = 3;
+    bytes asn1_block = 4;
 }

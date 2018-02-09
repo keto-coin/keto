@@ -45,7 +45,7 @@ AccountBlockChain ::= SEQUENCE {
 AccountBalance ::= SEQUENCE {
     version         Version,
     lastTransaction Hash,
-    value           Number
+    balance         Number
 }
 
 END

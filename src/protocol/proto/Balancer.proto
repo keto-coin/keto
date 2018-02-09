@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+/**
+ * This is an example of a protobuf message.
+ */
+message LockTransaction {
+    bytes account = 1;
+    bytes transactionHash = 2;
+    int64 nano_second_time = 3;
+}
+
+message ApproveLockTransaction {
+    bytes account = 1;
+    bytes transactionHash = 2;
+}
+
+message RejectLockTransaction {
+    bytes account = 1;
+    bytes transactionHash = 2;
+}

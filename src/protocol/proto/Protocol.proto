@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+
+package keto;
+
+import "google/protobuf/any.proto";
+
+/**
+ * This is an example of a protobuf message.
+ */
+message MessageWrapper {
+    
+    string messageType = 1;
+    string messageOperation = 2;
+    
+    google.protobuf.Any msg = 3;
+}

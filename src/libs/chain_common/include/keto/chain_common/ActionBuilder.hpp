@@ -49,7 +49,11 @@ public:
     
     keto::asn1::HashHelper getContract();
     ActionBuilder& setContract(const keto::asn1::HashHelper& contract);
-    
+    /*
+     * Removed these methods as at the current point in time
+     * it would appear impossible to determine who along the line
+     * is going to get costed and to simply deduct as fees
+     * the cost from the transaction
     keto::asn1::HashHelper getSourceAccount();
     ActionBuilder& setSourceAccount(const keto::asn1::HashHelper& sourceAccount);
     
@@ -58,7 +62,7 @@ public:
     
     keto::asn1::NumberHelper getValue();
     ActionBuilder& setValue(const keto::asn1::NumberHelper& value);
-    
+    */
     keto::asn1::HashHelper getParent();
     ActionBuilder& setParent(const keto::asn1::HashHelper& parent);
     

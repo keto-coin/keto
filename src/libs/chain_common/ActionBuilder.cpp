@@ -61,7 +61,7 @@ ActionBuilder& ActionBuilder::setContract(const keto::asn1::HashHelper& contract
     return (*this);
 }
 
-
+/*
 keto::asn1::HashHelper ActionBuilder::getSourceAccount() {
     return this->action->sourceAccount;
 }
@@ -91,7 +91,7 @@ ActionBuilder& ActionBuilder::setValue(const keto::asn1::NumberHelper& value) {
     this->action->value = value;
     return (*this);
 }
-
+*/
 
 keto::asn1::HashHelper ActionBuilder::getParent() {
     return this->action->parent;
