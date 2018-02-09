@@ -11,11 +11,11 @@
  * Created on January 19, 2018, 8:24 AM
  */
 
-#ifndef EVENT_SERVICE_EVENT_OBJECT_HPP
-#define EVENT_SERVICE_EVENT_OBJECT_HPP
+#ifndef BASIC_EVENT_SERVICE_EVENT_OBJECT_HPP
+#define BASIC_EVENT_SERVICE_EVENT_OBJECT_HPP
 
 #include <string>
-#include <string.h>
+#include <vector>
 #include <array>
 #include <stdlib.h>
 
@@ -26,32 +26,16 @@ class Event {
 public:
     Event(const std::string& name,
             const std::string& source,
-            const unsigned char* sourceSignature,
-            const unsigned char* message,
-            const unsigned char* signature) : 
-        name(name),source(source) {
-        
-        this->sourceSignature = (unsigned char *)malloc(sizeof(sourceSignature)*sizeof(unsigned char));
-        memcpy(&this->sourceSignature,&sourceSignature,sizeof(sourceSignature));
-        this->message = (unsigned char *)malloc(sizeof(message)*sizeof(unsigned char));
-        memcpy(&this->message,&message,sizeof(message));
-        this->signature = (unsigned char *)malloc(sizeof(signature)*sizeof(unsigned char));
-        memcpy(&this->signature,&signature,sizeof(message));
+            std::vector<uint8_t> sourceHash,
+            std::vector<uint8_t> sourceSignature,
+            std::vector<uint8_t> message) : 
+        name(name),source(source), sourceHash(sourceHash), 
+                sourceSignature(sourceSignature),message(message)  {
     }
     
-    Event(const Event& orig) : name(orig.name),source(orig.source) {
-        this->message = (unsigned char *)malloc(sizeof(orig.sourceSignature)*sizeof(unsigned char));
-        memcpy(&this->sourceSignature, &orig.sourceSignature,sizeof(orig.sourceSignature));
-        this->message = (unsigned char *)malloc(sizeof(orig.message)*sizeof(unsigned char));
-        memcpy(&this->message, &orig.message,sizeof(orig.message));
-        this->signature = (unsigned char *)malloc(sizeof(orig.signature)*sizeof(unsigned char));
-        memcpy(&this->signature,&orig.signature,sizeof(orig.signature));
-    }
+    Event(const Event& orig) = default;
     
     virtual ~Event() {
-        free(this->sourceSignature);
-        free(this->message);
-        free(this->signature);
     }
     
     std::string getName() const {
@@ -62,23 +46,23 @@ public:
         return this->source;
     }
     
-    unsigned char* getSourceSignature() {
-        return this->sourceSignature;
-    }
-    unsigned char* getMessage() {
-        return this->message;
+    std::vector<uint8_t> getSourceHash() const {
+        return this->sourceHash;
     }
     
-    unsigned char* getSignature() {
-        return this->signature;
+    std::vector<uint8_t> getSourceSignature() {
+        return this->sourceSignature;
+    }
+    std::vector<uint8_t> getMessage() {
+        return this->message;
     }
     
 private:
     std::string name;
     std::string source;
-    unsigned char* sourceSignature;
-    unsigned char* message;
-    unsigned char* signature;
+    std::vector<uint8_t> sourceHash;
+    std::vector<uint8_t> sourceSignature;
+    std::vector<uint8_t> message;
     
 };
 

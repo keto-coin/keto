@@ -10,8 +10,9 @@ import "google/protobuf/any.proto";
  */
 message MessageWrapper {
     
-    string messageType = 1;
-    string messageOperation = 2;
+    uint32 version = 1;
+    string messageType = 2;
+    string messageOperation = 3;
     
-    google.protobuf.Any msg = 3;
+    google.protobuf.Any msg = 4;
 }

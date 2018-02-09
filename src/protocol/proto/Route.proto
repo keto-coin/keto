@@ -6,19 +6,24 @@ message PushServiceList {
     repeated string servie_name = 2;
 }
 
+// push a new account to 
+message PushAccount {
+    // the session key of the source with its immediate peer
+    // this is 
+    bytes hash = 1;
+    bytes account = 2;
+    // the signature of the session_key_hash using the accounts private key
+    // this will enable validation of ownership of account.
+    bytes signature = 3;
+}
+
 // push the account list managed by this slave to the master.
 message PushAccountList {
     // the list of accounts managed by the down stream peer
-    bytes session_key = 1;
-    repeated bytes accounts = 2;
+    bytes session_key_hash = 1;
+    repeated PushAccount accounts = 2;
 }
 
-// push a new account to 
-message PushAccount {
-    // the list of accounts managed by the down stream peer
-    bytes session_key = 1;
-    bytes account = 2;
-}
 
 /**
  * This is an example of a protobuf message.
