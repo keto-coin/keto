@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package keto.proto;
+
 // push the service list managed by this node to a slave node.
 message PushServiceList {
     bytes account = 1;

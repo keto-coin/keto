@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package keto;
+package keto.proto;
 
 enum HelloResponse {
     WELCOME = 0;

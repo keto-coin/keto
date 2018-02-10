@@ -52,7 +52,6 @@ void KeystoreModuleManager::start() {
 void KeystoreModuleManager::stop() {
     modules.clear();
     KETO_LOG_INFO << "[KeystoreModuleManager] The KeystoreModuleManager is being stopped";
-
 }
 
 const std::vector<std::string> KeystoreModuleManager::listModules() {

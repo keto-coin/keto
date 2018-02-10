@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package keto.proto;
+
 /**
  * This is an example of a protobuf message.
  */
