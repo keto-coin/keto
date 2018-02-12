@@ -1,20 +1,20 @@
-file(GLOB HEADERS "include/keto/balancer/*.hpp")
+file(GLOB HEADERS "include/keto/block/*.hpp")
 
 include_directories(${PROTOBUF_INCLUDE_DIR})
 
 ## SORT .cpp by most likely to change / break compile
-add_library( 0025_keto_balancer_module
+add_library( 0020_keto_block_module
             SHARED
 
-            BalancerModuleManager.cpp
-            BalancerModule.cpp
+            BlockModuleManager.cpp
+            BlockModule.cpp
 
              ${HEADERS}
            )
 
-target_link_libraries( 0025_keto_balancer_module 
+target_link_libraries( 0020_keto_block_module 
                             PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} )
-target_include_directories( 0025_keto_balancer_module
+target_include_directories( 0020_keto_block_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
@@ -32,10 +32,10 @@ target_include_directories( 0025_keto_balancer_module
 #endif(MSVC)
 
 INSTALL( TARGETS
-   0025_keto_balancer_module
+   0020_keto_block_module
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION shared
    ARCHIVE DESTINATION shared
 )
-INSTALL( FILES ${HEADERS} DESTINATION "include/keto/balancer" )
+INSTALL( FILES ${HEADERS} DESTINATION "include/keto/block" )
