@@ -26,6 +26,8 @@ endif()
 
 #configure_file(config.hpp.in config.hpp ESCAPE_QUOTES)
 
+include_directories(${PROTOBUF_INCLUDE_DIR})
+
 target_include_directories(keto_cli
         PUBLIC ${CMAKE_CURRENT_BINARY_DIR}
         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/ssl/include")
@@ -37,7 +39,8 @@ target_link_libraries( keto_cli
 #        PRIVATE net_plugin http_plugin txn_test_gen_plugin faucet_testnet_plugin
 #        PRIVATE eos_chain fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
         PRIVATE ${Boost_LIBRARIES} ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} 
-        PRIVATE ${OPENSSL_LIBRARIES} ${pthread_library} )
+        PRIVATE ${OPENSSL_LIBRARIES} ${pthread_library}
+        PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} )
 
 install( TARGETS
    keto_cli
