@@ -50,6 +50,7 @@ KeyLoader::KeyLoader(const std::string& privateKeyPath,
         privateKeyPath(privateKeyPath), publicKeyPath(publicKeyPath),
         generator(new Botan::AutoSeeded_RNG())
 {
+    
     // setup the paths using the environmental variables
     boost::filesystem::path publicPath =  
             keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / publicKeyPath;

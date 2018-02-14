@@ -11,6 +11,8 @@
  * Created on February 13, 2018, 7:55 AM
  */
 
+#include <sstream> 
+
 #include <boost/beast/http/message.hpp>
 #include <botan/pkcs8.h>
 #include <botan/hex.h>
@@ -24,7 +26,8 @@
 #include "keto/session/HttpSession.hpp"
 #include "keto/crypto/HashGenerator.hpp"
 #include "keto/crypto/SignatureGenerator.hpp"
-#include "include/keto/session/HttpSession.hpp"
+#include "keto/session/HttpSession.hpp"
+#include "keto/session/Exception.hpp"
 
 
 namespace keto {
@@ -83,6 +86,9 @@ HttpSession& HttpSession::handShake() {
     boost::beast::http::response<boost::beast::http::dynamic_body> response = 
         this->makeRequest(this->createProtobufRequest(clientHello.SerializePartialAsString()));
     
+    
+    
+    std::cout << "Finished : " << response << std::endl;
     return (*this);
 }
 
@@ -136,6 +142,24 @@ HttpSession::makeRequest(boost::beast::http::request<boost::beast::http::string_
     // stream shutdown
     boost::system::error_code ec;
     stream.shutdown(ec);
+
+    // check if the ec error is eof and reset
+    //if(ec == boost::asio::error::eof)
+    //{
+    //    ec.assign(0, ec.category());
+    //}
+    // check if there is an error
+    //if(ec) {
+    //    BOOST_THROW_EXCEPTION(keto::session::ClientFailedToCloseSocketException(
+    //            ec.message()));
+    //}
+    
+    if (res.result() != boost::beast::http::status::ok) {
+        std::stringstream ss;
+        ss << "Http session call failed : " << std::endl << res;
+        BOOST_THROW_EXCEPTION(keto::session::ClientHandShakeFailureException(
+                ss.str()));
+    }
     
     return res;
 }
