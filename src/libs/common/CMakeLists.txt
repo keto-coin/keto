@@ -7,6 +7,7 @@ configure_file(include/keto/common/MetaInfo.hpp.in include/keto/common/MetaInfo.
 add_library( keto_common
             
 	      Exception.cpp
+              Constants.cpp
 
              ${HEADERS}
            )

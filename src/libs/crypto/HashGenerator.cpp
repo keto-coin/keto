@@ -11,6 +11,8 @@
  * Created on February 6, 2018, 2:32 PM
  */
 
+#include <algorithm>
+
 #include "keto/crypto/HashGenerator.hpp"
 #include "keto/crypto/Constants.hpp"
 
@@ -31,6 +33,11 @@ keto::crypto::SecureVector HashGenerator::generateHash(const keto::crypto::Secur
 
 
 keto::crypto::SecureVector HashGenerator::generateHash(const std::vector<uint8_t>& bytes) {
+    return hash256->process(bytes);
+}
+
+keto::crypto::SecureVector HashGenerator::generateHash(const std::string& stringValue) {
+    const std::vector<uint8_t> bytes(stringValue.begin(),stringValue.end());
     return hash256->process(bytes);
 }
 

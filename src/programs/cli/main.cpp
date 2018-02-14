@@ -19,6 +19,8 @@
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/environment/Constants.hpp"
 #include "keto/ssl/RootCertificate.hpp"
+#include "keto/cli/Constants.hpp"
+#include "keto/session/HttpSession.hpp"
 
 namespace ketoEnv = keto::environment;
 namespace ketoCommon = keto::common;
@@ -66,8 +68,41 @@ int main(int argc, char** argv)
             return 0;
         }
         
+        // retrieve the host information from the configuration file
+        if (!config->getVariablesMap().count(keto::cli::Constants::KETOD_SERVER)) {
+            std::cerr << "Please configure the ketod server host information [" << 
+                    keto::cli::Constants::KETOD_SERVER << "]" << std::endl;
+            return -1;
+        }
+        std::string host = config->getVariablesMap()[keto::cli::Constants::KETOD_SERVER].as<std::string>();
+        
+        // retrieve the host information from the configuration file
+        if (!config->getVariablesMap().count(keto::cli::Constants::KETOD_PORT)) {
+            std::cerr << "Please configure the ketod server port information [" << 
+                    keto::cli::Constants::KETOD_PORT << "]" << std::endl;
+            return -1;
+        }
+        std::string port = config->getVariablesMap()[keto::cli::Constants::KETOD_PORT].as<std::string>();
+        
+        // retrieve the host information from the configuration file
+        if (!config->getVariablesMap().count(keto::cli::Constants::PRIVATE_KEY)) {
+            std::cerr << "Please configure the private key [" << 
+                    keto::cli::Constants::PRIVATE_KEY << "]" << std::endl;
+            return -1;
+        }
+        std::string privateKey = config->getVariablesMap()[keto::cli::Constants::PRIVATE_KEY].as<std::string>();
+        
+        // retrieve the host information from the configuration file
+        if (!config->getVariablesMap().count(keto::cli::Constants::PUBLIC_KEY)) {
+            std::cerr << "Please configure the public key [" << 
+                    keto::cli::Constants::PUBLIC_KEY << "]" << std::endl;
+            return -1;
+        }
+        std::string publicKey = config->getVariablesMap()[keto::cli::Constants::PUBLIC_KEY].as<std::string>();
+        
+        
         // Check command line arguments.
-        if(argc != 4 && argc != 5)
+        /*if(argc != 4 && argc != 5)
         {
             std::cerr <<
                 "Usage: http-client-sync-ssl <host> <port> <target> [<HTTP version: 1.0 or 1.1(default)>]\n" <<
@@ -76,11 +111,8 @@ int main(int argc, char** argv)
                 "    http-client-sync-ssl www.example.com 443 / 1.0\n" << 
                 std::endl << optionDescription << std::endl;
             return EXIT_FAILURE;
-        }
-        auto const host = argv[1];
-        auto const port = argv[2];
-        auto const target = argv[3];
-        int version = argc == 5 && !std::strcmp("1.0", argv[4]) ? 10 : 11;
+        }*/
+        auto const target = "/";
 
         // The io_context is required for all I/O
         boost::asio::io_context ioc;
@@ -91,12 +123,12 @@ int main(int argc, char** argv)
         // This holds the root certificate used for verification
         keto::ssl::load_root_certificates(ctx);
 
-        // These objects perform our I/O
+        /*// These objects perform our I/O
         tcp::resolver resolver{ioc};
         ssl::stream<tcp::socket> stream{ioc, ctx};
 
         // Set SNI Hostname (many hosts need this to handshake successfully)
-        if(! SSL_set_tlsext_host_name(stream.native_handle(), host))
+        if(! SSL_set_tlsext_host_name(stream.native_handle(), host.c_str()))
         {
             boost::system::error_code ec{static_cast<int>(::ERR_get_error()), boost::asio::error::get_ssl_category()};
             throw boost::system::system_error{ec};
@@ -112,7 +144,7 @@ int main(int argc, char** argv)
         stream.handshake(ssl::stream_base::client);
 
         // Set up an HTTP GET request message
-        http::request<http::string_body> req{http::verb::get, target, version};
+        http::request<http::string_body> req{http::verb::get, target, keto::cli::Constants::HTTP_VERSION};
         req.set(http::field::host, host);
         req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
 
@@ -126,22 +158,27 @@ int main(int argc, char** argv)
         http::response<http::dynamic_body> res;
 
         // Receive the HTTP response
-        http::read(stream, buffer, res);
+        http::read(stream, buffer, res);*/
+        
+        keto::session::HttpSession session(ioc,ctx,
+                privateKey,publicKey);
+        std::string result= 
+                session.setHost(host).setPort(port).handShake().makeRequest("test");
 
         // Write the message to standard out
-        std::cout << res << std::endl;
+        std::cout << result << std::endl;
 
         // Gracefully close the stream
-        boost::system::error_code ec;
-        stream.shutdown(ec);
-        if(ec == boost::asio::error::eof)
-        {
-            // Rationale:
-            // http://stackoverflow.com/questions/25587403/boost-asio-ssl-async-shutdown-always-finishes-with-an-error
-            ec.assign(0, ec.category());
-        }
-        if(ec)
-            throw boost::system::system_error{ec};
+        //boost::system::error_code ec;
+        //stream.shutdown(ec);
+        //if(ec == boost::asio::error::eof)
+        //{
+        //    // Rationale:
+        //    // http://stackoverflow.com/questions/25587403/boost-asio-ssl-async-shutdown-always-finishes-with-an-error
+        //    ec.assign(0, ec.category());
+        //}
+        //if(ec)
+        //    throw boost::system::system_error{ec};
 
         // If we get here then the connection is closed gracefully
         

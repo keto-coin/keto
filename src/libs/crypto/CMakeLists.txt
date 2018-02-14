@@ -6,6 +6,7 @@ add_library( keto_crypto
             SignatureGenerator.cpp
             SignatureVerification.cpp
             HashGenerator.cpp
+            KeyLoader.cpp
             
              ${HEADERS}
            )
@@ -14,6 +15,7 @@ target_link_libraries( keto_crypto )
 target_include_directories( keto_crypto
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../common/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../environment/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/" 
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}

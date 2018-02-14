@@ -29,6 +29,7 @@ public:
     
     keto::crypto::SecureVector generateHash(const keto::crypto::SecureVector& bytes);
     keto::crypto::SecureVector generateHash(const std::vector<uint8_t>& bytes);
+    keto::crypto::SecureVector generateHash(const std::string& stringValue);
 private:
     std::shared_ptr<Botan::HashFunction> hash256;
 };

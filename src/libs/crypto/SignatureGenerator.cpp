@@ -21,6 +21,7 @@
 
 #include "keto/crypto/SignatureGenerator.hpp"
 #include "keto/crypto/Constants.hpp"
+#include "include/keto/crypto/KeyLoader.hpp"
 
 namespace keto {
 namespace crypto {
@@ -30,14 +31,23 @@ SignatureGenerator::SignatureGenerator(const keto::crypto::SecureVector& key) :
     key(key){
 }
 
+SignatureGenerator::SignatureGenerator(const keto::crypto::KeyLoader& loader) : loader(loader) {
+    
+}
+
 SignatureGenerator::~SignatureGenerator() {
 }
 
 
 std::vector<uint8_t> SignatureGenerator::sign(std::vector<uint8_t>& value) {
     Botan::DataSource_Memory memoryDatasource(key);
-    std::unique_ptr< Botan::Private_Key > privateKey = 
+    std::shared_ptr<Botan::Private_Key> privateKey;
+    if (this->loader.isInitialized()) {
+        privateKey = this->loader.getPrivateKey();
+    } else {
+        privateKey = 
             Botan::PKCS8::load_key(memoryDatasource);
+    }
     // present 
     std::unique_ptr<Botan::RandomNumberGenerator> rng(new Botan::AutoSeeded_RNG);
     Botan::PK_Signer signer(*privateKey, *rng, Constants::SIGNATURE_TYPE);
@@ -47,8 +57,13 @@ std::vector<uint8_t> SignatureGenerator::sign(std::vector<uint8_t>& value) {
 
 std::vector<uint8_t> SignatureGenerator::sign(const keto::crypto::SecureVector& value) {
     Botan::DataSource_Memory memoryDatasource(key);
-    std::unique_ptr< Botan::Private_Key > privateKey = 
+    std::shared_ptr< Botan::Private_Key > privateKey;
+    if (this->loader.isInitialized()) {
+        privateKey = this->loader.getPrivateKey();
+    } else {
+        privateKey = 
             Botan::PKCS8::load_key(memoryDatasource);
+    }
     // present 
     std::unique_ptr<Botan::RandomNumberGenerator> rng(new Botan::AutoSeeded_RNG);
     Botan::PK_Signer signer(*privateKey, *rng, Constants::SIGNATURE_TYPE);

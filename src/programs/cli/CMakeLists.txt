@@ -30,17 +30,26 @@ include_directories(${PROTOBUF_INCLUDE_DIR})
 
 target_include_directories(keto_cli
         PUBLIC ${CMAKE_CURRENT_BINARY_DIR}
-        PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/ssl/include")
+        PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
+        PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/ssl/include"
+        PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/http_client_session/include"
+        PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
+        PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/evironment/include"
+        PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
+        ${BOTAN_INCLUDE_DIR})
 
 target_link_libraries( keto_cli 
-        PRIVATE keto_environment keto_common
+        PRIVATE keto_http_client_session keto_crypto 
+        PRIVATE keto_environment keto_common 
 #        PRIVATE account_history_api_plugin net_api_plugin account_history_plugin db_plugin
 #        PRIVATE chain_api_plugin producer_plugin chain_plugin wallet_api_plugin
 #        PRIVATE net_plugin http_plugin txn_test_gen_plugin faucet_testnet_plugin
 #        PRIVATE eos_chain fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
-        PRIVATE ${Boost_LIBRARIES} ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} 
-        PRIVATE ${OPENSSL_LIBRARIES} ${pthread_library}
-        PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} )
+        PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} 
+        PRIVATE ${BOTAN_LIBRARIES} ${Boost_LIBRARIES} 
+        PRIVATE ${OPENSSL_LIBRARIES}  ${pthread_library}
+        PRIVATE ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} 
+        )
 
 install( TARGETS
    keto_cli

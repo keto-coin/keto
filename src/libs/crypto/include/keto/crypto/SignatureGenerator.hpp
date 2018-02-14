@@ -16,6 +16,7 @@
 
 #include "keto/crypto/Constants.hpp"
 #include "keto/crypto/Containers.hpp"
+#include "keto/crypto/KeyLoader.hpp"
 
 namespace keto {
 namespace crypto {
@@ -24,6 +25,7 @@ namespace crypto {
 class SignatureGenerator {
 public:
     SignatureGenerator(const keto::crypto::SecureVector& key);
+    SignatureGenerator(const keto::crypto::KeyLoader& loader);
     SignatureGenerator(const SignatureGenerator& orig) = default;
     virtual ~SignatureGenerator();
     
@@ -32,7 +34,7 @@ public:
     
 private:
     keto::crypto::SecureVector key;
-    
+    keto::crypto::KeyLoader loader;
 };
 
 
