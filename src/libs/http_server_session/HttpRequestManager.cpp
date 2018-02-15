@@ -32,12 +32,10 @@ bool
 HttpRequestManager::checkRequest(boost::beast::http::request<boost::beast::http::string_body>& req) {
     boost::beast::string_view path = req.target();
     
-    std::cout << "The request path " << path << std::endl;
     if (path.empty()) {
         return false;
     }
     std::string target = path.to_string();
-    std::cout << "The path is : " << target << std::endl;
     if (0 == target.compare(keto::common::HttpEndPoints::HAND_SHAKE)) {
         return true;
     }
@@ -51,14 +49,14 @@ HttpRequestManager::handle_request(
     std::string target = path.to_string();
     std::string result;
     if (0 == target.compare(keto::common::HttpEndPoints::HAND_SHAKE)) {
-        std::string value(req.body().c_str(),req.body().size());
-        result = this->httpSessionManagerPtr->processHello(value);
+        result = this->httpSessionManagerPtr->processHello(req.body());
     }
     boost::beast::http::response<boost::beast::http::string_body> response;
     response.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
     response.set(boost::beast::http::field::content_type, "text/html");
     response.keep_alive(req.keep_alive());
     response.body() = result;
+    response.content_length(result.size());
     
     return response;
 }
@@ -69,7 +67,6 @@ std::shared_ptr<HttpRequestManager> HttpRequestManager::init() {
                 new HttpRequestManager());
     }
     return singleton;
-
 }
 
 

@@ -17,6 +17,7 @@
 
 #include "HandShake.pb.h"
 
+#include "keto/server_session/Exception.hpp"
 
 namespace keto {
 namespace server_session {
@@ -30,17 +31,15 @@ HttpSessionManager::~HttpSessionManager() {
 }
 
 std::string HttpSessionManager::processHello(const std::string& hello) {
-    keto::proto::ClientHello clientHello;\
-    std::cout << "String to parse : " << hello << std::endl;
-    if (clientHello.ParseFromString(hello)) {
-        std::cout << "Process the hello " << clientHello.version() << std::endl;
-    } else {
-        std::cout << "Failed to deserialize " << std::endl;
+    keto::proto::ClientHello clientHello;
+    if (!clientHello.ParseFromString(hello)) {
+        BOOST_THROW_EXCEPTION(keto::server_session::MessageDeserializationException(
+                "Failed to deserialized the Client Hello message."));
     }
     
     std::string result;
     keto::proto::ClientResponse response;
-    response.set_response(keto::proto::HelloResponse::WELCOME);
+    response.set_response(keto::proto::HelloResponse::GO_AWAY);
     response.SerializeToString(&result);
     return result;
 }

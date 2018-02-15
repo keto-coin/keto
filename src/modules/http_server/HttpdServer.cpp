@@ -14,12 +14,20 @@
 #include <chrono>
 #include <thread>
 
+#include <boost/exception/exception.hpp>
+#include <boost/exception/diagnostic_information.hpp>
+#include <boost/exception_ptr.hpp> 
+
 #include "keto/http/HttpdServer.hpp"
 #include "keto/http/Constants.hpp"
 #include "keto/ssl/ServerCertificate.hpp"
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/common/HttpEndPoints.hpp"
 #include "keto/server_session/HttpRequestManager.hpp"
+
+#include "keto/common/Log.hpp"
+#include "keto/common/Exception.hpp"
+
 
 
 
@@ -158,18 +166,25 @@ handle_request(
     };
 
     // Build the path to the requested file
-    std::cout << "The check the request" << std::endl;
     if (keto::server_session::HttpRequestManager::getInstance()->checkRequest(req)) {
         try {
-            std::cout << "Handle the protocol layer request" << std::endl;
             return send(
                 keto::server_session::HttpRequestManager::getInstance()->
                 handle_request(req));
+        } catch (keto::common::Exception& ex) {
+            KETO_LOG_ERROR << "Process the request : " << req;
+            KETO_LOG_ERROR << "Cause: " << boost::diagnostic_information(ex,true);
+            return send(server_error(boost::diagnostic_information(ex,true)));
+        } catch (boost::exception& ex) {
+            KETO_LOG_ERROR << "Failed to process because : " << boost::diagnostic_information(ex,true);
+            return send(server_error(boost::diagnostic_information(ex,true)));
+        } catch (std::exception& ex) {
+            KETO_LOG_ERROR << "Failed to start because : " << ex.what();
+            return send(server_error(ex.what()));
         } catch (...) {
             return send(server_error("Failed to handle the request"));
         }
     } else {
-        std::cout << "Use the standard file handling request" << std::endl;
             
         // Make sure we can handle the method
         if( req.method() != httpBeast::verb::get &&
@@ -350,12 +365,13 @@ public:
         boost::ignore_unused(bytes_transferred);
 
         // This means they closed the connection
-        if(ec == httpBeast::error::end_of_stream)
+        if(ec == httpBeast::error::end_of_stream) {
             return do_close();
+        }
 
-        if(ec)
+        if(ec) {
             return fail(ec, "read");
-
+        }
         // Send the response
         handle_request(doc_root_, std::move(req_), lambda_);
     }
@@ -368,8 +384,9 @@ public:
     {
         boost::ignore_unused(bytes_transferred);
 
-        if(ec)
+        if(ec) {
             return fail(ec, "write");
+        }
 
         if(close)
         {
@@ -401,8 +418,9 @@ public:
     void
     on_shutdown(boost::system::error_code ec)
     {
-        if(ec)
+        if(ec) {
             return fail(ec, "shutdown");
+        }
 
         // At this point the connection is closed gracefully
     }
