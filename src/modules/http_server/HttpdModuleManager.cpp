@@ -19,13 +19,14 @@
 #include "keto/http/HttpdModuleManager.hpp"
 #include "include/keto/http/HttpdServer.hpp"
 #include "keto/common/MetaInfo.hpp"
-
+#include "keto/server_session/HttpRequestManager.hpp"
 
 namespace keto {
 namespace http {
 
 
 HttpdModuleManager::HttpdModuleManager() {
+    keto::server_session::HttpRequestManager::init();
     this->httpServer = std::make_shared<HttpdServer>();
 }
 

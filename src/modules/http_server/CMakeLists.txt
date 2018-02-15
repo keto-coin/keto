@@ -14,14 +14,17 @@ add_library( 0050_keto_httpd_module
            )
 
 target_link_libraries( 0050_keto_httpd_module 
+                            PRIVATE keto_http_server_session
+                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
                             PRIVATE ${OPENSSL_LIBRARIES}
-                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} )
+ )
 target_include_directories( 0050_keto_httpd_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/http_server_session/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/ssl/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"

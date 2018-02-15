@@ -19,7 +19,7 @@
 #include "keto/ssl/ServerCertificate.hpp"
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/common/HttpEndPoints.hpp"
-
+#include "keto/server_session/HttpRequestManager.hpp"
 
 
 
@@ -115,7 +115,7 @@ template<
 void
 handle_request(
     boost::beast::string_view doc_root,
-    httpBeast::request<Body, httpBeast::basic_fields<Allocator>>&& req,
+    boost::beast::http::request<Body, boost::beast::http::basic_fields<Allocator>>&& req,
     Send&& send)
 {
     // Returns a bad request response
@@ -157,40 +157,65 @@ handle_request(
         return res;
     };
 
-    // Make sure we can handle the method
-    if( req.method() != httpBeast::verb::get &&
-        req.method() != httpBeast::verb::head)
-        return send(bad_request("Unknown HTTP-method"));
-
-    // Request path must be absolute and not contain "..".
-    if( req.target().empty() ||
-        req.target()[0] != '/' ||
-        req.target().find("..") != boost::beast::string_view::npos)
-        return send(bad_request("Illegal request-target"));
-
     // Build the path to the requested file
-    
-    std::string path = path_cat(doc_root, req.target());
-    if(req.target().back() == '/')
-        path.append("index.html");
+    std::cout << "The check the request" << std::endl;
+    if (keto::server_session::HttpRequestManager::getInstance()->checkRequest(req)) {
+        try {
+            std::cout << "Handle the protocol layer request" << std::endl;
+            return send(
+                keto::server_session::HttpRequestManager::getInstance()->
+                handle_request(req));
+        } catch (...) {
+            return send(server_error("Failed to handle the request"));
+        }
+    } else {
+        std::cout << "Use the standard file handling request" << std::endl;
+            
+        // Make sure we can handle the method
+        if( req.method() != httpBeast::verb::get &&
+            req.method() != httpBeast::verb::head)
+            return send(bad_request("Unknown HTTP-method"));
 
-    // Attempt to open the file
-    boost::beast::error_code ec;
-    httpBeast::file_body::value_type body;
-    body.open(path.c_str(), boost::beast::file_mode::scan, ec);
+        // Request path must be absolute and not contain "..".
+        if( req.target().empty() ||
+            req.target()[0] != '/' ||
+            req.target().find("..") != boost::beast::string_view::npos)
+            return send(bad_request("Illegal request-target"));
 
-    // Handle the case where the file doesn't exist
-    if(ec == boost::system::errc::no_such_file_or_directory)
-        return send(not_found(req.target()));
 
-    // Handle an unknown error
-    if(ec)
-        return send(server_error(ec.message()));
+        std::string path = path_cat(doc_root, req.target());
+        if(req.target().back() == '/')
+            path.append("index.html");
 
-    // Respond to HEAD request
-    if(req.method() == httpBeast::verb::head)
-    {
-        httpBeast::response<httpBeast::empty_body> res{httpBeast::status::ok, req.version()};
+        // Attempt to open the file
+        boost::beast::error_code ec;
+        httpBeast::file_body::value_type body;
+        body.open(path.c_str(), boost::beast::file_mode::scan, ec);
+
+        // Handle the case where the file doesn't exist
+        if(ec == boost::system::errc::no_such_file_or_directory)
+            return send(not_found(req.target()));
+
+        // Handle an unknown error
+        if(ec)
+            return send(server_error(ec.message()));
+
+        // Respond to HEAD request
+        if(req.method() == httpBeast::verb::head)
+        {
+            httpBeast::response<httpBeast::empty_body> res{httpBeast::status::ok, req.version()};
+            res.set(httpBeast::field::server, BOOST_BEAST_VERSION_STRING);
+            res.set(httpBeast::field::content_type, mime_type(path));
+            res.content_length(body.size());
+            res.keep_alive(req.keep_alive());
+            return send(std::move(res));
+        }
+        
+        // Respond to GET request
+        httpBeast::response<httpBeast::file_body> res{
+            std::piecewise_construct,
+            std::make_tuple(std::move(body)),
+            std::make_tuple(httpBeast::status::ok, req.version())};
         res.set(httpBeast::field::server, BOOST_BEAST_VERSION_STRING);
         res.set(httpBeast::field::content_type, mime_type(path));
         res.content_length(body.size());
@@ -198,16 +223,7 @@ handle_request(
         return send(std::move(res));
     }
 
-    // Respond to GET request
-    httpBeast::response<httpBeast::file_body> res{
-        std::piecewise_construct,
-        std::make_tuple(std::move(body)),
-        std::make_tuple(httpBeast::status::ok, req.version())};
-    res.set(httpBeast::field::server, BOOST_BEAST_VERSION_STRING);
-    res.set(httpBeast::field::content_type, mime_type(path));
-    res.content_length(body.size());
-    res.keep_alive(req.keep_alive());
-    return send(std::move(res));
+    
 }
 
 //------------------------------------------------------------------------------

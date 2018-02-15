@@ -1,30 +1,25 @@
-file(GLOB HEADERS "include/keto/session/*.hpp")
+file(GLOB HEADERS "include/keto/server_session/*.hpp")
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include_directories(${PROTOBUF_INCLUDE_DIR})
 
 ## SORT .cpp by most likely to change / break compile
-add_library( keto_http_client_session
+add_library( keto_http_server_session
             
-            HttpSession.cpp
-            
+            HttpRequestManager.cpp 
+            HttpSessionManager.cpp
             
              ${HEADERS}
            )
 
-target_link_libraries( keto_http_client_session 
-                        PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}  )
-target_include_directories( keto_http_client_session
+target_link_libraries( keto_http_server_session)
+target_include_directories( keto_http_server_session
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
-                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../ssl/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../common/include"
-                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../crypto/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../environment/include"
-                            PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
                             PUBLIC "${PROTO_HDRS}"
-                            PRIVATE ${OPENSSL_LIBRARIES} ${pthread_library}
                             ${Boost_INCLUDE_DIRS}
-                            ${BOTAN_INCLUDE_DIR}
                             )
 
 #if(MSVC)
@@ -32,10 +27,10 @@ target_include_directories( keto_http_client_session
 #endif(MSVC)
 
 INSTALL( TARGETS
-   keto_http_client_session
+   keto_http_server_session
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
 )
-INSTALL( FILES ${HEADERS} DESTINATION "include/keto/session" )
+INSTALL( FILES ${HEADERS} DESTINATION "include/keto/server_session" )

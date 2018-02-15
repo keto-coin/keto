@@ -28,7 +28,8 @@ message ClientHello {
 
 message ClientResponse {
     HelloResponse response = 1;
-    bytes session_key = 2;
+    bytes session_hash = 2;
+    bytes session_key = 3;
 }
 
 // a message encrypting the 
@@ -55,7 +56,8 @@ message ServerHelo {
 
 message ServerReponse {
     HelloResponse response = 1;
-    bytes session_key = 2;
+    bytes session_hash = 2;
+    bytes session_key = 3;
 }
 
 message ServerConfirmation {

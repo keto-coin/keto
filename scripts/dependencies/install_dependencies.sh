@@ -69,7 +69,7 @@ if [ $ARCH == "ubuntu" ]; then
     tar -zxvf protobuf-all-${PROTOBUF_VERSION}.tar.gz
     mkdir -p ${HOME}/opt/protobuf
     cd ${TEMP_DIR}/protobuf-${PROTOBUF_VERSION}/
-    ./configure --prefix ${HOME}/opt/protobuf --enable-shared=no 
+    ./configure "CFLAGS=-fPIC" "CXXFLAGS=-fPIC" --prefix ${HOME}/opt/protobuf --enable-shared=no 
     make
     make install
     cd ${HOME}

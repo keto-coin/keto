@@ -73,22 +73,26 @@ HttpSession& HttpSession::handShake() {
     // setup the crypto
     keto::crypto::SecureVector publicKeyHashVector = keto::crypto::HashGenerator().generateHash(
             Botan::X509::BER_encode(*this->keyLoader.getPublicKey()));
-    std::string hexHash = Botan::hex_encode(publicKeyHashVector,true);
-    std::string hexSignedHash = 
-            Botan::hex_encode(
-            keto::crypto::SignatureGenerator(this->keyLoader).sign(publicKeyHashVector));
+    std::vector<uint8_t> signatureHashVector =
+            keto::crypto::SignatureGenerator(this->keyLoader).sign(publicKeyHashVector);
     
     keto::proto::ClientHello clientHello;
     clientHello.set_version(keto::common::MetaInfo::PROTOCOL_VERSION);
-    clientHello.set_client_hash(hexHash);
-    clientHello.set_signature(hexSignedHash);
+    clientHello.set_client_hash(publicKeyHashVector.data(),publicKeyHashVector.size());
+    clientHello.set_signature(signatureHashVector.data(),signatureHashVector.size());
     
-    boost::beast::http::response<boost::beast::http::dynamic_body> response = 
-        this->makeRequest(this->createProtobufRequest(clientHello.SerializePartialAsString()));
+    std::string buffer;
+    std::cout << "The version is : " << clientHello.version() << std::endl;
+    clientHello.SerializeToString(&buffer);
+    std::cout << "The buffer is [" << buffer << "]" << std::endl;
+    boost::beast::http::response<boost::beast::http::buffer_body> response = 
+        this->makeRequest(this->createProtobufRequest(buffer));
     
+    keto::proto::ClientResponse protoResponse;
+    std::string result((char*)response.body().data,response.body().size);
+    protoResponse.ParseFromString(result);
     
-    
-    std::cout << "Finished : " << response << std::endl;
+    std::cout << "Finished : " << protoResponse.response() << std::endl;
     return (*this);
 }
 
@@ -97,19 +101,21 @@ std::string HttpSession::makeRequest(const std::string& request) {
     return "After making request";
 }
 
-boost::beast::http::request<boost::beast::http::string_body>
+boost::beast::http::request<boost::beast::http::buffer_body>
 HttpSession::createProtobufRequest(const std::string& buffer) {
-    boost::beast::http::request<boost::beast::http::string_body> req{boost::beast::http::verb::post, 
+    boost::beast::http::request<boost::beast::http::buffer_body> req{boost::beast::http::verb::post, 
             keto::common::HttpEndPoints::HAND_SHAKE, 
             keto::common::Constants::HTTP_VERSION};
     req.insert(keto::common::Constants::CONTENT_TYPE_HEADING,
             keto::common::Constants::PROTOBUF_CONTENT_TYPE);
-    req.body() = buffer;
+    req.body().data = (void*)buffer.c_str();
+    req.body().more = false;
+    req.body().size = buffer.size();
     return req;
 }
 
-boost::beast::http::response<boost::beast::http::dynamic_body> 
-HttpSession::makeRequest(boost::beast::http::request<boost::beast::http::string_body> request) {
+boost::beast::http::response<boost::beast::http::buffer_body> 
+HttpSession::makeRequest(boost::beast::http::request<boost::beast::http::buffer_body> request) {
     
     boost::asio::ip::tcp::resolver resolver{this->ioc};
     boost::asio::ssl::stream<boost::asio::ip::tcp::socket> stream{this->ioc, this->ctx};
@@ -134,7 +140,7 @@ HttpSession::makeRequest(boost::beast::http::request<boost::beast::http::string_
     boost::beast::flat_buffer buffer;
 
     // Declare a container to hold the response
-    boost::beast::http::response<boost::beast::http::dynamic_body> res;
+    boost::beast::http::response<boost::beast::http::string_body> res;
 
     // Receive the HTTP response
     boost::beast::http::read(stream, buffer, res);
@@ -161,7 +167,7 @@ HttpSession::makeRequest(boost::beast::http::request<boost::beast::http::string_
                 ss.str()));
     }
     
-    return res;
+    return (boost::beast::http::response<boost::beast::http::buffer_body>)res;
 }
 
 }

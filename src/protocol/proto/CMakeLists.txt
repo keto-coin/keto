@@ -1,5 +1,6 @@
 find_package(Protobuf REQUIRED)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include_directories(${PROTOBUF_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
