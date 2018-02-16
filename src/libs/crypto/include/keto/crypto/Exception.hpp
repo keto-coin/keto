@@ -26,6 +26,7 @@ KETO_DECLARE_EXCEPTION( CyptoCommonException, "Crypto common exception." );
 
 // the 
 KETO_DECLARE_DERIVED_EXCEPTION (CyptoCommonException, PrivateKeyNotConfiguredException , "Key loader has no private key configured to load.");
+KETO_DECLARE_DERIVED_EXCEPTION (CyptoCommonException, PublicKeyNotConfiguredException , "Key loader has no public key configured to load.");
 KETO_DECLARE_DERIVED_EXCEPTION (CyptoCommonException, InvalidKeyPathException , "The specified key path is invalid.");
 KETO_DECLARE_DERIVED_EXCEPTION (CyptoCommonException, KeyLoaderNotInitializedException , "The key loader has not been initialized.");
 

@@ -16,7 +16,7 @@ add_library( 0050_keto_httpd_module
 target_link_libraries( 0050_keto_httpd_module 
                             PRIVATE keto_http_server_session keto_server_common
                             PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
-                            PRIVATE ${BOTAN_LIBRARIES} 
+                            PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
                             PRIVATE ${OPENSSL_LIBRARIES}
  )
 target_include_directories( 0050_keto_httpd_module

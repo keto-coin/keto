@@ -74,11 +74,14 @@ std::shared_ptr<Botan::Public_Key> HttpSessionManager::validateRemoteHash(
     std::copy(boost::filesystem::directory_iterator(publicKeyPath), 
             boost::filesystem::directory_iterator(), std::back_inserter(files));
     
+    std::cout << "Before setting the client has" << std::endl;
     std::vector<uint8_t> clientHash(
-            *clientHello.client_hash().data(),clientHello.client_hash().size());
+            clientHello.client_hash().size() + 1,*clientHello.client_hash().data());
+    std::cout << "Before setting the client signature" << std::endl;
     std::vector<uint8_t> signature(
-            *clientHello.signature().data(),clientHello.signature().size());
+            clientHello.signature().size() + 1, *clientHello.signature().data());
     
+    std::cout << "Test the private keys" << std::endl;
     for (std::vector<boost::filesystem::path>::const_iterator it(files.begin()), 
             it_end(files.end()); it != it_end; ++it) {
         keto::crypto::KeyLoader loader(*it);
@@ -89,6 +92,7 @@ std::shared_ptr<Botan::Public_Key> HttpSessionManager::validateRemoteHash(
         
         if (publicKeyHashVector == clientHash) {
             if (keto::crypto::SignatureVerification(publicKey,clientHash).check(signature)) {
+                std::cout << "Signature is valid" << std::endl;
                 return publicKey;
             } else {
                 break;
@@ -96,6 +100,8 @@ std::shared_ptr<Botan::Public_Key> HttpSessionManager::validateRemoteHash(
         }
     }
     
+    std::cout << "No private key was found" << std::endl;
+                
     return std::shared_ptr<Botan::Public_Key>();
 }
 

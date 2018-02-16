@@ -93,8 +93,8 @@ std::shared_ptr<Botan::Public_Key> KeyLoader::getPublicKey() {
     if (!isInitialized()) {
         BOOST_THROW_EXCEPTION(keto::crypto::KeyLoaderNotInitializedException());
     }
-    if (this->privateKeyPath.empty()) {
-        BOOST_THROW_EXCEPTION(keto::crypto::PrivateKeyNotConfiguredException());
+    if (this->publicKeyPath.empty()) {
+        BOOST_THROW_EXCEPTION(keto::crypto::PublicKeyNotConfiguredException());
     }
     // attempt to load the private key using the path supplied and the 
     return std::shared_ptr<Botan::Public_Key>(
