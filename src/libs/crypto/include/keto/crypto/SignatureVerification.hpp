@@ -17,6 +17,11 @@
 #include <vector>
 #include <memory>
 
+#include <botan/pk_keys.h>
+#include <botan/pubkey.h>
+#include <botan/x509_key.h>
+
+
 #include "keto/crypto/Containers.hpp"
 
 namespace keto {
@@ -25,6 +30,8 @@ namespace crypto {
 
 class SignatureVerification {
 public:
+    SignatureVerification(std::shared_ptr<Botan::Public_Key> publicKey,
+            const std::vector<uint8_t>& source);
     SignatureVerification(const std::vector<uint8_t>& key,
             keto::crypto::SecureVector source);
     SignatureVerification(const std::vector<uint8_t>& key,
@@ -34,6 +41,7 @@ public:
     
     bool check(const std::vector<uint8_t>& signature);
 private:
+    std::shared_ptr<Botan::Public_Key> publicKey;
     std::vector<uint8_t> key;
     std::vector<uint8_t> source;
 

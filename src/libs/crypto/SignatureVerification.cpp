@@ -11,9 +11,6 @@
  * Created on February 6, 2018, 12:07 PM
  */
 
-#include <botan/pk_keys.h>
-#include <botan/pubkey.h>
-#include <botan/x509_key.h>
 
 #include "keto/crypto/SignatureVerification.hpp"
 #include "keto/crypto/Constants.hpp"
@@ -21,6 +18,11 @@
 
 namespace keto {
 namespace crypto {
+
+SignatureVerification::SignatureVerification(std::shared_ptr<Botan::Public_Key> publicKey,
+            const std::vector<uint8_t>& source) : publicKey(publicKey), source(source) {
+    
+}
 
 
 SignatureVerification::SignatureVerification(const std::vector<uint8_t>& key, 
@@ -39,9 +41,11 @@ SignatureVerification::~SignatureVerification() {
 }
 
 bool SignatureVerification::check(const std::vector<uint8_t>& signature) {
-    std::shared_ptr<Botan::Public_Key> publicKey(
+    if (!this->publicKey) {
+        this->publicKey = std::shared_ptr<Botan::Public_Key>(
              Botan::X509::load_key(key));
-    Botan::PK_Verifier verify(*publicKey,Constants::SIGNATURE_TYPE);
+    }
+    Botan::PK_Verifier verify(*this->publicKey,Constants::SIGNATURE_TYPE);
     verify.update(this->source);
     return verify.check_signature(signature);
 }

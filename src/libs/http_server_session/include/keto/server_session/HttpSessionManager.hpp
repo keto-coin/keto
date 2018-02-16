@@ -17,6 +17,12 @@
 #include <string>
 #include <memory>
 
+#include <botan/pk_keys.h>
+#include <botan/pubkey.h>
+#include <botan/x509_key.h>
+
+#include "HandShake.pb.h"
+
 #include "keto/server_session/HttpSessionManager.hpp"
 
 namespace keto {
@@ -36,6 +42,8 @@ public:
     
 protected:
     
+private:
+    std::shared_ptr<Botan::Public_Key> validateRemoteHash(keto::proto::ClientHello& clientHello);
     
 };
 

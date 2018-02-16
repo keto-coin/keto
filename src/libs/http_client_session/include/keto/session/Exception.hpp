@@ -26,6 +26,8 @@ KETO_DECLARE_EXCEPTION( HttpClientSessionException, "Keto Http Client Session." 
 // the 
 KETO_DECLARE_DERIVED_EXCEPTION (HttpClientSessionException, ClientFailedToCloseSocketException , "The http client failed to close the connection.");
 KETO_DECLARE_DERIVED_EXCEPTION (HttpClientSessionException, ClientHandShakeFailureException , "Client hand shake failure.");
+KETO_DECLARE_DERIVED_EXCEPTION (HttpClientSessionException, ClientAuthorizationFailureException , "The client could not authorize with the server.");
+
     
 }
 }

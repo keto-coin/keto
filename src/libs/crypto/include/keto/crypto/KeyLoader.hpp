@@ -17,6 +17,8 @@
 #include <string>
 #include <memory>
 
+#include <boost/filesystem/path.hpp>
+
 #include <botan/pkcs8.h>
 #include <botan/x509_key.h>
 #include <botan/pubkey.h>
@@ -33,6 +35,7 @@ class KeyLoader {
 public:
     KeyLoader();
     KeyLoader(const std::string& publicKeyPath);
+    KeyLoader(const boost::filesystem::path& publicKeyPath);
     KeyLoader(const std::string& privateKeyPath, const std::string& publicKeyPath);
     KeyLoader(const KeyLoader& orig) = default;
     virtual ~KeyLoader();

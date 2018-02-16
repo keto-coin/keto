@@ -92,7 +92,7 @@ if [ $ARCH == "ubuntu" ]; then
     git clone https://github.com/randombit/botan.git
     mkdir -p ${HOME}/opt/botan
     cd ${TEMP_DIR}/botan
-    ./configure.py --prefix=${HOME}/opt/botan --with-openssl --disable-shared-library
+    ./configure.py --cxxflags=-fPIC --prefix=${HOME}/opt/botan --with-openssl --disable-shared-library
     make
     make install
     cd ${HOME}

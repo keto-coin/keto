@@ -86,10 +86,14 @@ HttpSession& HttpSession::handShake() {
     boost::beast::http::response<boost::beast::http::string_body> response = 
         this->makeRequest(this->createProtobufRequest(buffer));
     
-    keto::proto::ClientResponse protoResponse;
-    protoResponse.ParseFromString(response.body());
+    keto::proto::ClientResponse clientResponse;
+    clientResponse.ParseFromString(response.body());
+    if (clientResponse.response() != keto::proto::HelloResponse::WELCOME) {
+        BOOST_THROW_EXCEPTION(keto::session::ClientAuthorizationFailureException());
+    }
     
-    std::cout << "Finished : " << protoResponse.response() << std::endl;
+    std::cout << "Finished : " << clientResponse.response() << "was expecting " << 
+            keto::proto::HelloResponse::WELCOME << std::endl;
     return (*this);
 }
 

@@ -1,26 +1,21 @@
-file(GLOB HEADERS "include/keto/server_session/*.hpp")
+file(GLOB HEADERS "include/keto/server_common/*.hpp")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-include_directories(${PROTOBUF_INCLUDE_DIR})
 
 ## SORT .cpp by most likely to change / break compile
-add_library( keto_http_server_session
+add_library( keto_server_common
             
-            HttpRequestManager.cpp 
-            HttpSessionManager.cpp
-            
+	      Constants.cpp
+              ServerInfo.cpp
+
              ${HEADERS}
            )
 
-target_link_libraries( keto_http_server_session)
-target_include_directories( keto_http_server_session
+target_link_libraries( keto_server_common )
+target_include_directories( keto_server_common
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../common/include"
-                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../crypto/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../environment/include"
-                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../server_common/include"
-                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
-                            PUBLIC "${PROTO_HDRS}"
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}
                             )
@@ -30,10 +25,10 @@ target_include_directories( keto_http_server_session
 #endif(MSVC)
 
 INSTALL( TARGETS
-   keto_http_server_session
+   keto_server_common
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
 )
-INSTALL( FILES ${HEADERS} DESTINATION "include/keto/server_session" )
+INSTALL( FILES ${HEADERS} DESTINATION "include/keto/server_common" )

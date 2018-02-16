@@ -31,7 +31,12 @@ namespace crypto {
 KeyLoader::KeyLoader() : initialized(false), generator(new Botan::AutoSeeded_RNG()) {
     
 }
-    
+
+KeyLoader::KeyLoader(const boost::filesystem::path& publicKeyPath) : initialized(true),
+        publicKeyPath(publicKeyPath.string()), generator(new Botan::AutoSeeded_RNG())
+{
+}
+
 KeyLoader::KeyLoader(const std::string& publicKeyPath) : initialized(true),
         publicKeyPath(publicKeyPath), generator(new Botan::AutoSeeded_RNG())
 {

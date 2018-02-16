@@ -13,6 +13,7 @@
 
 #include <chrono>
 #include <thread>
+#include <sstream>
 
 #include <boost/exception/exception.hpp>
 #include <boost/exception/diagnostic_information.hpp>
@@ -172,15 +173,22 @@ handle_request(
                 keto::server_session::HttpRequestManager::getInstance()->
                 handle_request(req));
         } catch (keto::common::Exception& ex) {
-            KETO_LOG_ERROR << "Process the request : " << req;
+            KETO_LOG_ERROR << "Failed to process the request : " << req;
             KETO_LOG_ERROR << "Cause: " << boost::diagnostic_information(ex,true);
-            return send(server_error(boost::diagnostic_information(ex,true)));
+            std::stringstream ss;
+            ss << "Process the request : " << req << std::endl;
+            ss << "Cause : " << boost::diagnostic_information(ex,true);
+            return send(server_error(ss.str()));
         } catch (boost::exception& ex) {
             KETO_LOG_ERROR << "Failed to process because : " << boost::diagnostic_information(ex,true);
-            return send(server_error(boost::diagnostic_information(ex,true)));
+            std::stringstream ss;
+            ss << "Failed process the request : " << boost::diagnostic_information(ex,true);
+            return send(server_error(ss.str()));
         } catch (std::exception& ex) {
-            KETO_LOG_ERROR << "Failed to start because : " << ex.what();
-            return send(server_error(ex.what()));
+            KETO_LOG_ERROR << "Failed process the request : " << ex.what();
+            std::stringstream ss;
+            ss << "Failed process the request : " << ex.what();
+            return send(server_error(ss.str()));
         } catch (...) {
             return send(server_error("Failed to handle the request"));
         }
