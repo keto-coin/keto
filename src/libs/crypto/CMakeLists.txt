@@ -9,6 +9,7 @@ add_library( keto_crypto
             SignatureVerification.cpp
             HashGenerator.cpp
             KeyLoader.cpp
+            SecureVectorUtils.cpp
             
              ${HEADERS}
            )

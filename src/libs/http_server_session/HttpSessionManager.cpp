@@ -17,12 +17,16 @@
 #include <boost/filesystem/operations.hpp>
 #include <condition_variable>
 
+#include <botan/hex.h>
+
+#include "keto/server_common/VectorUtils.hpp"
 #include "keto/server_session/HttpSessionManager.hpp"
 
 #include "keto/server_session/Exception.hpp"
 #include "keto/server_common/ServerInfo.hpp"
 #include "keto/crypto/KeyLoader.hpp"
 #include "keto/crypto/SignatureVerification.hpp"
+#include "keto/crypto/SecureVectorUtils.hpp"
 #include "keto/crypto/HashGenerator.hpp"
 
 namespace keto {
@@ -74,34 +78,25 @@ std::shared_ptr<Botan::Public_Key> HttpSessionManager::validateRemoteHash(
     std::copy(boost::filesystem::directory_iterator(publicKeyPath), 
             boost::filesystem::directory_iterator(), std::back_inserter(files));
     
-    std::cout << "Before setting the client has" << std::endl;
-    std::vector<uint8_t> clientHash(
-            clientHello.client_hash().size() + 1,*clientHello.client_hash().data());
-    std::cout << "Before setting the client signature" << std::endl;
-    std::vector<uint8_t> signature(
-            clientHello.signature().size() + 1, *clientHello.signature().data());
+    std::vector<uint8_t> clientHash = keto::server_common::VectorUtils().copyStringToVector(clientHello.client_hash());
+    std::vector<uint8_t> signature = keto::server_common::VectorUtils().copyStringToVector(clientHello.signature());
     
-    std::cout << "Test the private keys" << std::endl;
     for (std::vector<boost::filesystem::path>::const_iterator it(files.begin()), 
             it_end(files.end()); it != it_end; ++it) {
         keto::crypto::KeyLoader loader(*it);
         std::shared_ptr<Botan::Public_Key> publicKey = loader.getPublicKey();
         
-        keto::crypto::SecureVector publicKeyHashVector = keto::crypto::HashGenerator().generateHash(
-            Botan::X509::BER_encode(*publicKey));
+        std::vector<uint8_t> publicKeyHashVector = keto::crypto::SecureVectorUtils().copyFromSecure(keto::crypto::HashGenerator().generateHash(
+            Botan::X509::BER_encode(*publicKey)));
         
         if (publicKeyHashVector == clientHash) {
-            if (keto::crypto::SignatureVerification(publicKey,clientHash).check(signature)) {
-                std::cout << "Signature is valid" << std::endl;
+            if (keto::crypto::SignatureVerification(publicKey,publicKeyHashVector).check(signature)) {
                 return publicKey;
             } else {
                 break;
             }
         }
     }
-    
-    std::cout << "No private key was found" << std::endl;
-                
     return std::shared_ptr<Botan::Public_Key>();
 }
 

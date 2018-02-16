@@ -7,6 +7,7 @@ add_library( keto_server_common
             
 	      Constants.cpp
               ServerInfo.cpp
+              VectorUtils.cpp
 
              ${HEADERS}
            )
