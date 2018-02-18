@@ -18,6 +18,8 @@
 
 #include "keto/crypto/SessionHashGenerator.hpp"
 #include "keto/crypto/HashGenerator.hpp"
+#include "keto/crypto/SecureVectorUtils.hpp"
+#include "include/keto/crypto/SecureVectorUtils.hpp"
 #include "include/keto/crypto/SessionHashGenerator.hpp"
 
 namespace keto {
@@ -29,12 +31,12 @@ SessionHashGenerator::SessionHashGenerator(const std::vector<uint8_t>& clientHas
     auto duration = std::chrono::system_clock::now().time_since_epoch();
     unsigned long microsecondsLong = 
         std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
-    uint8_t* longPointer = &microsecondsLong;
+    uint8_t* longPointer = (uint8_t*)&microsecondsLong;
     
     // setup srand and get a random integer
     unsigned int seedp = time(0);
     int randomNumber = rand_r(&seedp);
-    uint8_t* randomNumberPointer = &randomNumber;
+    uint8_t* randomNumberPointer = (uint8_t*)&randomNumber;
     
     // copy values to byte vector
     std::vector<uint8_t> byteVector;
@@ -55,7 +57,7 @@ SessionHashGenerator::SessionHashGenerator(const std::vector<uint8_t>& clientHas
     keto::crypto::SecureVector secureVector = 
             HashGenerator().generateHash(byteVector);
     
-    std::copy(secureVector.begin(),secureVector.end(),this->bytes);
+    this->bytes = SecureVectorUtils().copyFromSecure(secureVector);
     
 }
 

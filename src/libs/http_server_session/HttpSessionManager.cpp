@@ -12,22 +12,29 @@
  */
 
 #include <iostream>
+#include <memory>
 
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <condition_variable>
 
 #include <botan/hex.h>
+#include "KeyStore.pb.h"
 
 #include "keto/server_common/VectorUtils.hpp"
 #include "keto/server_session/HttpSessionManager.hpp"
 
+#include "keto/server_common/EventUtils.hpp"
+#include "keto/server_common/Events.hpp"
+#include "keto/server_common/EventServiceHelpers.hpp"
 #include "keto/server_session/Exception.hpp"
 #include "keto/server_common/ServerInfo.hpp"
 #include "keto/crypto/KeyLoader.hpp"
 #include "keto/crypto/SignatureVerification.hpp"
 #include "keto/crypto/SecureVectorUtils.hpp"
+#include "keto/crypto/SessionHashGenerator.hpp"
 #include "keto/crypto/HashGenerator.hpp"
+#include "keto/event/EventServiceInterface.hpp"
 
 namespace keto {
 namespace server_session {
@@ -59,9 +66,33 @@ std::string HttpSessionManager::processHello(const std::string& hello) {
         return result;
     }
     
+    
+    keto::crypto::SessionHashGenerator hashGenerator(
+            keto::server_common::VectorUtils().copyStringToVector(
+            clientHello.client_hash()),
+            keto::server_common::ServerInfo::getInstance()->getAccountHash());
+    
+    // create a session key
+    SessionKeyRequest sessionKeyRequest;
+    sessionKeyRequest.set_session_hash(keto::server_common::VectorUtils().copyVectorToString(
+        hashGenerator.getHash()));
+    
+    //keto::event::Event processEvent = keto::server_common::toEvent<SessionKeyRequest>(
+    //        keto::server_common::Events::REQUEST_SESSION_KEY,sessionKeyRequest);
+    
+    keto::event::Event resultEvent = keto::server_common::processEvent(keto::server_common::toEvent<SessionKeyRequest>(
+            keto::server_common::Events::REQUEST_SESSION_KEY,sessionKeyRequest));
+    //keto::event::Event resultEvent = std::dynamic_pointer_cast<keto::event::EventServiceInterface>(keto::module::ModuleManager::getInstance()->getModule(keto::event::EventServiceInterface::KETO_EVENT_SERVICE_MODULE))->processEvent(event);
+    
+    //SessionKeyResponse sessionKeyResponse = 
+    //        keto::server_common::fromEvent<SessionKeyResponse>(
+    //        resultEvent);
+    
     std::string result;
     keto::proto::ClientResponse response;
     response.set_response(keto::proto::HelloResponse::WELCOME);
+    response.set_session_hash(sessionKeyRequest.session_hash());
+    //response.set_session_key(sessionKeyResponse.session_key());
     response.SerializeToString(&result);
     return result;
 }

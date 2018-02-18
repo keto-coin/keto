@@ -24,6 +24,14 @@ namespace event {
 
 class Event {
 public:
+    Event(std::vector<uint8_t> message) : 
+        message(message)  {
+    }
+        
+    Event(const std::string& name,std::vector<uint8_t> message) : 
+        name(name),message(message)  {
+    }
+        
     Event(const std::string& name,
             const std::string& source,
             std::vector<uint8_t> sourceHash,
@@ -42,17 +50,38 @@ public:
         return this->name;
     }
     
+    Event& setName(const std::string& name) {
+        this->name = name;
+        return (*this);
+    }
+    
     std::string getSource() const {
         return this->source;
+    }
+    
+    Event& setSource(const std::string& source)  {
+        this->source = source;
+        return (*this);
     }
     
     std::vector<uint8_t> getSourceHash() const {
         return this->sourceHash;
     }
     
+    Event& setSourceHash(std::vector<uint8_t>& sourceHash) {
+        this->sourceHash = sourceHash;
+        return (*this);
+    }
+    
     std::vector<uint8_t> getSourceSignature() {
         return this->sourceSignature;
     }
+    
+    Event& setSourceSignature(const std::vector<uint8_t>& sourceSignature) {
+        this->sourceSignature = sourceSignature;
+        return (*this);
+    }
+    
     std::vector<uint8_t> getMessage() {
         return this->message;
     }

@@ -11,6 +11,8 @@
  * Created on January 19, 2018, 7:20 AM
  */
 
+#include <iostream>
+
 #include <condition_variable>
 #include <boost/optional/optional.hpp>
 
@@ -63,7 +65,7 @@ void EventServiceModule::deregisterEventHandler(const std::string& name) {
 }
 
 void EventServiceModule::addEventHandler(const std::string& name, keto::event::handler handlerMethod) {
-    Signal signal = std::make_shared<boost::signals2::signal<keto::event::handler>>();
+    Signal signal = std::make_shared<boost::signals2::signal<Event (const Event&)>>();
     signal->connect(handlerMethod);
     std::lock_guard<std::mutex> guard(this->classMutex);
     if (this->registeredSignals.count(name)) {
@@ -85,6 +87,7 @@ EventServiceModule::Signal EventServiceModule::getEventHandler(const std::string
 
 void EventServiceModule::removeEventHandler(const std::string& name) {
     std::lock_guard<std::mutex> guard(this->classMutex);
+    this->registeredSignals[name].reset();
     this->registeredSignals.erase(name);
 }
 

@@ -28,6 +28,8 @@ KETO_DECLARE_EXCEPTION( ServerCommonException, "Keto Server Common Exception." )
 KETO_DECLARE_DERIVED_EXCEPTION (ServerCommonException, NoPublicKeyDirectoryConfiguredException , "No public key configuration directory has been provided.");
 KETO_DECLARE_DERIVED_EXCEPTION (ServerCommonException, InvalidPublicKeyDirectoryException , "Could not retrieve the public key directory.");
 KETO_DECLARE_DERIVED_EXCEPTION (ServerCommonException, NoServerAccountConfiguredException , "No server account has been configured.");
+KETO_DECLARE_DERIVED_EXCEPTION (ServerCommonException, ProtobuffSerializationException , "Failed to serialize an object.");
+KETO_DECLARE_DERIVED_EXCEPTION (ServerCommonException, ProtobuffDeserializationException , "Failed to deserialize an object.");
 
 }
 }

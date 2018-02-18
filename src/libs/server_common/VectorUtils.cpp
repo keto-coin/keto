@@ -11,6 +11,10 @@
  * Created on February 16, 2018, 11:21 AM
  */
 
+#include <vector>
+#include <sstream>
+#include <iterator>
+
 #include "keto/server_common/VectorUtils.hpp"
 
 namespace keto {
@@ -28,6 +32,13 @@ std::vector<uint8_t> VectorUtils::copyStringToVector(const std::string& str) {
         result.push_back(str[index]);
     }
     return result;
+}
+
+std::string VectorUtils::copyVectorToString(const std::vector<uint8_t>& vec) {
+    std::stringstream ss; 
+    std::copy(vec.begin(), vec.end(),
+         std::ostream_iterator<uint8_t>(ss));
+    return ss.str();
 }
 
 }

@@ -10,7 +10,8 @@ add_library( keto_crypto
             HashGenerator.cpp
             KeyLoader.cpp
             SecureVectorUtils.cpp
-            
+            SessionHashGenerator.cpp
+
              ${HEADERS}
            )
 

@@ -14,6 +14,7 @@
 #include <iterator>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 #include <boost/filesystem/operations.hpp>
 #include <condition_variable>
@@ -109,19 +110,29 @@ void ModuleManager::unload() {
         // copy the contents
         loadedLibraryModule = this->loadedLibraryModuleManagers;
         
-        // clear the modules
-        this->loadedModules.clear();
-        this->loadedModuleManagementInterfaces.clear();
-        this->loadedLibraryModuleManagers.clear();
         
     } 
     
     for (std::map<boost::filesystem::path,std::shared_ptr<ModuleWrapper>>::reverse_iterator it=loadedLibraryModule.rbegin(); 
             it!=loadedLibraryModule.rend(); ++it) {
         it->second->getModuleManagerInterface()->stop();
-        it->second->unload();
     }
     
+    {
+        std::lock_guard<std::mutex> guard(this->classMutex);
+        this->loadedModules.clear();
+        this->loadedModuleManagementInterfaces.clear();
+        this->loadedLibraryModuleManagers.clear();
+        
+    }
+    
+    for (std::map<boost::filesystem::path,std::shared_ptr<ModuleWrapper>>::reverse_iterator it=loadedLibraryModule.rbegin(); 
+            it!=loadedLibraryModule.rend(); ++it) {
+        it->second->unload();
+    }
+    // clear the modules
+    loadedLibraryModule.clear();
+
     // set the state
     this->setState(State::unloaded);
 }

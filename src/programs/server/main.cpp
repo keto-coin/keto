@@ -91,4 +91,5 @@ int main(int argc, char** argv)
         KETO_LOG_ERROR << "Failed to start unknown error.";
         return -1;
     }
+    KETO_LOG_INFO << "Exit";
 }

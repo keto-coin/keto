@@ -32,7 +32,7 @@ namespace event {
 class EventServiceModule : public keto::module::ModuleInterface, 
         public EventServiceInterface {
 public:
-    typedef boost::signals2::signal<keto::event::handler> signalHandler;
+    typedef boost::signals2::signal<Event (const Event&)> signalHandler;
     typedef std::shared_ptr<signalHandler> Signal;
     
     EventServiceModule();

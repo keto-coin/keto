@@ -23,7 +23,7 @@ namespace crypto {
 class SessionHashGenerator {
 public:
     SessionHashGenerator(const std::vector<uint8_t>& clientHash,
-            const std::vector<uint8_t>& accountHash);
+                const std::vector<uint8_t>& accountHash);
     SessionHashGenerator(const SessionHashGenerator& orig) = default;
     virtual ~SessionHashGenerator();
     

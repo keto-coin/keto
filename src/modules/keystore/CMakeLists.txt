@@ -1,16 +1,24 @@
 file(GLOB HEADERS "include/keto/keystore/*.hpp")
 
+include_directories(${PROTOBUF_INCLUDE_DIR})
+
 ## SORT .cpp by most likely to change / break compile
 add_library( 0010_keto_keystore_module
             SHARED
 
             KeystoreModuleManager.cpp
             KeystoreModule.cpp
+            EventRegistry.cpp
+            KeyStoreService.cpp
+            SessionKeyManager.cpp
 
              ${HEADERS}
            )
 
 target_link_libraries( 0010_keto_keystore_module 
+                            PRIVATE keto_server_common
+                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
+                            PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
                             PRIVATE ${OPENSSL_LIBRARIES} )
 target_include_directories( 0010_keto_keystore_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
@@ -18,9 +26,13 @@ target_include_directories( 0010_keto_keystore_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/server_common/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
+                            PUBLIC "${PROTO_HDRS}"
 
                             ${Boost_INCLUDE_DIRS}
+                            ${BOTAN_INCLUDE_DIR}
                             )
 
 #if(MSVC)

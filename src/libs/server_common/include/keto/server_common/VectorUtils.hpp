@@ -36,6 +36,14 @@ public:
      */
     std::vector<uint8_t> copyStringToVector(const std::string& str);
     
+    
+    /**
+     * This method copies a vector to a string using a string stream.
+     * 
+     * @param vec The vector to copy.
+     * @return The string containing a copy of the vector
+     */
+    std::string copyVectorToString(const std::vector<uint8_t>& vec);
 private:
 
 };

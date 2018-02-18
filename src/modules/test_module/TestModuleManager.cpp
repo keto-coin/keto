@@ -55,6 +55,8 @@ void TestModuleManager::start() {
 void TestModuleManager::stop() {
     KETO_LOG_INFO << "Stop has been called on the test module manager";
     modules.clear();
+    KETO_LOG_INFO << "The test module has been stopped";
+    
 }
 
 const std::vector<std::string> TestModuleManager::listModules() {

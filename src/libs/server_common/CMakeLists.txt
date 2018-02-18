@@ -8,6 +8,8 @@ add_library( keto_server_common
 	      Constants.cpp
               ServerInfo.cpp
               VectorUtils.cpp
+              Events.cpp
+              EventServiceHelpers.cpp
 
              ${HEADERS}
            )
@@ -17,6 +19,8 @@ target_include_directories( keto_server_common
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../environment/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../event_service_api/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../module_manager/include"
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}
                             )
