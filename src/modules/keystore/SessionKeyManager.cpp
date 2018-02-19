@@ -57,14 +57,18 @@ keto::event::Event SessionKeyManager::requestKey(const keto::event::Event& event
     return keto::server_common::toEvent<SessionKeyResponse>(response);
 }
 
-void SessionKeyManager::removeKey(const keto::event::Event& event) {
-    SessionKeyExpire request = keto::server_common::fromEvent<SessionKeyExpire>(event);
+keto::event::Event SessionKeyManager::removeKey(const keto::event::Event& event) {
+    SessionKeyExpireRequest request = keto::server_common::fromEvent<SessionKeyExpireRequest>(event);
     std::vector<uint8_t> sessionHash = keto::server_common::VectorUtils().copyStringToVector(
             request.session_hash());
     std::lock_guard<std::mutex> guard(mutex);
     if (this->sessionKeys.count(sessionHash)) {
         this->sessionKeys.erase(sessionHash);
     }
+    SessionKeyExpireResponse response;
+    response.set_session_hash(request.session_hash());
+    response.set_success(true);
+    return keto::server_common::toEvent<SessionKeyExpireResponse>(response);
 }
 
     

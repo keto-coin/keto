@@ -40,8 +40,7 @@ keto::event::Event EventRegistry::requestSessionKey(
 
 keto::event::Event EventRegistry::removeSessionKey(
     const keto::event::Event& event) {
-    KeyStoreService::getInstance()->getSessionKeyManager()->removeKey(event);
-    return keto::event::Event(std::vector<uint8_t>());
+    return KeyStoreService::getInstance()->getSessionKeyManager()->removeKey(event);
 }
 
 

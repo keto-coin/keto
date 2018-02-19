@@ -38,7 +38,7 @@ public:
     virtual ~SessionKeyManager();
     
     keto::event::Event requestKey(const keto::event::Event& event);
-    void removeKey(const keto::event::Event& event);
+    keto::event::Event removeKey(const keto::event::Event& event);
     
 private:
     std::unique_ptr<Botan::RandomNumberGenerator> rng;
