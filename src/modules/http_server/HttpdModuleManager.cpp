@@ -55,6 +55,7 @@ void HttpdModuleManager::start() {
 void HttpdModuleManager::stop() {
     this->httpServer->stop();
     modules.clear();
+    keto::server_session::HttpRequestManager::fin();
     KETO_LOG_INFO << "[HttpdModuleManager] The HttpdModuleManager is being stopped";
 }
     

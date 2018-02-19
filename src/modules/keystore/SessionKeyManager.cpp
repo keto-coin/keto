@@ -39,7 +39,6 @@ SessionKeyManager::~SessionKeyManager() {
 }
 
 keto::event::Event SessionKeyManager::requestKey(const keto::event::Event& event) {
-    std::cout << "The request key has been called" << std::endl;
     SessionKeyRequest request = keto::server_common::fromEvent<SessionKeyRequest>(event);
     std::vector<uint8_t> sessionHash = keto::server_common::VectorUtils().copyStringToVector(
             request.session_hash());

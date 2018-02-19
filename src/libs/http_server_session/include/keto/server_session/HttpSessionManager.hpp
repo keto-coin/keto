@@ -23,7 +23,7 @@
 
 #include "HandShake.pb.h"
 
-#include "keto/server_session/HttpSessionManager.hpp"
+#include "keto/server_session/HttpSession.hpp"
 
 namespace keto {
 namespace server_session {
@@ -43,6 +43,10 @@ public:
 protected:
     
 private:
+    std::map<std::vector<uint8_t>,std::shared_ptr<HttpSession>> clientHashMap;
+    std::map<std::vector<uint8_t>,std::shared_ptr<HttpSession>> clientSessionMap;
+    
+    
     std::shared_ptr<Botan::Public_Key> validateRemoteHash(keto::proto::ClientHello& clientHello);
     
 };

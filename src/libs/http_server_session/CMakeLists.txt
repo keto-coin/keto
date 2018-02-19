@@ -8,7 +8,8 @@ add_library( keto_http_server_session
             
             HttpRequestManager.cpp 
             HttpSessionManager.cpp
-            
+            HttpSession.cpp
+
              ${HEADERS}
            )
 

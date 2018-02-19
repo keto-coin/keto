@@ -34,6 +34,7 @@ public:
     virtual ~HttpRequestManager();
     
     static std::shared_ptr<HttpRequestManager> init();
+    static void fin();
     static std::shared_ptr<HttpRequestManager> getInstance();
     
     bool checkRequest(boost::beast::http::request<boost::beast::http::string_body>& req);

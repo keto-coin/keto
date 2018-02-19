@@ -26,6 +26,7 @@ HttpRequestManager::HttpRequestManager() {
 }
 
 HttpRequestManager::~HttpRequestManager() {
+    httpSessionManagerPtr.reset();
 }
 
 bool
@@ -67,6 +68,10 @@ std::shared_ptr<HttpRequestManager> HttpRequestManager::init() {
                 new HttpRequestManager());
     }
     return singleton;
+}
+
+void HttpRequestManager::fin() {
+    singleton.reset();
 }
 
 

@@ -19,20 +19,18 @@
 #include <condition_variable>
 
 #include <botan/hex.h>
-#include "KeyStore.pb.h"
+
+#include "keto/server_session/HttpSessionManager.hpp"
 
 #include "keto/server_common/VectorUtils.hpp"
-#include "keto/server_session/HttpSessionManager.hpp"
 
 #include "keto/server_common/EventUtils.hpp"
 #include "keto/server_common/Events.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
 #include "keto/server_session/Exception.hpp"
-#include "keto/server_common/ServerInfo.hpp"
 #include "keto/crypto/KeyLoader.hpp"
 #include "keto/crypto/SignatureVerification.hpp"
 #include "keto/crypto/SecureVectorUtils.hpp"
-#include "keto/crypto/SessionHashGenerator.hpp"
 #include "keto/crypto/HashGenerator.hpp"
 #include "keto/event/EventServiceInterface.hpp"
 
@@ -65,34 +63,27 @@ std::string HttpSessionManager::processHello(const std::string& hello) {
         response.SerializeToString(&result);
         return result;
     }
+    keto::server_common::VectorUtils vectorUtils;
+    std::vector<uint8_t> clientHash = vectorUtils.copyStringToVector(
+        clientHello.client_hash());
     
-    
-    keto::crypto::SessionHashGenerator hashGenerator(
-            keto::server_common::VectorUtils().copyStringToVector(
-            clientHello.client_hash()),
-            keto::server_common::ServerInfo::getInstance()->getAccountHash());
-    
-    // create a session key
-    SessionKeyRequest sessionKeyRequest;
-    sessionKeyRequest.set_session_hash(keto::server_common::VectorUtils().copyVectorToString(
-        hashGenerator.getHash()));
-    
-    //keto::event::Event processEvent = keto::server_common::toEvent<SessionKeyRequest>(
-    //        keto::server_common::Events::REQUEST_SESSION_KEY,sessionKeyRequest);
-    
-    keto::event::Event resultEvent = keto::server_common::processEvent(keto::server_common::toEvent<SessionKeyRequest>(
-            keto::server_common::Events::REQUEST_SESSION_KEY,sessionKeyRequest));
-    //keto::event::Event resultEvent = std::dynamic_pointer_cast<keto::event::EventServiceInterface>(keto::module::ModuleManager::getInstance()->getModule(keto::event::EventServiceInterface::KETO_EVENT_SERVICE_MODULE))->processEvent(event);
-    
-    //SessionKeyResponse sessionKeyResponse = 
-    //        keto::server_common::fromEvent<SessionKeyResponse>(
-    //        resultEvent);
+    std::shared_ptr<HttpSession> ptr;
+        
+    if (this->clientHashMap.count(clientHash)) {
+        ptr = this->clientHashMap[clientHash];
+    } else {
+        ptr = std::shared_ptr<HttpSession>(new HttpSession(clientHash));
+        this->clientHashMap[ptr->getClientHash()] = ptr;
+        this->clientSessionMap[ptr->getSessionHash()] = ptr;
+    }
     
     std::string result;
     keto::proto::ClientResponse response;
     response.set_response(keto::proto::HelloResponse::WELCOME);
-    response.set_session_hash(sessionKeyRequest.session_hash());
-    //response.set_session_key(sessionKeyResponse.session_key());
+    response.set_session_hash(vectorUtils.copyVectorToString(ptr->getSessionHash()));
+    response.set_session_key(vectorUtils.copyVectorToString(
+            keto::crypto::SecureVectorUtils().copyFromSecure(
+            ptr->getSessionKey())));
     response.SerializeToString(&result);
     return result;
 }
