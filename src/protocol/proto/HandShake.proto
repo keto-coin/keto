@@ -32,6 +32,14 @@ message ClientResponse {
     bytes session_key = 3;
 }
 
+// These messages are currently not implemented
+// If necessary to provide a follow up to the initial hello and client response
+// they will be implemented.
+//
+// The signed client hash when verified by the server is currently seen as
+// sufficient atleast during development. If it proves to be in addiquete
+// the the underlying encrypted connection is not sufficient these will be
+// implemented.
 // a message encrypting the 
 message ClientConfirmation {
     bytes encrypted_bytes = 1;

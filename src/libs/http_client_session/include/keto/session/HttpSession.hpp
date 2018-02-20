@@ -69,6 +69,7 @@ private:
     std::string host;
     std::string port;
     keto::crypto::KeyLoader keyLoader;
+    keto::proto::ClientResponse clientResponse;
     
     boost::beast::http::request<boost::beast::http::string_body>
     createProtobufRequest(const std::string& buffer);

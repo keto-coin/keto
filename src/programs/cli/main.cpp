@@ -123,43 +123,6 @@ int main(int argc, char** argv)
         // This holds the root certificate used for verification
         keto::ssl::load_root_certificates(ctx);
 
-        /*// These objects perform our I/O
-        tcp::resolver resolver{ioc};
-        ssl::stream<tcp::socket> stream{ioc, ctx};
-
-        // Set SNI Hostname (many hosts need this to handshake successfully)
-        if(! SSL_set_tlsext_host_name(stream.native_handle(), host.c_str()))
-        {
-            boost::system::error_code ec{static_cast<int>(::ERR_get_error()), boost::asio::error::get_ssl_category()};
-            throw boost::system::system_error{ec};
-        }
-
-        // Look up the domain name
-        auto const results = resolver.resolve(host, port);
-
-        // Make the connection on the IP address we get from a lookup
-        boost::asio::connect(stream.next_layer(), results.begin(), results.end());
-
-        // Perform the SSL handshake
-        stream.handshake(ssl::stream_base::client);
-
-        // Set up an HTTP GET request message
-        http::request<http::string_body> req{http::verb::get, target, keto::cli::Constants::HTTP_VERSION};
-        req.set(http::field::host, host);
-        req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
-
-        // Send the HTTP request to the remote host
-        http::write(stream, req);
-
-        // This buffer is used for reading and must be persisted
-        boost::beast::flat_buffer buffer;
-
-        // Declare a container to hold the response
-        http::response<http::dynamic_body> res;
-
-        // Receive the HTTP response
-        http::read(stream, buffer, res);*/
-        
         keto::session::HttpSession session(ioc,ctx,
                 privateKey,publicKey);
         std::string result= 
