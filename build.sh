@@ -73,6 +73,9 @@ if [ $ARCH == "ubuntu" ]; then
     
     BOTAN_ROOT=${HOME}/opt/botan/
     export BOTAN_ROOT
+
+    ROCKSDB_ROOT=${HOME}/opt/rocksdb/
+    export ROCKSDB_ROOT
 fi
 
 if [ $ARCH == "darwin" ]; then
