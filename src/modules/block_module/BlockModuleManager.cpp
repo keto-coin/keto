@@ -18,6 +18,8 @@
 #include "keto/common/Log.hpp"
 #include "keto/common/MetaInfo.hpp"
 #include "keto/block/BlockModuleManager.hpp"
+#include "keto/block/StorageManager.hpp"
+#include "include/keto/block/StorageManager.hpp"
 
 namespace keto {
 namespace block {
@@ -43,12 +45,14 @@ const std::string BlockModuleManager::getVersion() const {
 
 // lifecycle methods
 void BlockModuleManager::start() {
+    StorageManager::init();
     modules["blockModule"] = std::make_shared<BlockModule>();
     KETO_LOG_INFO << "[BlockModuleManager] Started the BlockModuleManager";
 }
 
 void BlockModuleManager::stop() {
     modules.clear();
+    StorageManager::fin();
     KETO_LOG_INFO << "[BlockModuleManager] The BlockModuleManager is being stopped";
 }
 

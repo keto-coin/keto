@@ -17,9 +17,6 @@
 #include <botan/pkcs8.h>
 #include <botan/hex.h>
 
-// protobuf includes
-#include "HandShake.pb.h"
-
 #include "keto/common/HttpEndPoints.hpp"
 #include "keto/session/HttpSession.hpp"
 #include "keto/common/Constants.hpp"

@@ -36,6 +36,7 @@ target_include_directories(keto_cli
         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/evironment/include"
         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
+        PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
         ${BOTAN_INCLUDE_DIR})
 
 target_link_libraries( keto_cli 

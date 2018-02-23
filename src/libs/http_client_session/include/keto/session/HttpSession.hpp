@@ -20,6 +20,10 @@
 #include <string>
 #include <memory>
 
+// protobuf includes
+#include "HandShake.pb.h"
+
+
 // boost and beast includes
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>

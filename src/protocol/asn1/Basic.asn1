@@ -7,6 +7,7 @@ Key             ::= OCTET STRING (SIZE(1..256))
 Signature       ::= OCTET STRING
 BerEncoding     ::= OCTET STRING
 EncyptedData    ::= OCTET STRING
+BinaryData      ::= OCTET STRING
 
 
 END

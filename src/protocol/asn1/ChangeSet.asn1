@@ -1,0 +1,25 @@
+ChangeSetModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
+    IMPORTS Version, Signature, BinaryData, Hash
+        FROM BasicModule;
+
+ChangeData ::= CHOICE {
+    asn1Change         ANY,
+    binaryChange       BinaryData
+}
+
+
+Change ::= SEQUENCE {
+    version             Version,
+    target              Hash,
+    changeData          ChangeData
+}
+
+ChangeSet ::= SEQUENCE {
+    version             Version,
+    transactionHash     Hash,
+    accountHash         Hash,
+    signature           Signature,
+    changes    SEQUENCE OF Change
+}
+
+END
