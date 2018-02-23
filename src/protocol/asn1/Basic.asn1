@@ -9,5 +9,19 @@ BerEncoding     ::= OCTET STRING
 EncyptedData    ::= OCTET STRING
 BinaryData      ::= OCTET STRING
 
+Status ::= ENUMERATED {
+    init    (0),
+    route   (1),
+    preCrBlock (2),
+    postCrBlock   (3),
+    preProcessBalance (4),
+    process (5),
+    wait    (6),
+    postWait (7),
+    preDrBlock (8),
+    postDrBlock (9),
+    complete (10)
+}
+
 
 END

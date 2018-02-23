@@ -1,5 +1,5 @@
 TransactionModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
-    IMPORTS Number, Hash, Version, Key, Signature
+    IMPORTS Number, Hash, Version, Key, Signature, Status
         FROM BasicModule
         Account 
         FROM AccountModule
@@ -53,6 +53,8 @@ TransactionMessage ::= SEQUENCE {
     -- transaction 
     signedTransaction   ANY,
     transactionTrace    SEQUENCE OF TransactionTrace,
+    -- status and changeset
+    currentStatus       Status,
     changeSet           SEQUENCE OF ChangeSet
 }
 

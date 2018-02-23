@@ -5,17 +5,15 @@ package keto.proto;
 enum TransactionStatus {
     INIT = 0;
     ROUTE = 1;
-    CR_BLOCK_BALANCE = 2;
-    PRE_CR_BLOCK = 3;
-    POST_CR_BLOCK = 4;
-    PRE_PROCESS_BALANCE = 5;
-    PROCESS = 6;
-    WAIT = 7;
-    POST_WAIT = 8;
-    DR_BLOCK_BALANCE = 9;
-    PRE_DR_BLOCK = 10;
-    POST_DR_BLOCK = 11;
-    COMPLETE = 12;
+    PRE_CR_BLOCK = 2;
+    POST_CR_BLOCK = 3;
+    PRE_PROCESS_BALANCE = 4;
+    PROCESS = 5;
+    WAIT = 6;
+    POST_WAIT = 7;
+    PRE_DR_BLOCK = 8;
+    POST_DR_BLOCK = 9;
+    COMPLETE = 10;
     
     FAILURE = 100;
     REJECT = 200;

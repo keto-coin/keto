@@ -1,5 +1,5 @@
 ChangeSetModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
-    IMPORTS Version, Signature, BinaryData, Hash
+    IMPORTS Version, Signature, BinaryData, Hash, Status
         FROM BasicModule;
 
 ChangeData ::= CHOICE {
@@ -19,6 +19,7 @@ ChangeSet ::= SEQUENCE {
     transactionHash     Hash,
     accountHash         Hash,
     signature           Signature,
+    applyStatus         Status,
     changes    SEQUENCE OF Change
 }
 
