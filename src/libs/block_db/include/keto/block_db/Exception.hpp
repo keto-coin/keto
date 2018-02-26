@@ -18,7 +18,7 @@
 #include "keto/common/Exception.hpp"
 
 namespace keto {
-namespace db {
+namespace block_db {
 
 // the keto db
 KETO_DECLARE_EXCEPTION( DBException, "DB Exception." );

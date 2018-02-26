@@ -13,12 +13,11 @@
 
 #include <sstream>
 
-#include "keto/db/Exception.hpp"
-#include "keto/db/DBConnector.hpp"
-#include "include/keto/db/DBConnector.hpp"
+#include "keto/block_db/Exception.hpp"
+#include "keto/block_db/DBConnector.hpp"
 
 namespace keto {
-namespace db {
+namespace block_db {
 
 DBConnector::DBConnector(const std::string& path) {
     rocksdb::Options options;
@@ -28,7 +27,7 @@ DBConnector::DBConnector(const std::string& path) {
     if (!status.ok()) {
         std::stringstream ss;
         ss << "Failed to connect to the database [" << path << "]" << std::endl;
-        BOOST_THROW_EXCEPTION(keto::db::DBConnectionException(
+        BOOST_THROW_EXCEPTION(keto::block_db::DBConnectionException(
                 ss.str()));
     }
 }
@@ -36,6 +35,10 @@ DBConnector::DBConnector(const std::string& path) {
 DBConnector::~DBConnector() {
 }
 
+
+rocksdb::DB* DBConnector::getDB() {
+    return this->db;
+}
 
 
 

@@ -20,7 +20,7 @@
 #include "rocksdb/db.h"
 
 namespace keto {
-namespace db {
+namespace block_db {
 
 class DBConnector;
 typedef std::shared_ptr<DBConnector> DBConnectorPtr;
@@ -31,7 +31,7 @@ public:
     DBConnector(const DBConnector& orig) = delete;
     virtual ~DBConnector();
     
-    
+    rocksdb::DB* getDB();
 private:
     rocksdb::DB* db;
 };
