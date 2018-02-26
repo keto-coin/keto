@@ -11,8 +11,8 @@
  * Created on February 25, 2018, 11:47 AM
  */
 
-#ifndef TRANSACTION_HPP
-#define TRANSACTION_HPP
+#ifndef KETO_MEMORY_TRANSACTION_HPP
+#define KETO_MEMORY_TRANSACTION_HPP
 
 #include <memory>
 
@@ -22,7 +22,7 @@ namespace transaction {
 class Transaction;
 typedef std::shared_ptr<Transaction> TransactionPtr;
     
-class Tranaction {
+class Transaction {
 public:
     virtual void commit() = 0;
     virtual void rollback() = 0;

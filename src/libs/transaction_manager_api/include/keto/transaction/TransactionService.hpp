@@ -20,7 +20,7 @@
 namespace keto {
 namespace transaction {
 
-class TransactionManager {
+class TransactionService {
 public:
     static constexpr const char* KETO_TRANSACTION_MANAGER = "transaction_manager";
     

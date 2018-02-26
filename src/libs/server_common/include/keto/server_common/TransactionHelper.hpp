@@ -16,7 +16,7 @@
 
 #include "keto/transaction/Transaction.hpp"
 #include "keto/transaction/Resource.hpp"
-#include "keto/transaction/TransactionManager.hpp"
+#include "keto/transaction/TransactionService.hpp"
 
 namespace keto {
 namespace server_common {

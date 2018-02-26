@@ -20,15 +20,15 @@ namespace keto {
 namespace server_common {
 
 keto::transaction::TransactionPtr createTransaction() {
-    return std::dynamic_pointer_cast<keto::transaction::TransactionManager>(
+    return std::dynamic_pointer_cast<keto::transaction::TransactionService>(
             keto::module::ModuleManager::getInstance()->getModule(
-            keto::transaction::TransactionManager::KETO_TRANSACTION_MANAGER))->createTransaction();
+            keto::transaction::TransactionService::KETO_TRANSACTION_MANAGER))->createTransaction();
 }
 
 void enlistResource(keto::transaction::Resource& resource) {
-    std::dynamic_pointer_cast<keto::transaction::TransactionManager>(
+    std::dynamic_pointer_cast<keto::transaction::TransactionService>(
             keto::module::ModuleManager::getInstance()->getModule(
-            keto::transaction::TransactionManager::KETO_TRANSACTION_MANAGER))->
+            keto::transaction::TransactionService::KETO_TRANSACTION_MANAGER))->
             enlistResource(resource);
 }
 
