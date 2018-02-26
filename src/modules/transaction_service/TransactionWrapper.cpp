@@ -12,6 +12,7 @@
  */
 
 #include <vector>
+#include <iostream>
 
 #include "keto/transaction/TransactionWrapper.hpp"
 #include "include/keto/transaction/TransactionWrapper.hpp"
@@ -20,6 +21,7 @@ namespace keto {
 namespace transaction {
 
 TransactionWrapper::TransactionWrapper() {
+    
 }
 
 TransactionWrapper::~TransactionWrapper() {

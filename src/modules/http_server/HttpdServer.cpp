@@ -26,6 +26,9 @@
 #include "keto/common/HttpEndPoints.hpp"
 #include "keto/server_session/HttpRequestManager.hpp"
 
+#include "keto/transaction/Transaction.hpp"
+#include "keto/server_common/TransactionHelper.hpp"
+
 #include "keto/common/Log.hpp"
 #include "keto/common/Exception.hpp"
 
@@ -168,10 +171,13 @@ handle_request(
 
     // Build the path to the requested file
     if (keto::server_session::HttpRequestManager::getInstance()->checkRequest(req)) {
+        keto::transaction::TransactionPtr transactionPtr = keto::server_common::createTransaction();
         try {
-            return send(
+            send(
                 keto::server_session::HttpRequestManager::getInstance()->
                 handle_request(req));
+            transactionPtr->commit();
+            return;
         } catch (keto::common::Exception& ex) {
             KETO_LOG_ERROR << "Failed to process the request : " << req;
             KETO_LOG_ERROR << "Cause: " << boost::diagnostic_information(ex,true);
