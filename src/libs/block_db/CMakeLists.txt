@@ -6,8 +6,10 @@ include_directories(${PROTOBUF_INCLUDE_DIR})
 ## SORT .cpp by most likely to change / break compile
 add_library( keto_block_db
             
+            Constants.cpp
             DBConnector.cpp
             DBManager.cpp
+            BlockChainStore.cpp
 
              ${HEADERS}
            )
@@ -19,9 +21,11 @@ target_include_directories( keto_block_db
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../crypto/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../event_service_api/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../transaction_manager_api/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../server_common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../module_manager/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/" 
                             PUBLIC "${PROTO_HDRS}"
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}

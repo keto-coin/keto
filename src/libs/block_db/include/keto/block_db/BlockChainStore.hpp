@@ -17,7 +17,10 @@
 #include <string>
 #include <memory>
 
-#include "keto/block_db/DBManager.h"
+#include "SignedBlock.h"
+
+#include "keto/block_db/DBManager.hpp"
+
 
 namespace keto {
 namespace block_db {
@@ -28,10 +31,15 @@ public:
     BlockChainStore(const BlockChainStore& orig) = delete;
     virtual ~BlockChainStore();
     
+    static std::shared_ptr<BlockChainStore> init();
+    static void fin();
+    static std::shared_ptr<BlockChainStore> getInstance();
     
+    
+    void writeBlock(const SignedBlock& signedBlock);
     
 private:
-    std::shared_ptr<DBManager> DBManagerPtr;
+    std::shared_ptr<DBManager> dbManagerPtr;
 
 };
 

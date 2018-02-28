@@ -18,6 +18,8 @@
 #include <memory>
 
 #include "rocksdb/db.h"
+#include "rocksdb/utilities/transaction.h"
+#include "rocksdb/utilities/transaction_db.h"
 
 namespace keto {
 namespace block_db {
@@ -31,9 +33,9 @@ public:
     DBConnector(const DBConnector& orig) = delete;
     virtual ~DBConnector();
     
-    rocksdb::DB* getDB();
+    rocksdb::TransactionDB* getDB();
 private:
-    rocksdb::DB* db;
+    rocksdb::TransactionDB* db;
 };
 
 

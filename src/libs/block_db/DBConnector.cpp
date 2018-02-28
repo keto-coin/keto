@@ -21,9 +21,11 @@ namespace block_db {
 
 DBConnector::DBConnector(const std::string& path) {
     rocksdb::Options options;
+    rocksdb::TransactionDBOptions txn_db_options;
     options.create_if_missing = true;
-    rocksdb::Status status = rocksdb::DB::Open(options, 
-            path, &this->db);
+    
+    rocksdb::Status status = rocksdb::TransactionDB::Open(options, 
+            txn_db_options,path, &this->db);
     if (!status.ok()) {
         std::stringstream ss;
         ss << "Failed to connect to the database [" << path << "]" << std::endl;
@@ -36,7 +38,7 @@ DBConnector::~DBConnector() {
 }
 
 
-rocksdb::DB* DBConnector::getDB() {
+rocksdb::TransactionDB* DBConnector::getDB() {
     return this->db;
 }
 
