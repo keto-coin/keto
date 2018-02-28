@@ -20,7 +20,7 @@
 #include "SignedBlock.h"
 
 #include "keto/block_db/DBManager.hpp"
-
+#include "keto/block_db/BlockResourceManager.hpp"
 
 namespace keto {
 namespace block_db {
@@ -40,6 +40,7 @@ public:
     
 private:
     std::shared_ptr<DBManager> dbManagerPtr;
+    BlockResourceManagerPtr blockResourceManagerPtr;
 
 };
 

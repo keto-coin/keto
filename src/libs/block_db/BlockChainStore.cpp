@@ -11,10 +11,14 @@
  * Created on February 23, 2018, 10:19 AM
  */
 
+
+
 #include "keto/block_db/BlockChainStore.hpp"
 #include "keto/block_db/DBManager.hpp"
 #include "keto/block_db/Constants.hpp"
 #include "keto/server_common/TransactionHelper.hpp"
+#include "keto/block_db/BlockResourceManager.hpp"
+#include "keto/block_db/BlockResource.hpp"
 
 namespace keto {
 namespace block_db {
@@ -23,6 +27,8 @@ static std::shared_ptr<BlockChainStore> singleton;
     
 BlockChainStore::BlockChainStore() {
     dbManagerPtr = std::shared_ptr<DBManager>(new DBManager(Constants::DB_LIST));
+    blockResourceManagerPtr  =  BlockResourceManagerPtr(
+            new BlockResourceManager(dbManagerPtr));
 }
 
 BlockChainStore::~BlockChainStore() {
@@ -46,9 +52,10 @@ std::shared_ptr<BlockChainStore> BlockChainStore::getInstance() {
 
 
 void BlockChainStore::writeBlock(const SignedBlock& signedBlock) {
-    dbManagerPtr->getConnection(Constants::BLOCKS_INDEX)->getDB();
+    BlockResourcePtr resource = blockResourceManagerPtr->getResource();
+    rocksdb::Transaction* blockTransaction = resource->getTransaction(Constants::BLOCKS_INDEX);
+    //blockTransaction->Put()
 }
-
 
 
 }

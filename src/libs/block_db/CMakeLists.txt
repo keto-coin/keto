@@ -10,6 +10,8 @@ add_library( keto_block_db
             DBConnector.cpp
             DBManager.cpp
             BlockChainStore.cpp
+            BlockResource.cpp
+            BlockResourceManager.cpp
 
              ${HEADERS}
            )
