@@ -11,10 +11,12 @@
  * Created on February 21, 2018, 9:03 AM
  */
 
+#include <string>
+#include <iostream>
 #include <condition_variable>
 
 #include "keto/block/StorageManager.hpp"
-#include "include/keto/block/StorageManager.hpp"
+#include "keto/block_db/BlockChainStore.hpp"
 
 namespace keto {
 namespace block {
@@ -24,9 +26,11 @@ static std::shared_ptr<StorageManager> singleton;
 
 
 StorageManager::StorageManager() {
+    keto::block_db::BlockChainStore::init();
 }
 
 StorageManager::~StorageManager() {
+    keto::block_db::BlockChainStore::fin();
 }
 
 

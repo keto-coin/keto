@@ -50,7 +50,7 @@ if [ $ARCH == "ubuntu" ]; then
     cd ${TEMP_DIR}
     git clone https://github.com/facebook/rocksdb.git
     cd rocksdb
-    make static_lib
+    EXTRA_CFLAGS=-fPIC EXTRA_CXXFLAGS=-fPIC PORTABLE=1 make static_lib
     mkdir -p ${HOME}/opt/rocksdb/
     mkdir -p ${HOME}/opt/rocksdb/lib
     mkdir -p ${HOME}/opt/rocksdb/lib

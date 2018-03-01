@@ -13,8 +13,12 @@ add_library( 0020_keto_block_module
              ${HEADERS}
            )
 
-target_link_libraries( 0020_keto_block_module 
-                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} )
+target_link_libraries( 0020_keto_block_module
+                            PRIVATE keto_block_db keto_server_common keto_asn1_protocol
+                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
+                            PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
+                            PRIVATE ${ROCKSDB_LIBRARY} ${ROCKSDB_EXTRA_LIBRARY}
+                            PRIVATE ${OPENSSL_LIBRARIES} )
 target_include_directories( 0020_keto_block_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"

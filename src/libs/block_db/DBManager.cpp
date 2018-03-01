@@ -11,6 +11,7 @@
  * Created on February 23, 2018, 9:43 AM
  */
 
+#include <iostream>
 #include <sstream>
 
 #include <boost/filesystem/path.hpp>
@@ -28,9 +29,8 @@ namespace block_db {
 DBManager::DBManager(const std::vector<std::string>& databases) {
     std::shared_ptr<keto::environment::Config> config = 
             keto::environment::EnvironmentManager::getInstance()->getConfig();
-    
     for (std::string dbName : databases) {
-        if (config->getVariablesMap().count(dbName)) {
+        if (!config->getVariablesMap().count(dbName)) {
             std::stringstream ss;
             ss << "The db name supplied is not configured : " << dbName;
             BOOST_THROW_EXCEPTION(keto::block_db::InvalidDBNameException(
@@ -40,7 +40,7 @@ DBManager::DBManager(const std::vector<std::string>& databases) {
         boost::filesystem::path dbPath =  
                 keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / 
                 config->getVariablesMap()[dbName].as<std::string>();
-        connections[dbName] = DBConnectorPtr(new DBConnector(dbPath.string()));
+        connections[dbName] = DBConnectorPtr(new DBConnector(dbPath.c_str()));
     }
 }
 

@@ -7,6 +7,7 @@ include_directories(${PROTOBUF_INCLUDE_DIR})
 add_library( keto_block_db
             
             Constants.cpp
+            SliceHelper.cpp
             DBConnector.cpp
             DBManager.cpp
             BlockChainStore.cpp
@@ -26,6 +27,7 @@ target_include_directories( keto_block_db
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../transaction_manager_api/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../server_common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../module_manager/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/" 
                             PUBLIC "${PROTO_HDRS}"

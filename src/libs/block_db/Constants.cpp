@@ -19,7 +19,7 @@ const char* Constants::ACCOUNTS_INDEX = "accounts";
     
 
 const std::vector<std::string> Constants::DB_LIST = 
-    {Constants::BLOCKS_INDEX,"transactions","accounts"};
+    {Constants::BLOCKS_INDEX,Constants::TRANSACTIONS_INDEX,Constants::ACCOUNTS_INDEX};
     
 }
 }

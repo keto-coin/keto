@@ -31,7 +31,7 @@ namespace asn1 {
 template <typename Data> 
 class SerializationHelper {
 public:
-    SerializationHelper(Data* data, const struct asn_TYPE_descriptor_s *type_descriptor) 
+    SerializationHelper(const Data* data, const struct asn_TYPE_descriptor_s *type_descriptor) 
     : type_descriptor(type_descriptor) {
         char buffer[1024];
         size_t errorSize;
