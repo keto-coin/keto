@@ -89,6 +89,18 @@ std::string HttpSessionManager::processHello(const std::string& hello) {
 }
 
 
+bool HttpSessionManager::isValid(const std::vector<uint8_t>& sessionHash) {
+    if (this->clientSessionMap.count(sessionHash)) {
+        return true;
+    }
+    return false;
+}
+
+std::shared_ptr<HttpSession> HttpSessionManager::getSession(
+    const std::vector<uint8_t>& sessionHash) {
+    return this->clientSessionMap[sessionHash];
+}
+
 
 std::shared_ptr<Botan::Public_Key> HttpSessionManager::validateRemoteHash(
     keto::proto::ClientHello& clientHello) {

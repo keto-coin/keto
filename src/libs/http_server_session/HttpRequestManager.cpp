@@ -14,6 +14,7 @@
 #include <iostream>
 #include <memory>
 #include "keto/server_session/HttpRequestManager.hpp"
+#include "keto/server_session/HttpTransactionManager.hpp"
 
 namespace keto {
 namespace server_session {
@@ -23,9 +24,12 @@ static std::shared_ptr<HttpRequestManager> singleton;
 
 HttpRequestManager::HttpRequestManager() {
     httpSessionManagerPtr = std::make_shared<HttpSessionManager>();
+    httpTransactionManagerPtr = std::make_shared<HttpTransactionManager>(
+            httpSessionManagerPtr);
 }
 
 HttpRequestManager::~HttpRequestManager() {
+    httpTransactionManagerPtr.reset();
     httpSessionManagerPtr.reset();
 }
 
@@ -39,7 +43,10 @@ HttpRequestManager::checkRequest(boost::beast::http::request<boost::beast::http:
     std::string target = path.to_string();
     if (0 == target.compare(keto::common::HttpEndPoints::HAND_SHAKE)) {
         return true;
+    } else if (0 == target.compare(keto::common::HttpEndPoints::TRANSACTION)) {
+        return true;
     }
+    
     return false;
 }
 
@@ -51,6 +58,8 @@ HttpRequestManager::handle_request(
     std::string result;
     if (0 == target.compare(keto::common::HttpEndPoints::HAND_SHAKE)) {
         result = this->httpSessionManagerPtr->processHello(req.body());
+    } else if (0 == target.compare(keto::common::HttpEndPoints::TRANSACTION)) {
+        result = this->httpTransactionManagerPtr->processTransaction(req,req.body());
     }
     boost::beast::http::response<boost::beast::http::string_body> response;
     response.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);

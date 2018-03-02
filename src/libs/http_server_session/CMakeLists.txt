@@ -9,6 +9,7 @@ add_library( keto_http_server_session
             HttpRequestManager.cpp 
             HttpSessionManager.cpp
             HttpSession.cpp
+            HttpTransactionManager.cpp
 
              ${HEADERS}
            )
@@ -22,7 +23,9 @@ target_include_directories( keto_http_server_session
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../event_service_api/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../server_common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../module_manager/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/"
                             PUBLIC "${PROTO_HDRS}"
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}

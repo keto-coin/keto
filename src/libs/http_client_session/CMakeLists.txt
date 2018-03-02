@@ -17,10 +17,14 @@ target_include_directories( keto_http_client_session
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../ssl/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../common/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../chain_common/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../server_common/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../crypto/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../environment/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/"
                             PUBLIC "${PROTO_HDRS}"
                             PRIVATE ${OPENSSL_LIBRARIES} ${pthread_library}
                             ${Boost_INCLUDE_DIRS}

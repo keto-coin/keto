@@ -44,6 +44,7 @@
 #include "keto/environment/Constants.hpp"
 #include "keto/ssl/RootCertificate.hpp"
 #include "keto/crypto/KeyLoader.hpp"
+#include "keto/chain_common/SignedTransactionBuilder.hpp"
 
 namespace keto {
 namespace session {
@@ -65,7 +66,7 @@ public:
     
     HttpSession& handShake();
     
-    std::string makeRequest(const std::string& request);
+    std::string makeRequest(std::shared_ptr<keto::chain_common::SignedTransactionBuilder>& request);
     
 private:
     boost::asio::io_context& ioc;
@@ -73,10 +74,11 @@ private:
     std::string host;
     std::string port;
     keto::crypto::KeyLoader keyLoader;
+    bool hasSession;
     keto::proto::ClientResponse clientResponse;
     
     boost::beast::http::request<boost::beast::http::string_body>
-    createProtobufRequest(const std::string& buffer);
+    createProtobufRequest(const std::string& endPoint, const std::string& buffer);
     
     boost::beast::http::response<boost::beast::http::string_body> 
     makeRequest(boost::beast::http::request<boost::beast::http::string_body> request);

@@ -38,7 +38,8 @@ public:
     
     std::string processHello(const std::string& hello);
     
-    
+    bool isValid(const std::vector<uint8_t>& sessionHash);
+    std::shared_ptr<HttpSession> getSession(const std::vector<uint8_t>& sessionHash);
     
 protected:
     

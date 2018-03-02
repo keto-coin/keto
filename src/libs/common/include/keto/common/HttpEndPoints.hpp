@@ -23,9 +23,12 @@ public:
     HttpEndPoints(const HttpEndPoints& orig) = delete;
     virtual ~HttpEndPoints() = delete;
     
-    
+    // end points
     static constexpr const char* HAND_SHAKE = "/hand_shake";
+    static constexpr const char* TRANSACTION = "/transaction";
     
+    // headers
+    static constexpr const char* HEADER_SESSION_HASH = "session_hash";
 };
     
     

@@ -17,12 +17,15 @@
 #include <botan/pkcs8.h>
 #include <botan/hex.h>
 
+#include "BlockChain.pb.h"
+
 #include "keto/common/HttpEndPoints.hpp"
 #include "keto/session/HttpSession.hpp"
 #include "keto/common/Constants.hpp"
-#include "keto/session/HttpSession.hpp"
+#include "keto/server_common/VectorUtils.hpp"
 #include "keto/crypto/HashGenerator.hpp"
 #include "keto/crypto/SignatureGenerator.hpp"
+#include "keto/crypto/SecureVectorUtils.hpp"
 #include "keto/session/HttpSession.hpp"
 #include "keto/session/Exception.hpp"
 
@@ -34,7 +37,7 @@ namespace session {
 HttpSession::HttpSession(
         boost::asio::io_context& ioc, boost::asio::ssl::context& ctx,
         const std::string& privateKey, const std::string& publicKey) :
-    ioc(ioc), ctx(ctx), keyLoader(privateKey,publicKey) {
+    ioc(ioc), ctx(ctx), keyLoader(privateKey,publicKey), hasSession(false) {
     
     
     
@@ -81,27 +84,45 @@ HttpSession& HttpSession::handShake() {
     std::string buffer;
     clientHello.SerializeToString(&buffer);
     boost::beast::http::response<boost::beast::http::string_body> response = 
-        this->makeRequest(this->createProtobufRequest(buffer));
+        this->makeRequest(this->createProtobufRequest(
+            keto::common::HttpEndPoints::HAND_SHAKE,buffer));
     
     clientResponse.ParseFromString(response.body());
     if (clientResponse.response() != keto::proto::HelloResponse::WELCOME) {
         BOOST_THROW_EXCEPTION(keto::session::ClientAuthorizationFailureException());
     }
-    
-    std::cout << "Finished : " << clientResponse.response() << "was expecting " << 
-            keto::proto::HelloResponse::WELCOME << std::endl;
+    hasSession = true;
     return (*this);
 }
 
-std::string HttpSession::makeRequest(const std::string& request) {
+std::string HttpSession::makeRequest(
+    std::shared_ptr<keto::chain_common::SignedTransactionBuilder>& signedTransaction) {
     
-    return "After making request";
+    keto::proto::Transaction transaction;
+    transaction.set_transaction_hash(signedTransaction->getHash());
+    transaction.set_transaction_signature(signedTransaction->getSignature());
+    transaction.set_status(keto::proto::INIT);
+    std::vector<uint8_t> serializedTransaction = 
+        signedTransaction->operator std::vector<uint8_t>&();
+    transaction.set_asn1_transaction_message(
+        serializedTransaction.data(),serializedTransaction.size());
+    
+    std::string buffer;
+    transaction.SerializeToString(&buffer);
+    boost::beast::http::response<boost::beast::http::string_body> response = 
+        this->makeRequest(this->createProtobufRequest(
+            keto::common::HttpEndPoints::TRANSACTION,buffer));
+    
+    std::stringstream ss;
+    ss << "Made request : " << response.body();
+    
+    return ss.str();
 }
 
 boost::beast::http::request<boost::beast::http::string_body>
-HttpSession::createProtobufRequest(const std::string& buffer) {
+HttpSession::createProtobufRequest(const std::string& endPoint, const std::string& buffer) {
     boost::beast::http::request<boost::beast::http::string_body> req{boost::beast::http::verb::post, 
-            keto::common::HttpEndPoints::HAND_SHAKE, 
+            endPoint, 
             keto::common::Constants::HTTP_VERSION};
     req.insert(keto::common::Constants::CONTENT_TYPE_HEADING,
             keto::common::Constants::PROTOBUF_CONTENT_TYPE);
@@ -128,6 +149,16 @@ HttpSession::makeRequest(boost::beast::http::request<boost::beast::http::string_
     // Set up an HTTP GET request message
     request.set(boost::beast::http::field::host, this->host);
     request.set(boost::beast::http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+    
+    if (hasSession) {
+        keto::server_common::VectorUtils vectorUtils;
+        keto::crypto::SecureVectorUtils secureVectorUtils;
+        keto::asn1::HashHelper hashHelper(secureVectorUtils.copyToSecure(
+                vectorUtils.copyStringToVector(
+            this->clientResponse.session_hash())));
+        request.set(keto::common::HttpEndPoints::HEADER_SESSION_HASH,
+                hashHelper.getHash(keto::common::HEX));
+    }
 
     // Send the HTTP request to the remote host
     boost::beast::http::write(stream, request);

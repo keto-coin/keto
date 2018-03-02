@@ -25,6 +25,12 @@ public:
     static constexpr const char* PRIVATE_KEY = "private_key";
     static constexpr const char* PUBLIC_KEY = "public_key";
     
+    static constexpr const char* ACTION = "action";
+    static constexpr const char* PARENT = "parent";
+    static constexpr const char* SOURCE_ACCOUNT = "source";
+    static constexpr const char* TARGET_ACCOUNT = "target";
+    static constexpr const char* VALUE = "value";
+    
     static const int HTTP_VERSION = 11;
     
     

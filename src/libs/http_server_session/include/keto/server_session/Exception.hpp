@@ -26,6 +26,7 @@ KETO_DECLARE_EXCEPTION( HttpServerSessionException, "Keto Http Server Session." 
 // the 
 KETO_DECLARE_DERIVED_EXCEPTION (HttpServerSessionException, MessageSerializationException , "The server message failed serialize.");
 KETO_DECLARE_DERIVED_EXCEPTION (HttpServerSessionException, MessageDeserializationException , "The server message failed deserialize.");
+KETO_DECLARE_DERIVED_EXCEPTION (HttpServerSessionException, InvalidSessionException , "Invalid client session.");
     
 }
 }

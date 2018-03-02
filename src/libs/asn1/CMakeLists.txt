@@ -1,5 +1,7 @@
 file(GLOB HEADERS "include/keto/asn1/*.hpp")
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 ## SORT .cpp by most likely to change / break compile
 add_library( keto_asn1_common
             

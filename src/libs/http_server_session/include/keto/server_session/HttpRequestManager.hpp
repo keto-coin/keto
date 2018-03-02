@@ -24,6 +24,7 @@
 #include "keto/common/HttpEndPoints.hpp"
 
 #include "keto/server_session/HttpSessionManager.hpp"
+#include "keto/server_session/HttpTransactionManager.hpp"
 
 namespace keto {
 namespace server_session {
@@ -45,6 +46,7 @@ public:
     
 private:
     std::shared_ptr<HttpSessionManager> httpSessionManagerPtr;
+    std::shared_ptr<HttpTransactionManager> httpTransactionManagerPtr;
     
     HttpRequestManager();
     
