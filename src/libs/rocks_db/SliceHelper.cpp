@@ -14,11 +14,10 @@
 #include <rocksdb/slice.h>
 #include <vector>
 
-#include "keto/block_db/SliceHelper.hpp"
-#include "include/keto/block_db/SliceHelper.hpp"
+#include "keto/rocks_db/SliceHelper.hpp"
 
 namespace keto {
-namespace block_db {
+namespace rocks_db {
 
 
 SliceHelper::SliceHelper() {

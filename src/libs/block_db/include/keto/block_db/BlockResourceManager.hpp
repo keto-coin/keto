@@ -19,7 +19,7 @@
 
 #include "keto/transaction/Resource.hpp"
 
-#include "keto/block_db/DBManager.hpp"
+#include "keto/rocks_db/DBManager.hpp"
 #include "keto/block_db/BlockResource.hpp"
 
 
@@ -32,7 +32,7 @@ typedef std::shared_ptr<BlockResourceManager> BlockResourceManagerPtr;
     
 class BlockResourceManager : keto::transaction::Resource {
 public:
-    BlockResourceManager(std::shared_ptr<DBManager> dbManagerPtr);
+    BlockResourceManager(std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr);
     BlockResourceManager(const BlockResourceManager& orig) = delete;
     virtual ~BlockResourceManager();
     
@@ -43,7 +43,7 @@ public:
     
 private:
     static thread_local BlockResourcePtr blockResourcePtr;
-    std::shared_ptr<DBManager> dbManagerPtr;
+    std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;
 };
 
 

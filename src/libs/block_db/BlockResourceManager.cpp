@@ -19,7 +19,8 @@ namespace block_db {
 
 thread_local BlockResourcePtr BlockResourceManager::blockResourcePtr;
 
-BlockResourceManager::BlockResourceManager(std::shared_ptr<DBManager> dbManagerPtr) :
+BlockResourceManager::BlockResourceManager(
+    std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr) :
     dbManagerPtr(dbManagerPtr) {
 }
 

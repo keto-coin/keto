@@ -15,7 +15,7 @@
 #include <iostream>
 
 #include "keto/block_db/BlockChainStore.hpp"
-#include "keto/block_db/DBManager.hpp"
+#include "keto/rocks_db/DBManager.hpp"
 #include "keto/block_db/Constants.hpp"
 #include "keto/server_common/TransactionHelper.hpp"
 #include "keto/asn1/SerializationHelper.hpp"
@@ -23,7 +23,7 @@
 #include "keto/crypto/SecureVectorUtils.hpp"
 #include "keto/block_db/BlockResourceManager.hpp"
 #include "keto/block_db/BlockResource.hpp"
-#include "keto/block_db/SliceHelper.hpp"
+#include "keto/rocks_db/SliceHelper.hpp"
 
 
 namespace keto {
@@ -32,7 +32,8 @@ namespace block_db {
 static std::shared_ptr<BlockChainStore> singleton;
     
 BlockChainStore::BlockChainStore() {
-    dbManagerPtr = std::shared_ptr<DBManager>(new DBManager(Constants::DB_LIST));
+    dbManagerPtr = std::shared_ptr<keto::rocks_db::DBManager>(
+            new keto::rocks_db::DBManager(Constants::DB_LIST));
     blockResourceManagerPtr  =  BlockResourceManagerPtr(
             new BlockResourceManager(dbManagerPtr));
 }
@@ -65,8 +66,8 @@ void BlockChainStore::writeBlock(const SignedBlock& signedBlock) {
     std::shared_ptr<keto::asn1::SerializationHelper<SignedBlock>> serializationHelperPtr =
             std::make_shared<keto::asn1::SerializationHelper<SignedBlock>>(
                 &signedBlock,&asn_DEF_SignedBlock);
-    SliceHelper valueHelper((const std::vector<uint8_t>)(*serializationHelperPtr));
-    SliceHelper blockHashHelper(keto::crypto::SecureVectorUtils().copyFromSecure(
+    keto::rocks_db::SliceHelper valueHelper((const std::vector<uint8_t>)(*serializationHelperPtr));
+    keto::rocks_db::SliceHelper blockHashHelper(keto::crypto::SecureVectorUtils().copyFromSecure(
         keto::asn1::HashHelper(signedBlock.hash)));
     blockTransaction->Put(blockHashHelper,valueHelper);
     

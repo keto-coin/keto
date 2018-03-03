@@ -1,21 +1,20 @@
-file(GLOB HEADERS "include/keto/block_db/*.hpp")
+file(GLOB HEADERS "include/keto/rocks_db/*.hpp")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include_directories(${PROTOBUF_INCLUDE_DIR})
 
 ## SORT .cpp by most likely to change / break compile
-add_library( keto_block_db
+add_library( keto_rocks_db
             
-            Constants.cpp
-            BlockChainStore.cpp
-            BlockResource.cpp
-            BlockResourceManager.cpp
-
+            SliceHelper.cpp
+            DBConnector.cpp
+            DBManager.cpp
+            
              ${HEADERS}
            )
 
-target_link_libraries( keto_block_db)
-target_include_directories( keto_block_db
+target_link_libraries( keto_rocks_db)
+target_include_directories( keto_rocks_db
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../crypto/include"
@@ -25,7 +24,6 @@ target_include_directories( keto_block_db
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../server_common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
-                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../rocks_db/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/" 
                             PUBLIC "${PROTO_HDRS}"
@@ -39,10 +37,10 @@ target_include_directories( keto_block_db
 #endif(MSVC)
 
 INSTALL( TARGETS
-   keto_block_db
+   keto_rocks_db
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
 )
-INSTALL( FILES ${HEADERS} DESTINATION "include/keto/block_db" )
+INSTALL( FILES ${HEADERS} DESTINATION "include/keto/rocks_db" )

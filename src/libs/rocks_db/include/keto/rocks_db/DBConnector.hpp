@@ -22,7 +22,7 @@
 #include "rocksdb/utilities/transaction_db.h"
 
 namespace keto {
-namespace block_db {
+namespace rocks_db {
 
 class DBConnector;
 typedef std::shared_ptr<DBConnector> DBConnectorPtr;

@@ -19,7 +19,7 @@
 
 #include "SignedBlock.h"
 
-#include "keto/block_db/DBManager.hpp"
+#include "keto/rocks_db/DBManager.hpp"
 #include "keto/block_db/BlockResourceManager.hpp"
 
 namespace keto {
@@ -39,7 +39,7 @@ public:
     void writeBlock(const SignedBlock& signedBlock);
     
 private:
-    std::shared_ptr<DBManager> dbManagerPtr;
+    std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;
     BlockResourceManagerPtr blockResourceManagerPtr;
 
 };

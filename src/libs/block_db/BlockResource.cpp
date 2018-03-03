@@ -14,13 +14,12 @@
 #include <rocksdb/utilities/transaction.h>
 
 #include "keto/block_db/BlockResource.hpp"
-#include "include/keto/block_db/DBManager.hpp"
 
 namespace keto {
 namespace block_db {
 
 
-BlockResource::BlockResource(std::shared_ptr<DBManager> dbManagerPtr) : 
+BlockResource::BlockResource(std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr) : 
 dbManagerPtr(dbManagerPtr) {
 }
 
@@ -59,7 +58,7 @@ void BlockResource::rollback() {
 
 rocksdb::Transaction* BlockResource::getTransaction(const std::string& name) {
     if (!transactionMap.count(name)) {
-        keto::block_db::DBConnectorPtr dbConnectionPtr = 
+        keto::rocks_db::DBConnectorPtr dbConnectionPtr = 
                 dbManagerPtr->getConnection(name);
         rocksdb::WriteOptions write_options;
         transactionMap[name] = dbConnectionPtr->getDB()->BeginTransaction(

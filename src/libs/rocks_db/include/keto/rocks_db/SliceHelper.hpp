@@ -20,7 +20,7 @@
 #include "rocksdb/slice.h"
 
 namespace keto {
-namespace block_db {
+namespace rocks_db {
 
 class SliceHelper {
 public:

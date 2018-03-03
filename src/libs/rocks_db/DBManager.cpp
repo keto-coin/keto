@@ -16,15 +16,15 @@
 
 #include <boost/filesystem/path.hpp>
 
-#include "keto/block_db/DBManager.hpp"
-#include "keto/block_db/Exception.hpp"
+#include "keto/rocks_db/DBManager.hpp"
+#include "keto/rocks_db/Exception.hpp"
 
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/environment/Config.hpp"
 
 
 namespace keto {
-namespace block_db {
+namespace rocks_db {
 
 DBManager::DBManager(const std::vector<std::string>& databases) {
     std::shared_ptr<keto::environment::Config> config = 
@@ -33,7 +33,7 @@ DBManager::DBManager(const std::vector<std::string>& databases) {
         if (!config->getVariablesMap().count(dbName)) {
             std::stringstream ss;
             ss << "The db name supplied is not configured : " << dbName;
-            BOOST_THROW_EXCEPTION(keto::block_db::InvalidDBNameException(
+            BOOST_THROW_EXCEPTION(keto::rocks_db::RocksInvalidDBNameException(
                 ss.str()));
         }
         
@@ -48,7 +48,7 @@ DBManager::~DBManager() {
     connections.clear();
 }
 
-keto::block_db::DBConnectorPtr DBManager::getConnection(const std::string& name) {
+keto::rocks_db::DBConnectorPtr DBManager::getConnection(const std::string& name) {
     return connections[name];
 }
 

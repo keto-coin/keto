@@ -19,10 +19,10 @@
 #include <string>
 #include <memory>
 
-#include "keto/block_db/DBConnector.hpp"
+#include "keto/rocks_db/DBConnector.hpp"
 
 namespace keto {
-namespace block_db {
+namespace rocks_db {
 
 
 class DBManager {
@@ -31,12 +31,12 @@ public:
     DBManager(const DBManager& orig) = delete;
     virtual ~DBManager();
     
-    keto::block_db::DBConnectorPtr getConnection(const std::string& database);
+    keto::rocks_db::DBConnectorPtr getConnection(const std::string& database);
     
     
     
 private:
-    std::map<std::string,keto::block_db::DBConnectorPtr> connections;
+    std::map<std::string,keto::rocks_db::DBConnectorPtr> connections;
     
     
 };

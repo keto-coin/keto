@@ -24,7 +24,7 @@
 
 #include "keto/transaction/Resource.hpp"
 
-#include "keto/block_db/DBManager.hpp"
+#include "keto/rocks_db/DBManager.hpp"
 
 namespace keto {
 namespace block_db {
@@ -34,7 +34,7 @@ typedef std::shared_ptr<BlockResource> BlockResourcePtr;
 
 class BlockResource {
 public:
-    BlockResource(std::shared_ptr<DBManager> dbManagerPtr);
+    BlockResource(std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr);
     BlockResource(const BlockResource& orig) = delete;
     virtual ~BlockResource();
     
@@ -45,7 +45,7 @@ public:
     rocksdb::Transaction* getTransaction(const std::string& name);
     
 private:
-    std::shared_ptr<DBManager> dbManagerPtr;
+    std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;
     std::map<std::string,rocksdb::Transaction*> transactionMap;
     
 };
