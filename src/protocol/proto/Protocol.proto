@@ -4,6 +4,21 @@ package keto.proto;
 
 import "google/protobuf/any.proto";
 
+enum MessageType {
+    MESSAGE_TYPE_TRANSACTION = 0;
+    MESSAGE_TYPE_BLOCK = 1;
+}
+
+enum MessageOperation {
+    MESSAGE_INIT = 0;
+    MESSAGE_ROUTE = 1;
+    MESSAGE_BLOCK = 2;
+    MESSAGE_PROCESS = 3;
+    
+    // Block Operations
+    MESSAGE_PERSIST = 100;
+}
+
 /**
  * This is an example of a protobuf message.
  */
@@ -11,8 +26,14 @@ message MessageWrapper {
     
     uint32 version = 1;
     bytes session_hash = 2;
-    string messageType = 3;
-    string messageOperation = 4;
+    bytes account_hash = 3;
+    MessageType messageType = 4;
+    MessageOperation messageOperation = 5;
     
-    google.protobuf.Any msg = 5;
+    google.protobuf.Any msg = 6;
+}
+
+message MessageWrapperResponse {
+    bool  success = 1;
+    string result = 2;
 }

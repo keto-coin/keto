@@ -14,10 +14,17 @@
 #include <boost/beast/http/message.hpp>
 
 #include "BlockChain.pb.h"
+#include "Protocol.pb.h"
+#include "google/protobuf/any.h"
 
 #include "keto/common/HttpEndPoints.hpp"
 #include "keto/common/StringCodec.hpp"
 #include "keto/asn1/HashHelper.hpp"
+
+#include "keto/server_common/EventUtils.hpp"
+#include "keto/server_common/Events.hpp"
+#include "keto/server_common/EventServiceHelpers.hpp"
+
 #include "keto/server_session/HttpTransactionManager.hpp"
 #include "keto/server_session/HttpSessionManager.hpp"
 #include "keto/server_session/HttpSession.hpp"
@@ -41,9 +48,9 @@ HttpTransactionManager::~HttpTransactionManager() {
 std::string HttpTransactionManager::processTransaction(
         boost::beast::http::request<boost::beast::http::string_body>& req,
         const std::string& transactionMsg) {
+    std::string sessionHash = (const std::string&)req.base().at(keto::common::HttpEndPoints::HEADER_SESSION_HASH);
     keto::asn1::HashHelper hashHelper(
-            (const std::string&)req.base().at(keto::common::HttpEndPoints::HEADER_SESSION_HASH),
-            keto::common::HEX);
+            sessionHash,keto::common::HEX);
     std::vector<uint8_t> vectorHash = keto::crypto::SecureVectorUtils().copyFromSecure(hashHelper);
     if (!httpSessionManagerPtr->isValid(vectorHash)) {
         BOOST_THROW_EXCEPTION(keto::server_session::InvalidSessionException());
@@ -58,8 +65,23 @@ std::string HttpTransactionManager::processTransaction(
                 "Failed to deserialized the transaction message."));
     }
     
+    keto::proto::MessageWrapper wrapper;
+    wrapper.set_version(1);
+    wrapper.set_session_hash(vectorHash.data(),vectorHash.size());
+    wrapper.set_account_hash(transaction.activeaccount());
+    wrapper.set_account_hash(transaction.activeaccount());
+    wrapper.set_messagetype(keto::proto::MessageType::MESSAGE_TYPE_TRANSACTION);
+    wrapper.set_messageoperation(keto::proto::MessageOperation::MESSAGE_INIT);
+    google::protobuf::Any* any = new google::protobuf::Any();
+    any->PackFrom(transaction);
+    wrapper.set_allocated_msg(any);
     
-    return "ACCEPTED";
+    keto::proto::MessageWrapperResponse  messageWrapperResponse = 
+            keto::server_common::fromEvent<keto::proto::MessageWrapperResponse>(
+            keto::server_common::processEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
+            keto::server_common::Events::ROUTE_MESSAGE,wrapper)));
+    
+    return messageWrapperResponse.result();
 }
     
 }

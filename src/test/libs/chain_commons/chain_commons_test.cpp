@@ -110,8 +110,8 @@ BOOST_AUTO_TEST_CASE( chain_commons_test ) {
     signedTransBuild->sign();
     
     std::cout << "The sha is [" << string256 << "]" << std::endl;
-    std::cout << "The sha is [" << signedTransBuild->getHash() << "]" << std::endl;
-    std::cout << "The signature is [" << signedTransBuild->getSignature() << "]" << std::endl;
+    std::cout << "The sha is [" << signedTransBuild->getHash().getHash(keto::common::HEX) << "]" << std::endl;
+    std::cout << "The signature is [" << signedTransBuild->getSignature().getSignature(keto::common::HEX) << "]" << std::endl;
     
     std::this_thread::sleep_for (std::chrono::seconds(1));
     
@@ -122,11 +122,11 @@ BOOST_AUTO_TEST_CASE( chain_commons_test ) {
     signedTransBuild2->sign();
     
     //std::cout << "The sha is [" << string256 << "]" << std::endl;
-    std::cout << "The sha is [" << signedTransBuild2->getHash() << "]" << std::endl;
-    std::cout << "The signature is [" << signedTransBuild2->getSignature() << "]" << std::endl;
+    std::cout << "The sha is [" << signedTransBuild2->getHash().getHash(keto::common::HEX) << "]" << std::endl;
+    std::cout << "The signature is [" << signedTransBuild2->getSignature().getSignature(keto::common::HEX) << "]" << std::endl;
     
-    keto::crypto::SecureVector hashBytes = Botan::hex_decode_locked(signedTransBuild2->getHash(),true);
-    std::vector<uint8_t> signatureBytes = Botan::hex_decode(signedTransBuild2->getSignature(),true);
+    keto::crypto::SecureVector hashBytes = signedTransBuild2->getHash().operator keto::crypto::SecureVector();
+    std::vector<uint8_t> signatureBytes = Botan::hex_decode(signedTransBuild2->getSignature().getSignature(keto::common::HEX),true);
     
     std::cout << "Validation says " << keto::crypto::SignatureVerification(publicKeyVector,hashBytes).check(
             signatureBytes) << std::endl;

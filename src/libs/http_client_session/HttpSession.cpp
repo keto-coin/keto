@@ -99,8 +99,18 @@ std::string HttpSession::makeRequest(
     std::shared_ptr<keto::chain_common::SignedTransactionBuilder>& signedTransaction) {
     
     keto::proto::Transaction transaction;
-    transaction.set_transaction_hash(signedTransaction->getHash());
-    transaction.set_transaction_signature(signedTransaction->getSignature());
+    keto::asn1::HashHelper hashHelper = signedTransaction->getHash();
+    transaction.set_transaction_hash(
+        hashHelper.operator keto::crypto::SecureVector().data(),
+        hashHelper.operator keto::crypto::SecureVector().size());
+    hashHelper = signedTransaction->getHash();
+    transaction.set_transaction_signature(
+        hashHelper.operator keto::crypto::SecureVector().data(),
+        hashHelper.operator keto::crypto::SecureVector().size());
+    hashHelper = signedTransaction->getSourceAccount();
+    transaction.set_activeaccount(
+        hashHelper.operator keto::crypto::SecureVector().data(),
+        hashHelper.operator keto::crypto::SecureVector().size());
     transaction.set_status(keto::proto::INIT);
     std::vector<uint8_t> serializedTransaction = 
         signedTransaction->operator std::vector<uint8_t>&();

@@ -20,7 +20,6 @@
 
 #include "PrivateKey.h"
 #include "keto/asn1/BerEncodingHelper.hpp"
-#include "keto/asn1/SignatureHelper.hpp"
 #include "keto/crypto/SignatureGenerator.hpp"
 #include "keto/crypto/HashGenerator.hpp"
 #include "keto/chain_common/SignedTransactionBuilder.hpp"
@@ -56,14 +55,20 @@ SignedTransactionBuilder& SignedTransactionBuilder::setTransaction(
     return (*this);
 }
 
-std::string SignedTransactionBuilder::getHash() {
+keto::asn1::HashHelper SignedTransactionBuilder::getSourceAccount() {
+    keto::asn1::HashHelper accountHash(
+            this->signedTransaction->transaction.sourceAccount);
+    return accountHash;
+}
+    
+keto::asn1::HashHelper SignedTransactionBuilder::getHash() {
     keto::asn1::HashHelper hashHelper(this->signedTransaction->transactionHash);
-    return hashHelper.getHash(keto::common::HEX);
+    return hashHelper;
 }
 
-std::string SignedTransactionBuilder::getSignature() {
+keto::asn1::SignatureHelper SignedTransactionBuilder::getSignature() {
     keto::asn1::SignatureHelper signatureHelper(this->signedTransaction->signature);
-    return signatureHelper.getSignature(keto::common::HEX);
+    return signatureHelper;
 }
 
 void SignedTransactionBuilder::sign() {

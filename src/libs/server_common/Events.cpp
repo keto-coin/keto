@@ -17,9 +17,12 @@ namespace keto {
 namespace server_common {
 
 
+// events for the key store
 const char* Events::REQUEST_SESSION_KEY = "REQUEST_SESSION_KEY";
 const char* Events::REMOVE_SESSION_KEY = "REMOVE_SESSION_KEY";
 
+// events for the router
+const char* Events::ROUTE_MESSAGE = "ROUTE_MESSAGE";
 
 }
 }

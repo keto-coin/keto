@@ -23,8 +23,13 @@ public:
     Events(const Events& orig) = delete;
     virtual ~Events() = delete;
     
+    // events for the key store
     static const char* REQUEST_SESSION_KEY;
     static const char* REMOVE_SESSION_KEY;
+    
+    // events for the router
+    static const char* ROUTE_MESSAGE;
+    
 
 private:
 

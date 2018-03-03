@@ -1,35 +1,29 @@
-file(GLOB HEADERS "include/keto/router/*.hpp")
+file(GLOB HEADERS "include/keto/account/*.hpp")
 
 include_directories(${PROTOBUF_INCLUDE_DIR})
 
 ## SORT .cpp by most likely to change / break compile
-add_library( 0015_keto_router_module
+add_library( 0015_account_module
             SHARED
 
-            RouterModuleManager.cpp
-            RouterModule.cpp
-            RouterService.cpp
-            EventRegistry.cpp
+            AccountModuleManager.cpp
+            AccountModule.cpp
 
              ${HEADERS}
            )
 
-target_link_libraries( 0015_keto_router_module 
-                            PRIVATE keto_server_common
-                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
-                            PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
-                            PRIVATE ${OPENSSL_LIBRARIES} )
-target_include_directories( 0015_keto_router_module
+target_link_libraries( 0015_account_module 
+                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} )
+target_include_directories( 0015_account_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
-                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/server_common/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
                             PUBLIC "${PROTO_HDRS}"
-                            
+
                             ${Boost_INCLUDE_DIRS}
                             )
 
@@ -38,10 +32,10 @@ target_include_directories( 0015_keto_router_module
 #endif(MSVC)
 
 INSTALL( TARGETS
-   0015_keto_router_module
+   0015_account_module
 
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION shared
    ARCHIVE DESTINATION shared
 )
-INSTALL( FILES ${HEADERS} DESTINATION "include/keto/router" )
+INSTALL( FILES ${HEADERS} DESTINATION "include/keto/account" )
