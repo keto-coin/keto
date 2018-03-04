@@ -11,14 +11,15 @@ if [ $ARCH == "ubuntu" ]; then
                          autoconf libtool git curl \
                          libgflags-dev libsnappy-dev \
                          zlib1g-dev liblz4-dev libzstd-dev \
-                         bison libbison-dev flex libfl-dev
+                         bison libbison-dev flex libfl-dev \
+                         gtk-doc-tools libxml2-dev libdb-dev
     OPENSSL_ROOT_DIR=/usr/local/opt/openssl
     OPENSSL_LIBRARIES=/usr/local/opt/openssl/lib
 
     # install boost
     cd ${TEMP_DIR}
     export BOOST_ROOT=${HOME}/opt/boost_1_66_0
-    curl -L https://sourceforge.net/projects/boost/files/boost/1.66.0/boost_1_66_0.tar.bz2 > boost_1.66.0.tar.bz2
+    curl -L https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.bz2 > boost_1.66.0.tar.bz2
     tar xvf boost_1.66.0.tar.bz2
     cd boost_1_66_0/
     ./bootstrap.sh "--prefix=$BOOST_ROOT"
@@ -42,7 +43,7 @@ if [ $ARCH == "ubuntu" ]; then
     git checkout tags/1.37.14
     cmake . && make
     mkdir -p ${HOME}/opt/binaryen/
-    mv ${TEMP_DIR}/binaryen/bin ${HOME}/opt/binaryen/
+    cp -rf ${TEMP_DIR}/binaryen/bin ${HOME}/opt/binaryen/.
     rm -rf ${TEMP_DIR}/binaryen
     BINARYEN_BIN=${HOME}/opt/binaryen/bin
     
@@ -97,7 +98,36 @@ if [ $ARCH == "ubuntu" ]; then
     make install
     cd ${HOME}
     rm -rf ${TEMP_DIR}/botan
-
+    
+    # rdf libraries 
+    mkdir -p ${HOME}/opt/librdf
+    cd ${TEMP_DIR}
+    git clone git://github.com/dajobe/raptor.git
+    cd ${TEMP_DIR}/raptor
+    ./autogen.sh --prefix=${HOME}/opt/librdf --enable-shared=no
+    make
+    make install
+    cd ${HOME}
+    rm -rf ${TEMP_DIR}/raptor
+    
+    cd ${TEMP_DIR}
+    git clone git://github.com/dajobe/rasqal.git
+    cd ${TEMP_DIR}/rasqal
+    PKG_CONFIG_PATH=${HOME}/opt/librdf/lib/pkgconfig ./autogen.sh --prefix=${HOME}/opt/librdf --enable-shared=no
+    make
+    make install
+    cd ${HOME}
+    rm -rf ${TEMP_DIR}/rasqal
+    
+    cd ${TEMP_DIR}
+    git clone git://github.com/dajobe/librdf.git
+    cd ${TEMP_DIR}/librdf
+    PKG_CONFIG_PATH=${HOME}/opt/librdf/lib/pkgconfig ./autogen.sh --prefix=${HOME}/opt/librdf --enable-shared=no --with-bdb
+    make
+    make install
+    cd ${HOME}
+    rm -rf {TEMP_DIR}/librdf
+    
     # build llvm with wasm build target:
     cd ${TEMP_DIR}
     mkdir wasm-compiler
