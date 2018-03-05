@@ -19,7 +19,6 @@
 #include "keto/common/MetaInfo.hpp"
 #include "keto/block/BlockModuleManager.hpp"
 #include "keto/block/StorageManager.hpp"
-#include "include/keto/block/StorageManager.hpp"
 
 namespace keto {
 namespace block {

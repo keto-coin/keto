@@ -6,6 +6,7 @@ include_directories(${PROTOBUF_INCLUDE_DIR})
 add_library( 0015_account_module
             SHARED
 
+            StorageManager.cpp
             AccountModuleManager.cpp
             AccountModule.cpp
 
@@ -13,13 +14,19 @@ add_library( 0015_account_module
            )
 
 target_link_libraries( 0015_account_module 
-                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} )
+                            PRIVATE keto_account_db keto_rocks_db
+                            PRIVATE keto_server_common keto_asn1_protocol
+                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
+                            PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
+                            PRIVATE ${ROCKSDB_LIBRARY} ${ROCKSDB_EXTRA_LIBRARY}
+                            PRIVATE ${OPENSSL_LIBRARIES} )
 target_include_directories( 0015_account_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/account_db/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
                             PUBLIC "${PROTO_HDRS}"

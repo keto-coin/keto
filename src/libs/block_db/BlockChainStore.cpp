@@ -39,6 +39,7 @@ BlockChainStore::BlockChainStore() {
 }
 
 BlockChainStore::~BlockChainStore() {
+    blockResourceManagerPtr.reset();
     dbManagerPtr.reset();
 }
 
