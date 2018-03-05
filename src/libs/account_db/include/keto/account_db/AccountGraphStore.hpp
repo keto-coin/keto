@@ -32,6 +32,8 @@ public:
     AccountGraphStore(const std::string& dbName);
     AccountGraphStore(const AccountGraphStore& orig) = delete;
     virtual ~AccountGraphStore();
+    
+    
 private:
     librdf_world* world;
     librdf_storage* storage;
