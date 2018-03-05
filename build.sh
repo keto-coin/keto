@@ -76,6 +76,9 @@ if [ $ARCH == "ubuntu" ]; then
 
     ROCKSDB_ROOT=${HOME}/opt/rocksdb/
     export ROCKSDB_ROOT
+
+    LIBRDF_ROOT=${HOME}/opt/librdf/
+    export LIBRDF_ROOT
 fi
 
 if [ $ARCH == "darwin" ]; then

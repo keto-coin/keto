@@ -104,7 +104,7 @@ if [ $ARCH == "ubuntu" ]; then
     cd ${TEMP_DIR}
     git clone git://github.com/dajobe/raptor.git
     cd ${TEMP_DIR}/raptor
-    ./autogen.sh --prefix=${HOME}/opt/librdf --enable-shared=no
+    CFLAGS=-fPIC CPPFLAGS=-fPIC ./autogen.sh --prefix=${HOME}/opt/librdf --enable-shared=no
     make
     make install
     cd ${HOME}
@@ -113,7 +113,7 @@ if [ $ARCH == "ubuntu" ]; then
     cd ${TEMP_DIR}
     git clone git://github.com/dajobe/rasqal.git
     cd ${TEMP_DIR}/rasqal
-    PKG_CONFIG_PATH=${HOME}/opt/librdf/lib/pkgconfig ./autogen.sh --prefix=${HOME}/opt/librdf --enable-shared=no
+    CFLAGS=-fPIC CPPFLAGS=-fPIC PKG_CONFIG_PATH=${HOME}/opt/librdf/lib/pkgconfig ./autogen.sh --prefix=${HOME}/opt/librdf --enable-shared=no
     make
     make install
     cd ${HOME}
@@ -122,7 +122,7 @@ if [ $ARCH == "ubuntu" ]; then
     cd ${TEMP_DIR}
     git clone git://github.com/dajobe/librdf.git
     cd ${TEMP_DIR}/librdf
-    PKG_CONFIG_PATH=${HOME}/opt/librdf/lib/pkgconfig ./autogen.sh --prefix=${HOME}/opt/librdf --enable-shared=no --with-bdb
+    CFLAGS=-fPIC CPPFLAGS=-fPIC PKG_CONFIG_PATH=${HOME}/opt/librdf/lib/pkgconfig ./autogen.sh --prefix=${HOME}/opt/librdf --enable-shared=no --with-bdb
     make
     make install
     cd ${HOME}

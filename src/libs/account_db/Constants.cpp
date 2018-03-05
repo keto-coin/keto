@@ -13,7 +13,7 @@ namespace account_db {
 
     
 const char* Constants::ACCOUNTS_MAPPING = "accounts_mapping";
-
+const char* Constants::BASE_GRAPH = "base_graph";
     
 
 const std::vector<std::string> Constants::DB_LIST = 

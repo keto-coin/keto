@@ -10,8 +10,9 @@ add_library( keto_account_db
             AccountStore.cpp
             AccountResource.cpp
             AccountResourceManager.cpp
+            AccountGraphStore.cpp
 
-             ${HEADERS}
+            ${HEADERS}
            )
 
 target_link_libraries( keto_account_db)
@@ -32,6 +33,9 @@ target_include_directories( keto_account_db
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}
                             ${ROCKSDB_INCLUDE_DIR}
+                            ${LIBRDF_INCLUDE_DIR}
+                            ${LIBRDF_RAPTOR_INCLUDE_DIR}
+                            ${LIBRDF_RASQAL_INCLUDE_DIR}
                             )
 
 #if(MSVC)

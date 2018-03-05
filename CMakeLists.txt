@@ -86,6 +86,7 @@ find_package(Protobuf REQUIRED)
 find_package(Asn1 REQUIRED)
 find_package(Botan REQUIRED)
 find_package(RocksDB REQUIRED)
+find_package(Librdf REQUIRED)
 
 if( WIN32 )
 
