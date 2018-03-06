@@ -211,25 +211,70 @@ std::shared_ptr<ModuleWrapper> ModuleManager::getModuleWrapper(
 
 
 void ModuleManager::load(const boost::filesystem::path& libraryPath) {
-    // setup a module wrapper and load and start the module
-    std::shared_ptr<ModuleWrapper> moduleWrapperPtr = std::shared_ptr<ModuleWrapper>(
-            new ModuleWrapper(libraryPath,this->tmpDir));
-    moduleWrapperPtr->load();
-    boost::shared_ptr<ModuleManagementInterface> moduleManagerInterfacePtr = 
-            moduleWrapperPtr->getModuleManagerInterface();
-    moduleManagerInterfacePtr->start();
+    // set the module wrapper ptr at an appropriate point to prevent the
+    // library from being unloaded before we can extract the message
+    std::shared_ptr<ModuleWrapper> moduleWrapperPtr;
+    boost::shared_ptr<ModuleManagementInterface> moduleManagerInterfacePtr;
+        
+    try {
     
-    // add the module to the cointainers
-    std::lock_guard<std::mutex> guard(this->classMutex);
-    this->loadedLibraryModuleManagers[libraryPath] = moduleWrapperPtr;
-    this->loadedModuleManagementInterfaces[moduleWrapperPtr->getModuleManagerInterface()->getName()] = 
-            moduleWrapperPtr->getModuleManagerInterface();
-    std::vector<std::string> modules = moduleWrapperPtr->getModuleManagerInterface()->listModules();
-    for (std::string name : modules) {
-        this->loadedModules[name] = 
-                moduleWrapperPtr->getModuleManagerInterface()->getModule(name);
+        // setup a module wrapper and load and start the module
+        moduleWrapperPtr = std::shared_ptr<ModuleWrapper>(
+                new ModuleWrapper(libraryPath,this->tmpDir));
+        moduleWrapperPtr->load();
+        moduleManagerInterfacePtr = 
+                moduleWrapperPtr->getModuleManagerInterface();
+        moduleManagerInterfacePtr->start();
+
+        // add the module to the cointainers
+        std::lock_guard<std::mutex> guard(this->classMutex);
+        this->loadedLibraryModuleManagers[libraryPath] = moduleWrapperPtr;
+        this->loadedModuleManagementInterfaces[moduleWrapperPtr->getModuleManagerInterface()->getName()] = 
+                moduleWrapperPtr->getModuleManagerInterface();
+        std::vector<std::string> modules = moduleWrapperPtr->getModuleManagerInterface()->listModules();
+        for (std::string name : modules) {
+            this->loadedModules[name] = 
+                    moduleWrapperPtr->getModuleManagerInterface()->getModule(name);
+        }
+    
+    } catch (keto::common::Exception& ex) {
+        if (moduleManagerInterfacePtr) {
+            moduleManagerInterfacePtr->stop();
+        }
+        std::stringstream ss;
+        ss << "Failed to load the module [" << libraryPath.string() << "] : " << ex.what() << std::endl;
+        ss << "Cause: " << boost::diagnostic_information(ex,true) << std::endl;
+        BOOST_THROW_EXCEPTION(keto::module::ModuleLoadException(
+                ss.str()));
+    } catch (boost::exception& ex) {
+        // attempt to clear up
+        if (moduleManagerInterfacePtr) {
+            moduleManagerInterfacePtr->stop();
+        }
+        std::stringstream ss;
+        ss << "Failed to load the module [" << libraryPath.string() << "] : " 
+                << boost::diagnostic_information(ex,true) << std::endl;
+        BOOST_THROW_EXCEPTION(keto::module::ModuleLoadException(
+                ss.str()));
+    } catch (std::exception& ex) {
+        // attempt to clear up
+        if (moduleManagerInterfacePtr) {
+            moduleManagerInterfacePtr->stop();
+        }
+        std::stringstream ss;
+        ss << "Failed to load the module [" << libraryPath.string() << "] : " << ex.what() << std::endl;
+        BOOST_THROW_EXCEPTION(keto::module::ModuleLoadException(
+                ss.str()));
+    } catch (...) {
+        // attempt to clear up
+        if (moduleManagerInterfacePtr) {
+            moduleManagerInterfacePtr->stop();
+        }
+        std::stringstream ss;
+        ss << "Failed to load the module [" << libraryPath.string() << "]" << std::endl;
+        BOOST_THROW_EXCEPTION(keto::module::ModuleLoadException(
+                ss.str()));
     }
-    
 }
 
 

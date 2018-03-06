@@ -78,17 +78,40 @@ int main(int argc, char** argv)
         KETO_LOG_INFO << "KETOD Complete";
         
     } catch (keto::common::Exception& ex) {
+        std::cerr << "[keto::common::Exception]Keto exited unexpectedly : " << ex.what() << std::endl;
+        std::cerr << "Cause: " << boost::diagnostic_information(ex,true) << std::endl;
         KETO_LOG_ERROR << "Failed to start because : " << ex.what();
         KETO_LOG_ERROR << "Cause: " << boost::diagnostic_information(ex,true);
+        // unload to force a clean up
+        if (moduleManagerPtr) {
+            moduleManagerPtr->unload();
+        }
         return -1;
     } catch (boost::exception& ex) {
+        std::cerr << "[boost::exception]Keto exited unexpectedly : " << boost::diagnostic_information(ex,true) << std::endl;
         KETO_LOG_ERROR << "Failed to start because : " << boost::diagnostic_information(ex,true);
+        // unload to force a clean up
+        if (moduleManagerPtr) {
+            moduleManagerPtr->unload();
+        }
         return -1;
     } catch (std::exception& ex) {
-        KETO_LOG_ERROR << "Failed to start because : " << ex.what();
+        std::cerr << "[std::exception]Keto exited unexpectedly : " << std::endl;
+        std::cerr << "Keto exited unexpectedly : " << ex.what() << std::endl;
+        KETO_LOG_ERROR << "Keto exited unexpectedly : " << ex.what();
+        // unload to force a clean up
+        if (moduleManagerPtr) {
+            moduleManagerPtr->unload();
+        }
         return -1;
     } catch (...) {
-        KETO_LOG_ERROR << "Failed to start unknown error.";
+        std::cerr << "[unknown]Keto exited unexpectedly : " << std::endl;
+        std::cerr << "Keto exited unexpectedly" << std::endl;
+        KETO_LOG_ERROR << "Keto exited unexpectedly.";
+        // unload to force a clean up
+        if (moduleManagerPtr) {
+            moduleManagerPtr->unload();
+        }
         return -1;
     }
     KETO_LOG_INFO << "Exit";
