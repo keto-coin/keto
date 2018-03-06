@@ -9,6 +9,7 @@ add_library( keto_router_db
             Constants.cpp
             RouterResource.cpp
             RouterResourceManager.cpp
+            RouterStore.cpp
 
              ${HEADERS}
            )

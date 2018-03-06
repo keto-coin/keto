@@ -8,7 +8,7 @@
  * File:   StorageManager.hpp
  * Author: ubuntu
  *
- * Created on February 21, 2018, 9:03 AM
+ * Created on March 6, 2018, 6:13 AM
  */
 
 #ifndef STORAGEMANAGER_HPP
@@ -17,9 +17,8 @@
 #include <string>
 #include <memory>
 
-
 namespace keto {
-namespace block {
+namespace router {
 
 
 class StorageManager {
@@ -30,12 +29,10 @@ public:
     static std::shared_ptr<StorageManager> init();
     static void fin();
     static std::shared_ptr<StorageManager> getInstance();
-    
-    
+
 private:
     StorageManager();
-    
-    
+
 };
 
 

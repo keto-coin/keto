@@ -10,14 +10,17 @@ add_library( 0015_keto_router_module
             RouterModule.cpp
             RouterService.cpp
             EventRegistry.cpp
+            StorageManager.cpp
 
              ${HEADERS}
            )
 
 target_link_libraries( 0015_keto_router_module 
+                            PRIVATE keto_router_db keto_rocks_db
                             PRIVATE keto_server_common
                             PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
                             PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
+                            PRIVATE ${ROCKSDB_LIBRARY} ${ROCKSDB_EXTRA_LIBRARY}
                             PRIVATE ${OPENSSL_LIBRARIES} )
 target_include_directories( 0015_keto_router_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"

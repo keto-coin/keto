@@ -20,7 +20,7 @@
 #include "keto/router/RouterModuleManager.hpp"
 #include "keto/router/RouterService.hpp"
 #include "keto/router/EventRegistry.hpp"
-#include "include/keto/router/RouterService.hpp"
+#include "keto/router/StorageManager.hpp"
 
 namespace keto {
 namespace router {
@@ -51,6 +51,7 @@ const std::string RouterModuleManager::getVersion() const {
 // lifecycle methods
 void RouterModuleManager::start() {
     RouterService::init();
+    StorageManager::init();
     modules["routerModule"] = std::make_shared<RouterModule>();
     EventRegistry::registerEventHandlers();
     KETO_LOG_INFO << "[RouterModuleManager] Started the RouterModuleManager";
@@ -60,6 +61,7 @@ void RouterModuleManager::start() {
 void RouterModuleManager::stop() {
     EventRegistry::deregisterEventHandlers();
     modules.clear();
+    StorageManager::fin();
     RouterService::fin();
     KETO_LOG_INFO << "[RouterModuleManager] The RouterModuleManager is being stopped";
 }
