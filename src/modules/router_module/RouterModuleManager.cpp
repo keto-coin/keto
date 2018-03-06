@@ -50,8 +50,8 @@ const std::string RouterModuleManager::getVersion() const {
 
 // lifecycle methods
 void RouterModuleManager::start() {
-    RouterService::init();
     StorageManager::init();
+    RouterService::init();
     modules["routerModule"] = std::make_shared<RouterModule>();
     EventRegistry::registerEventHandlers();
     KETO_LOG_INFO << "[RouterModuleManager] Started the RouterModuleManager";
@@ -61,8 +61,8 @@ void RouterModuleManager::start() {
 void RouterModuleManager::stop() {
     EventRegistry::deregisterEventHandlers();
     modules.clear();
-    StorageManager::fin();
     RouterService::fin();
+    StorageManager::fin();
     KETO_LOG_INFO << "[RouterModuleManager] The RouterModuleManager is being stopped";
 }
 

@@ -30,7 +30,8 @@ public:
     // events for the router
     static const char* ROUTE_MESSAGE;
     
-
+    // account events
+    static const char* CHECK_ACCOUNT_MESSAGE;
 private:
 
 };

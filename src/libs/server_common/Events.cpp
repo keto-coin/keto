@@ -24,5 +24,8 @@ const char* Events::REMOVE_SESSION_KEY = "REMOVE_SESSION_KEY";
 // events for the router
 const char* Events::ROUTE_MESSAGE = "ROUTE_MESSAGE";
 
+// account events
+const char* Events::CHECK_ACCOUNT_MESSAGE = "CHECK_ACCOUNT_MESSAGE";
+
 }
 }

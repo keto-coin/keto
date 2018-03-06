@@ -9,6 +9,8 @@ add_library( 0015_account_module
             StorageManager.cpp
             AccountModuleManager.cpp
             AccountModule.cpp
+            AccountService.cpp
+            EventRegistry.cpp
 
              ${HEADERS}
            )

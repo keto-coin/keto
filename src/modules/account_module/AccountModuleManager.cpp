@@ -20,6 +20,9 @@
 #include "keto/account/AccountModuleManager.hpp"
 #include "keto/account/AccountModule.hpp"
 #include "keto/account/StorageManager.hpp"
+#include "keto/account/AccountService.hpp"
+#include "keto/account/EventRegistry.hpp"
+#include "include/keto/account/AccountService.hpp"
 
 namespace keto {
 namespace account {
@@ -47,12 +50,16 @@ const std::string AccountModuleManager::getVersion() const {
 // lifecycle methods
 void AccountModuleManager::start() {
     StorageManager::init();
+    AccountService::init();
     modules["accountModule"] = std::make_shared<AccountModule>();
+    EventRegistry::registerEventHandlers();
     KETO_LOG_INFO << "[AccountModuleManager] Started the AccountModuleManager";
 }
 
 void AccountModuleManager::stop() {
+    EventRegistry::deregisterEventHandlers();
     modules.clear();
+    AccountService::fin();
     StorageManager::fin();
     KETO_LOG_INFO << "[AccountModuleManager] The AccountModuleManager is being stopped";
 }
