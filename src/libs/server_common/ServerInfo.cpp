@@ -45,7 +45,7 @@ ServerInfo::ServerInfo() {
             config->getVariablesMap()[keto::server_common::Constants::PUBLIC_KEY_DIR].as<std::string>();
     this->publicKeyPath =  
             keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / publicKeyPath;
-    if (!this->publicKeyPath.is_complete()) {
+    if (!boost::filesystem::exists(this->publicKeyPath)) {
         std::stringstream ss;
         ss << "The public key path is invalid : " << this->publicKeyPath.string();
         BOOST_THROW_EXCEPTION(keto::server_common::InvalidPublicKeyDirectoryException(

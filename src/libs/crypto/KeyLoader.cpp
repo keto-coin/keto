@@ -43,7 +43,8 @@ KeyLoader::KeyLoader(const std::string& publicKeyPath) : initialized(true),
     // setup the paths using the environmental variables
     boost::filesystem::path publicPath =  
             keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / publicKeyPath;
-    if (!publicPath.is_complete()) {
+    
+    if (!boost::filesystem::exists(publicPath)) {
         BOOST_THROW_EXCEPTION(keto::crypto::InvalidKeyPathException());
     }
     this->publicKeyPath = publicPath.string();
@@ -59,7 +60,7 @@ KeyLoader::KeyLoader(const std::string& privateKeyPath,
     // setup the paths using the environmental variables
     boost::filesystem::path publicPath =  
             keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / publicKeyPath;
-    if (!publicPath.is_complete()) {
+    if (!boost::filesystem::exists(publicPath)) {
         BOOST_THROW_EXCEPTION(keto::crypto::InvalidKeyPathException());
     }
     this->publicKeyPath = publicPath.string();
@@ -67,7 +68,7 @@ KeyLoader::KeyLoader(const std::string& privateKeyPath,
     // setup the paths using the environmental variables
     boost::filesystem::path privatePath =  
             keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / privateKeyPath;
-    if (!privatePath.is_complete()) {
+    if (!boost::filesystem::exists(privatePath)) {
         BOOST_THROW_EXCEPTION(keto::crypto::InvalidKeyPathException());
     }
     this->privateKeyPath = privatePath.string();

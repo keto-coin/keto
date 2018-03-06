@@ -43,6 +43,9 @@ AccountGraphStore::AccountGraphStore(const std::string& dbName) {
     boost::filesystem::path dbPath =  
         keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / 
         config->getVariablesMap()[dbName].as<std::string>();
+    if (!boost::filesystem::exists(dbPath)) {
+        boost::filesystem::create_directory(dbPath);
+    }
     std::stringstream ss;
     ss << "hash-type='bdb',dir='" << dbPath.c_str() << "'" ;
     storage=librdf_new_storage(world, "hashes", dbName.c_str(),
