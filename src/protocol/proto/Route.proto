@@ -12,17 +12,14 @@ message PushServiceList {
 message PushAccount {
     // the session key of the source with its immediate peer
     // this is 
-    bytes hash = 1;
-    bytes account = 2;
-    // the signature of the session_key_hash using the accounts private key
-    // this will enable validation of ownership of account.
-    bytes signature = 3;
+    bytes managment_account_hash = 1;
+    bytes account_hash = 2;
 }
 
 // push the account list managed by this slave to the master.
 message PushAccountList {
     // the list of accounts managed by the down stream peer
-    bytes session_key_hash = 1;
+    bytes managment_account_hash = 1;
     repeated PushAccount accounts = 2;
 }
 
@@ -30,6 +27,7 @@ message PushAccountList {
 /**
  * This is an example of a protobuf message.
  */
-message MessageName {
-    uint32 message_field = 1;
+message AccountRoutingStore {
+    uint32 version = 1;
+    bytes management_account_hash = 2;
 }

@@ -54,12 +54,14 @@ message ClientAcceptance {
  */
 message ServerHelo {
     uint32 version = 1;
+    // account hash
+    bytes account_hash = 2;
     // merkel root of all loaded modules. If root is not recognised
     // then access will be DENIED.
-    bytes instance_merkel_root = 2;
+    bytes instance_merkel_root = 3;
     // signature of merkel root
     // must be signed by a recognised key in order to join.
-    bytes signature = 3;
+    bytes signature = 4;
 }
 
 message ServerReponse {

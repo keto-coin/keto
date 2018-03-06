@@ -31,10 +31,13 @@ public:
     RouterStore(const RouterStore& orig) = delete;
     virtual ~RouterStore();
     
+    // manage the store
     static std::shared_ptr<RouterStore> init();
     static void fin();
     static std::shared_ptr<RouterStore> getInstance();
 
+    // get the account information
+    
 private:
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;
     RouterResourceManagerPtr routerResourceManagerPtr;

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package keto.proto;
+
+/**
+ * This is an example of a protobuf message.
+ */
+message CheckForAccount {
+    uint32 version = 1;
+    bytes account_hash = 2;
+    bool found = 3;
+}
+
+
+

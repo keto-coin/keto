@@ -39,7 +39,7 @@ SessionKeyManager::~SessionKeyManager() {
 }
 
 keto::event::Event SessionKeyManager::requestKey(const keto::event::Event& event) {
-    SessionKeyRequest request = keto::server_common::fromEvent<SessionKeyRequest>(event);
+    keto::proto::SessionKeyRequest request = keto::server_common::fromEvent<keto::proto::SessionKeyRequest>(event);
     std::vector<uint8_t> sessionHash = keto::server_common::VectorUtils().copyStringToVector(
             request.session_hash());
     
@@ -49,25 +49,25 @@ keto::event::Event SessionKeyManager::requestKey(const keto::event::Event& event
         this->sessionKeys[sessionHash] = Botan::PKCS8::BER_encode( privateKey );
     }
     
-    SessionKeyResponse response;
+    keto::proto::SessionKeyResponse response;
     response.set_session_hash(request.session_hash());
     response.set_session_key(keto::server_common::VectorUtils().copyVectorToString(
             keto::crypto::SecureVectorUtils().copyFromSecure(this->sessionKeys[sessionHash])));
-    return keto::server_common::toEvent<SessionKeyResponse>(response);
+    return keto::server_common::toEvent<keto::proto::SessionKeyResponse>(response);
 }
 
 keto::event::Event SessionKeyManager::removeKey(const keto::event::Event& event) {
-    SessionKeyExpireRequest request = keto::server_common::fromEvent<SessionKeyExpireRequest>(event);
+    keto::proto::SessionKeyExpireRequest request = keto::server_common::fromEvent<keto::proto::SessionKeyExpireRequest>(event);
     std::vector<uint8_t> sessionHash = keto::server_common::VectorUtils().copyStringToVector(
             request.session_hash());
     std::lock_guard<std::mutex> guard(mutex);
     if (this->sessionKeys.count(sessionHash)) {
         this->sessionKeys.erase(sessionHash);
     }
-    SessionKeyExpireResponse response;
+    keto::proto::SessionKeyExpireResponse response;
     response.set_session_hash(request.session_hash());
     response.set_success(true);
-    return keto::server_common::toEvent<SessionKeyExpireResponse>(response);
+    return keto::server_common::toEvent<keto::proto::SessionKeyExpireResponse>(response);
 }
 
     

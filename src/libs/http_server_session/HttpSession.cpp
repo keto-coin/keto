@@ -38,12 +38,12 @@ HttpSession::HttpSession(const std::vector<uint8_t>& clientHash) :
     this->sessionHash = hashGenerator.getHash();
     
     // create a session key
-    SessionKeyRequest sessionKeyRequest;
+    keto::proto::SessionKeyRequest sessionKeyRequest;
     sessionKeyRequest.set_session_hash(
         keto::server_common::VectorUtils().copyVectorToString(this->sessionHash));
     
-    SessionKeyResponse sessionKeyResponse = 
-            keto::server_common::fromEvent<SessionKeyResponse>(keto::server_common::processEvent(keto::server_common::toEvent<SessionKeyRequest>(
+    keto::proto::SessionKeyResponse sessionKeyResponse = 
+            keto::server_common::fromEvent<keto::proto::SessionKeyResponse>(keto::server_common::processEvent(keto::server_common::toEvent<keto::proto::SessionKeyRequest>(
             keto::server_common::Events::REQUEST_SESSION_KEY,sessionKeyRequest)));
     
     this->sessionKey = keto::crypto::SecureVectorUtils().copyToSecure(
@@ -56,10 +56,10 @@ HttpSession::HttpSession(const std::vector<uint8_t>& clientHash) :
 }
 
 HttpSession::~HttpSession() {
-    SessionKeyExpireRequest sessionKeyExpireRequest;
+    keto::proto::SessionKeyExpireRequest sessionKeyExpireRequest;
     sessionKeyExpireRequest.set_session_hash(
             keto::server_common::VectorUtils().copyVectorToString(this->sessionHash));
-    keto::server_common::triggerEvent(keto::server_common::toEvent<SessionKeyExpireRequest>(
+    keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::SessionKeyExpireRequest>(
             keto::server_common::Events::REMOVE_SESSION_KEY,sessionKeyExpireRequest));
 }
 
