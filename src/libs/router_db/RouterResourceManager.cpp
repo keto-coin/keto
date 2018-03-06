@@ -14,10 +14,12 @@
 #include "keto/server_common/TransactionHelper.hpp"
 #include "keto/router_db/RouterResourceManager.hpp"
 
+#include <iostream>
+
 namespace keto {
 namespace router_db {
 
-thread_local RouterResourcePtr RouterResourceManager::blockResourcePtr;
+thread_local RouterResourcePtr RouterResourceManager::routerResourcePtr;
 
 RouterResourceManager::RouterResourceManager(
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr) :
@@ -28,25 +30,25 @@ RouterResourceManager::~RouterResourceManager() {
 }
 
 void RouterResourceManager::commit() {
-    if (blockResourcePtr) {
-        blockResourcePtr->commit();
-        blockResourcePtr.reset();
+    if (routerResourcePtr) {
+        routerResourcePtr->commit();
+        routerResourcePtr.reset();
     }
 }
 
 void RouterResourceManager::rollback() {
-    if (blockResourcePtr) {
-        blockResourcePtr->rollback();
-        blockResourcePtr.reset();
+    if (routerResourcePtr) {
+        routerResourcePtr->rollback();
+        routerResourcePtr.reset();
     }
 }
 
 RouterResourcePtr RouterResourceManager::getResource() {
-    if (!blockResourcePtr) {
-        blockResourcePtr = RouterResourcePtr(new RouterResource(dbManagerPtr));
+    if (!routerResourcePtr) {
+        routerResourcePtr = RouterResourcePtr(new RouterResource(dbManagerPtr));
         keto::server_common::enlistResource(*this);
     }
-    return blockResourcePtr;
+    return routerResourcePtr;
 }
 
 

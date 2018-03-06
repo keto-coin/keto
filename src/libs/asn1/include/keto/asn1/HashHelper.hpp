@@ -26,12 +26,15 @@ namespace asn1 {
 class HashHelper {
 public:
     HashHelper();
+    HashHelper(const std::string& hash);
     HashHelper(const keto::crypto::SecureVector& hash);
     HashHelper(const Hash_t& hash);
     HashHelper(const std::string& hash,keto::common::StringEncoding stringEncoding);
     
     HashHelper(const HashHelper& orig) = default;
     virtual ~HashHelper();
+    
+    HashHelper& operator=(const std::string& hash);
     
     HashHelper& operator=(const Hash_t* hash);
     HashHelper& operator=(const Hash_t& hash);

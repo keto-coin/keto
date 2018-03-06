@@ -25,17 +25,20 @@ namespace rocks_db {
 class SliceHelper {
 public:
     SliceHelper();
+    SliceHelper(const std::string& sliceBytes);
     SliceHelper(const std::vector<uint8_t>& sliceBytes);
     SliceHelper(const rocksdb::Slice& slice);
     
     SliceHelper(const SliceHelper& orig) = default;
     virtual ~SliceHelper();
     
+    SliceHelper& operator = (const std::string& sliceBytes);
     SliceHelper& operator = (const std::vector<uint8_t>& sliceBytes);
     SliceHelper& operator = (const rocksdb::Slice& slice);
     
     operator rocksdb::Slice ();
     operator std::vector<uint8_t> ();
+    operator std::string ();
     
 private:
     std::vector<uint8_t> sliceBytes;

@@ -25,6 +25,13 @@ namespace asn1 {
 HashHelper::HashHelper() {
 }
 
+HashHelper::HashHelper(const std::string& hash) {
+    for (const char entry: hash) {
+        this->hash.push_back(entry);
+    }
+}
+    
+
 HashHelper::HashHelper(const keto::crypto::SecureVector& hash) {
     this->hash = hash;
 }
@@ -46,6 +53,13 @@ HashHelper::HashHelper(const std::string& hash,keto::common::StringEncoding stri
 
 
 HashHelper::~HashHelper() {
+}
+
+HashHelper& HashHelper::operator=(const std::string& hash) {
+    for (const char entry: hash) {
+        this->hash.push_back(entry);
+    }
+    return (*this);
 }
 
 HashHelper& HashHelper::operator=(const Hash_t* hash) {

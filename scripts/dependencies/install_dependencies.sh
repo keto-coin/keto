@@ -51,12 +51,16 @@ if [ $ARCH == "ubuntu" ]; then
     cd ${TEMP_DIR}
     git clone https://github.com/facebook/rocksdb.git
     cd rocksdb
-    EXTRA_CFLAGS=-fPIC EXTRA_CXXFLAGS=-fPIC PORTABLE=1 make static_lib
     mkdir -p ${HOME}/opt/rocksdb/
-    mkdir -p ${HOME}/opt/rocksdb/lib
-    mkdir -p ${HOME}/opt/rocksdb/lib
-    mv ${TEMP_DIR}/rocksdb/librocksdb.a ${HOME}/opt/rocksdb/lib/
-    cp -rf ${TEMP_DIR}/rocksdb/include ${HOME}/opt/rocksdb/include
+    #EXTRA_CFLAGS=-fPIC EXTRA_CXXFLAGS=-fPIC PORTABLE=1 make static_lib
+    INSTALL_PATH=${HOME}/opt/rocksdb/ EXTRA_CFLAGS=-fPIC EXTRA_CXXFLAGS=-fPIC PORTABLE=1 make static_lib
+    INSTALL_PATH=${HOME}/opt/rocksdb/ EXTRA_CFLAGS=-fPIC EXTRA_CXXFLAGS=-fPIC PORTABLE=1 make install
+    #mkdir -p ${HOME}/opt/rocksdb/
+    #mkdir -p ${HOME}/opt/rocksdb/lib
+    #mkdir -p ${HOME}/opt/rocksdb/lib
+    #mv ${TEMP_DIR}/rocksdb/librocksdb.a ${HOME}/opt/rocksdb/lib/
+    #cp -rf ${TEMP_DIR}/rocksdb/include ${HOME}/opt/rocksdb/include
+    cd ${HOME}
     rm -rf ${TEMP_DIR}/rocksdb
 
     # install beast

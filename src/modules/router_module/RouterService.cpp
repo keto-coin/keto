@@ -15,6 +15,7 @@
 
 #include "keto/router/RouterService.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
+#include "keto/router_db/RouterStore.hpp"
 
 #include "Protocol.pb.h"
 
@@ -48,6 +49,13 @@ std::shared_ptr<RouterService> RouterService::getInstance() {
 keto::event::Event RouterService::routeMessage(const keto::event::Event& event) {
     keto::proto::MessageWrapper  messageWrapper = 
             keto::server_common::fromEvent<keto::proto::MessageWrapper>(event);
+    
+    keto::asn1::HashHelper accountHash(messageWrapper.account_hash());
+    keto::proto::AccountRoutingStore accountRouting;
+    if (keto::router_db::RouterStore::getInstance()->getAccountRouting(
+            accountHash,accountRouting)) {
+        
+    }
     
     std::cout << "Process the message : " << messageWrapper.messagetype() << std::endl;
     

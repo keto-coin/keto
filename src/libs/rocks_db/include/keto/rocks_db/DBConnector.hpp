@@ -35,6 +35,8 @@ public:
     
     rocksdb::TransactionDB* getDB();
 private:
+    rocksdb::Options options;
+    rocksdb::TransactionDBOptions txn_db_options;
     rocksdb::TransactionDB* db;
 };
 

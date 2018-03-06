@@ -42,7 +42,7 @@ public:
     RouterResourcePtr getResource();
     
 private:
-    static thread_local RouterResourcePtr blockResourcePtr;
+    static thread_local RouterResourcePtr routerResourcePtr;
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;
 };
 

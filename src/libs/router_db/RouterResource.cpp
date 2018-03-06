@@ -13,6 +13,7 @@
 
 #include <rocksdb/utilities/transaction.h>
 
+#include <iostream>
 #include "keto/router_db/RouterResource.hpp"
 
 namespace keto {
@@ -63,7 +64,6 @@ rocksdb::Transaction* RouterResource::getTransaction(const std::string& name) {
         rocksdb::WriteOptions write_options;
         transactionMap[name] = dbConnectionPtr->getDB()->BeginTransaction(
                 write_options);
-        
     }
     return transactionMap[name];
 }

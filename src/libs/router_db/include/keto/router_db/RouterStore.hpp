@@ -17,9 +17,11 @@
 #include <string>
 #include <memory>
 
-#include "SignedBlock.h"
+#include "Route.pb.h"
 
 #include "keto/rocks_db/DBManager.hpp"
+
+#include "keto/asn1/HashHelper.hpp"
 #include "keto/router_db/RouterResourceManager.hpp"
 
 namespace keto {
@@ -37,6 +39,14 @@ public:
     static std::shared_ptr<RouterStore> getInstance();
 
     // get the account information
+    bool getAccountRouting(
+            const keto::asn1::HashHelper& helper,
+            keto::proto::AccountRoutingStore& result);
+    
+    
+    void setAccountRouting(
+            const keto::asn1::HashHelper& helper,
+            const keto::proto::AccountRoutingStore& routing);
     
 private:
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;

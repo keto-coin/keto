@@ -12,6 +12,8 @@
  */
 
 #include <sstream>
+#include <iostream>
+
 
 #include "keto/rocks_db/Exception.hpp"
 #include "keto/rocks_db/DBConnector.hpp"
@@ -19,13 +21,11 @@
 namespace keto {
 namespace rocks_db {
 
-DBConnector::DBConnector(const std::string& path) {
-    rocksdb::Options options;
-    rocksdb::TransactionDBOptions txn_db_options;
+DBConnector::DBConnector(const std::string& path) : db(NULL) {
     options.create_if_missing = true;
     
     rocksdb::Status status = rocksdb::TransactionDB::Open(options, 
-            txn_db_options,path, &this->db);
+            txn_db_options,path, &db);
     if (!status.ok()) {
         std::stringstream ss;
         ss << "Failed to connect to the database [" << path << "]" << std::endl;
@@ -35,10 +35,12 @@ DBConnector::DBConnector(const std::string& path) {
 }
 
 DBConnector::~DBConnector() {
+    delete db;
 }
 
 
 rocksdb::TransactionDB* DBConnector::getDB() {
+    
     return this->db;
 }
 
