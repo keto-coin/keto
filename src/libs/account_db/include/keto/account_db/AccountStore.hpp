@@ -14,6 +14,9 @@
 #ifndef ACCOUNTSTORE_HPP
 #define ACCOUNTSTORE_HPP
 
+#include "Account.pb.h"
+
+#include "keto/asn1/HashHelper.hpp"
 #include "keto/rocks_db/DBManager.hpp"
 #include "keto/account_db/AccountResourceManager.hpp"
 #include "keto/account_db/AccountGraphStore.hpp"
@@ -31,6 +34,8 @@ public:
     static void fin();
     static std::shared_ptr<AccountStore> getInstance();
     
+    bool getAccountInfo(const keto::asn1::HashHelper& accountHash,
+            keto::proto::AccountInfo& result);
     
 private:
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;

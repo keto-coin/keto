@@ -16,8 +16,11 @@
 
 #include "Account.pb.h"
 
+#include "keto/asn1/HashHelper.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
 #include "keto/account/AccountService.hpp"
+#include "keto/account_db/AccountStore.hpp"
+
 
 namespace keto {
 namespace account {
@@ -48,11 +51,19 @@ std::shared_ptr<AccountService> AccountService::getInstance() {
 
 // account methods
 keto::event::Event AccountService::checkAccount(const keto::event::Event& event) {
-    keto::proto::CheckForAccount  messageWrapper = 
+    keto::proto::CheckForAccount  checkForAccount = 
             keto::server_common::fromEvent<keto::proto::CheckForAccount>(event);
     
+    keto::proto::AccountInfo accountInfo;
+    keto::asn1::HashHelper accountHashHelper(checkForAccount.account_hash());
+    if (keto::account_db::AccountStore::getInstance()->getAccountInfo(accountHashHelper,
+            accountInfo)) {
+        checkForAccount.set_found(true);
+    } else {
+        checkForAccount.set_found(false);
+    }
     
-    return keto::server_common::toEvent<keto::proto::CheckForAccount>(messageWrapper);
+    return keto::server_common::toEvent<keto::proto::CheckForAccount>(checkForAccount);
 }
 
 

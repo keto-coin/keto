@@ -13,7 +13,11 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
+#include "keto/crypto/Containers.hpp"
+#include "keto/crypto/SecureVectorUtils.hpp"
+#include "keto/rocks_db/SliceHelper.hpp"
 #include "keto/account_db/Constants.hpp"
 #include "keto/account_db/AccountStore.hpp"
 
@@ -53,6 +57,20 @@ std::shared_ptr<AccountStore> AccountStore::getInstance() {
     return singleton;
 }
 
+bool AccountStore::getAccountInfo(const keto::asn1::HashHelper& accountHash,
+            keto::proto::AccountInfo& result) {
+    AccountResourcePtr resource = accountResourceManagerPtr->getResource();
+    rocksdb::Transaction* accountTransaction = resource->getTransaction(Constants::ACCOUNTS_MAPPING);
+    keto::rocks_db::SliceHelper accountHashHelper(keto::crypto::SecureVectorUtils().copyFromSecure(
+        accountHash));
+    rocksdb::ReadOptions readOptions;
+    std::string value;
+    if (rocksdb::Status::OK() != accountTransaction->Get(readOptions,accountHashHelper,&value)) {
+        return false;
+    }
+    result.ParseFromString(value);
+    return true;
+}
 
 }
 }

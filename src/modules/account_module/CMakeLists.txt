@@ -17,7 +17,7 @@ add_library( 0015_account_module
 
 target_link_libraries( 0015_account_module 
                             PRIVATE keto_account_db keto_rocks_db
-                            PRIVATE keto_server_common keto_asn1_protocol
+                            PRIVATE keto_server_common keto_asn1_common keto_asn1_protocol
                             PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
                             PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
                             PRIVATE ${ROCKSDB_LIBRARY} ${ROCKSDB_EXTRA_LIBRARY}

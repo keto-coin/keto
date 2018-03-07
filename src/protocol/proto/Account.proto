@@ -11,5 +11,12 @@ message CheckForAccount {
     bool found = 3;
 }
 
+message AccountInfo {
+    uint32 version = 1;
+    bytes account_hash = 2;
+    bytes management_account_hash = 3;
+    string graph_name = 4;
+}
+
 
 
