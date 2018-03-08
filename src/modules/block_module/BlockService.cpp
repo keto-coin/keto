@@ -43,8 +43,8 @@ std::shared_ptr<BlockService> BlockService::getInstance() {
     return singleton;
 }
 
-void BlockService::boot() {
-    if (keto::block_db::BlockChainStore::getInstance()->requireBoot()) {
+void BlockService::genesis() {
+    if (keto::block_db::BlockChainStore::getInstance()->requireGenesis()) {
         
     }
 }

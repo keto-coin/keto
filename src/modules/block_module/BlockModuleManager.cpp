@@ -24,6 +24,7 @@
 #include "keto/server_common/TransactionHelper.hpp"
 #include "keto/block/BlockService.hpp"
 #include "keto/block/EventRegistry.hpp"
+#include "include/keto/block/BlockService.hpp"
 
 
 namespace keto {
@@ -60,7 +61,7 @@ void BlockModuleManager::start() {
 void BlockModuleManager::postStart() {
     KETO_LOG_INFO << "[BlockModuleManager] Block manager post start has been called";
     keto::transaction::TransactionPtr transactionPtr = keto::server_common::createTransaction();
-    BlockService::getInstance()->boot();
+    BlockService::getInstance()->genesis();
     transactionPtr->commit();
 }
 

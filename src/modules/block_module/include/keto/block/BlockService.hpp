@@ -29,7 +29,7 @@ public:
     static void fin();
     static std::shared_ptr<BlockService> getInstance();
     
-    void boot();
+    void genesis();
     
 private:
 

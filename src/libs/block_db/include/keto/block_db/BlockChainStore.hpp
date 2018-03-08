@@ -35,7 +35,7 @@ public:
     static void fin();
     static std::shared_ptr<BlockChainStore> getInstance();
     
-    bool requireBoot();
+    bool requireGenesis();
     void writeBlock(const SignedBlock& signedBlock);
     
     

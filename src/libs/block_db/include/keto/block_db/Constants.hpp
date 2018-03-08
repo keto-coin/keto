@@ -31,8 +31,8 @@ public:
     static const char* ACCOUNTS_INDEX;
     
     // boot constants
-    static const char* BOOT_KEY;
-    static const char* BOOT_VALUE;
+    static const char* GENESIS_KEY;
+    static const char* GENESIS_VALUE;
     
     
     static const std::vector<std::string> DB_LIST;
