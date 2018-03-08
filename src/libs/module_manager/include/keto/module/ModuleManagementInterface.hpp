@@ -38,6 +38,7 @@ protected:
     
     // lifecycle methods
     virtual void start() = 0;
+    virtual void postStart() {};
     virtual void stop() = 0;
     
     virtual const std::vector<std::string> listModules() = 0;

@@ -35,8 +35,10 @@ public:
     static void fin();
     static std::shared_ptr<BlockChainStore> getInstance();
     
-    
+    bool requireBoot();
     void writeBlock(const SignedBlock& signedBlock);
+    
+    
     
 private:
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;

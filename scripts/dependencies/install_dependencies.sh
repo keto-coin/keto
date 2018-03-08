@@ -130,7 +130,16 @@ if [ $ARCH == "ubuntu" ]; then
     make
     make install
     cd ${HOME}
-    rm -rf {TEMP_DIR}/librdf
+    rm -rf ${TEMP_DIR}/librdf
+
+    # json parsing
+    cd ${TEMP_DIR}
+    git clone https://github.com/nlohmann/json.git
+    cd ${TEMP_DIR}/json
+    mkdir -p ${HOME}/opt/nlohmann/include
+    cp -rf single_include/nlohmann ${HOME}/opt/nlohmann/include
+    cd ${HOME}
+    rm -rf ${TEMP_DIR}/json
     
     # build llvm with wasm build target:
     cd ${TEMP_DIR}

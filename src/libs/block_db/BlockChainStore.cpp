@@ -58,6 +58,16 @@ std::shared_ptr<BlockChainStore> BlockChainStore::getInstance() {
     return singleton;
 }
 
+bool BlockChainStore::requireBoot() {
+    BlockResourcePtr resource = blockResourceManagerPtr->getResource();
+    rocksdb::Transaction* blockTransaction = resource->getTransaction(Constants::BLOCKS_INDEX);
+    rocksdb::ReadOptions readOptions;
+    std::string value;
+    if (rocksdb::Status::OK() != blockTransaction->Get(readOptions,Constants::BOOT_KEY,&value)) {
+        return false;
+    }
+    return value.compare(Constants::BOOT_VALUE);
+}
 
 void BlockChainStore::writeBlock(const SignedBlock& signedBlock) {
     
@@ -79,6 +89,8 @@ void BlockChainStore::writeBlock(const SignedBlock& signedBlock) {
     
     
 }
+
+
 
 
 }

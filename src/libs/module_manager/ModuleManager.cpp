@@ -83,7 +83,12 @@ void ModuleManager::load() {
             it_end(files.end()); it != it_end; ++it) {
         load(*it);
     }
-            
+    
+    for (std::map<boost::filesystem::path,std::shared_ptr<ModuleWrapper>>::iterator it=loadedLibraryModuleManagers.begin(); 
+            it!=loadedLibraryModuleManagers.end(); ++it) {
+        it->second->getModuleManagerInterface()->postStart();
+    }
+    
     this->setState(State::loaded);
     
 }

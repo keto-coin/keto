@@ -79,6 +79,9 @@ if [ $ARCH == "ubuntu" ]; then
 
     LIBRDF_ROOT=${HOME}/opt/librdf/
     export LIBRDF_ROOT
+
+    JSON_ROOT=${HOME}/opt/nlohmann/
+    export JSON_ROOT
 fi
 
 if [ $ARCH == "darwin" ]; then

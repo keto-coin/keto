@@ -38,6 +38,7 @@ public:
     
     // lifecycle methods
     virtual void start();
+    virtual void postStart();
     virtual void stop();
     
     virtual const std::vector<std::string> listModules();

@@ -87,6 +87,7 @@ find_package(Asn1 REQUIRED)
 find_package(Botan REQUIRED)
 find_package(RocksDB REQUIRED)
 find_package(Librdf REQUIRED)
+find_package(Json REQUIRED)
 
 if( WIN32 )
 

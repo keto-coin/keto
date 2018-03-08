@@ -29,7 +29,11 @@ public:
     static const char* BLOCKS_INDEX;
     static const char* TRANSACTIONS_INDEX;
     static const char* ACCOUNTS_INDEX;
-
+    
+    // boot constants
+    static const char* BOOT_KEY;
+    static const char* BOOT_VALUE;
+    
     
     static const std::vector<std::string> DB_LIST;
     

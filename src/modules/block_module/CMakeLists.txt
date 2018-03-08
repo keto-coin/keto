@@ -9,6 +9,8 @@ add_library( 0020_keto_block_module
             BlockModuleManager.cpp
             BlockModule.cpp
             StorageManager.cpp
+            BlockService.cpp
+            EventRegistry.cpp
 
              ${HEADERS}
            )
