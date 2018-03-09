@@ -12,6 +12,7 @@
  */
 
 #include <vector>
+#include <iostream>
 
 #include "keto/environment/Config.hpp"
 

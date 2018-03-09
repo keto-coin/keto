@@ -13,8 +13,17 @@
 
 #include <condition_variable>
 
+#include <iostream>
+
 #include "keto/block/BlockService.hpp"
 #include "keto/block_db/BlockChainStore.hpp"
+
+#include "keto/environment/EnvironmentManager.hpp"
+#include "keto/environment/Config.hpp"
+#include "keto/block/Constants.hpp"
+#include "keto/block/GenesisReader.hpp"
+#include "keto/block/GenesisLoader.hpp"
+#include "include/keto/block/GenesisLoader.hpp"
 
 namespace keto {
 namespace block {
@@ -45,7 +54,23 @@ std::shared_ptr<BlockService> BlockService::getInstance() {
 
 void BlockService::genesis() {
     if (keto::block_db::BlockChainStore::getInstance()->requireGenesis()) {
+        std::shared_ptr<keto::environment::Config> config = 
+            keto::environment::EnvironmentManager::getInstance()->getConfig();
+    
+        if (!config->getVariablesMap().count(Constants::GENESIS_CONFIG)) {
+            return;
+        }
+        // genesis configuration
+        boost::filesystem::path genesisConfig =  
+                keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / 
+                config->getVariablesMap()[Constants::GENESIS_CONFIG].as<std::string>();
         
+        if (!boost::filesystem::exists(genesisConfig)) {
+            return;
+        }
+        GenesisReader reader(genesisConfig);
+        GenesisLoader loader(reader);
+        loader.load();
     }
 }
 

@@ -31,6 +31,11 @@ public:
     static constexpr const char* TARGET_ACCOUNT = "target";
     static constexpr const char* VALUE = "value";
     
+    // commands
+    static constexpr const char* KETO_TRANSACTION_GEN = "transgen";
+    static constexpr const char* KETO_ACCOUNT_GEN = "accgen";
+    static constexpr const char* KETO_ACCOUNT_KEY = "account_key";
+    
     static const int HTTP_VERSION = 11;
     
     

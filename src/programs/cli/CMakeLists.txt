@@ -36,18 +36,16 @@ target_include_directories(keto_cli
         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/chain_common/include"
         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/evironment/include"
+        PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/account_utils/include"
         PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
         PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
-        ${BOTAN_INCLUDE_DIR})
+        ${BOTAN_INCLUDE_DIR}
+        ${JSON_INCLUDE_DIR})
 
 target_link_libraries( keto_cli 
-        PRIVATE keto_http_client_session keto_crypto keto_server_common
-        PRIVATE keto_environment keto_common keto_chain_common
-        PRIVATE keto_asn1_common keto_asn1_protocol 
-#        PRIVATE account_history_api_plugin net_api_plugin account_history_plugin db_plugin
-#        PRIVATE chain_api_plugin producer_plugin chain_plugin wallet_api_plugin
-#        PRIVATE net_plugin http_plugin txn_test_gen_plugin faucet_testnet_plugin
-#        PRIVATE eos_chain fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
+        PRIVATE keto_http_client_session keto_crypto  keto_account_utils
+        PRIVATE keto_server_common keto_environment keto_common keto_chain_common
+        PRIVATE keto_asn1_common keto_asn1_protocol
         PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} 
         PRIVATE ${BOTAN_LIBRARIES} ${Boost_LIBRARIES} 
         PRIVATE ${OPENSSL_LIBRARIES}  ${pthread_library}

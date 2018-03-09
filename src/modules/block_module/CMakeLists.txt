@@ -11,6 +11,9 @@ add_library( 0020_keto_block_module
             StorageManager.cpp
             BlockService.cpp
             EventRegistry.cpp
+            Constants.cpp
+            GenesisReader.cpp
+            GenesisLoader.cpp
 
              ${HEADERS}
            )
@@ -33,6 +36,7 @@ target_include_directories( 0020_keto_block_module
                             PUBLIC "${PROTO_HDRS}"
 
                             ${Boost_INCLUDE_DIRS}
+                            ${JSON_INCLUDE_DIR}
                             )
 
 #if(MSVC)

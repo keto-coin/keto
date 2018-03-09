@@ -32,7 +32,6 @@ public:
     
     // boot constants
     static const char* GENESIS_KEY;
-    static const char* GENESIS_VALUE;
     
     
     static const std::vector<std::string> DB_LIST;

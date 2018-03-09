@@ -64,9 +64,9 @@ bool BlockChainStore::requireGenesis() {
     rocksdb::ReadOptions readOptions;
     std::string value;
     if (rocksdb::Status::OK() != blockTransaction->Get(readOptions,Constants::GENESIS_KEY,&value)) {
-        return false;
+        return true;
     }
-    return value.compare(Constants::GENESIS_VALUE);
+    return false;
 }
 
 void BlockChainStore::writeBlock(const SignedBlock& signedBlock) {

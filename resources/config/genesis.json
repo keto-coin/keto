@@ -1,0 +1,22 @@
+{
+    parent: "00000000000000000000000000000000"
+    transactions : [
+        {
+            account_hash: "",
+            public_key: "",
+            change_set : {
+                rdf: [
+                    {
+                      "http://keto-coin.io/schema/rdf/1.0/keto/Account#Account/" : {
+                            "http://keto-coin.io/schema/rdf/1.0/keto/Account#id" : [ { "value" : "Anna's Homepage", 
+                                                                         "type" : "literal", 
+                                                                         "lang" : "en" }] 
+                        }
+                    }
+                ]
+            }
+            
+        } 
+
+    ]
+}
