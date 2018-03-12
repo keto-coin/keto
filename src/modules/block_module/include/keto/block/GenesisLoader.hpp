@@ -26,8 +26,11 @@ public:
     virtual ~GenesisLoader();
     
     void load();
+    
 private:
     GenesisReader reader;
+    
+    
 };
 
 

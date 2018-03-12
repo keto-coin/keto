@@ -32,6 +32,9 @@ KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, UnsupportedStringFormatException 
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, InvalidAnyValueException , "Invalid any cannot extract");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, TypeToAnyConversionFailedException , "Failed to convert the type to an any");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, NoAnyTypeInfoFailedException , "No any type information was provided");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddObjectToPredicateException , "Could not add RDF object to predicate");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddPredicateToSubjectException , "Could not add RDF predicate to subject");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddSubjectToModelException , "Could not add RDF subject to model");
 
 
 }

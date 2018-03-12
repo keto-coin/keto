@@ -3,7 +3,7 @@ find_package(Asn1 REQUIRED)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-asn1_generate_cpp(ASN1_SRCS ASN1_HDRS Basic.asn1 PrivateKey.asn1 PublicKey.asn1 Test.asn1 Security.asn1 Account.asn1 Contract.asn1 Action.asn1 ChangeSet.asn1 Transaction.asn1 BlockChain.asn1 )
+asn1_generate_cpp(ASN1_SRCS ASN1_HDRS Basic.asn1 PrivateKey.asn1 PublicKey.asn1 Test.asn1 Security.asn1 Account.asn1 Contract.asn1 Action.asn1 ChangeSet.asn1 Transaction.asn1 BlockChain.asn1 RDF.asn1 )
 
 add_library(keto_asn1_protocol ${ASN1_SRCS} )
 

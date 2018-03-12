@@ -1,0 +1,52 @@
+RDFModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
+    IMPORTS Version
+        FROM BasicModule;
+
+RDFChange ::= ENUMERATED {
+    persist    (0),
+    remove     (1),
+    none       (2)
+}
+
+RDFObject ::= SEQUENCE {
+    value           UTF8String,
+    type            UTF8String,
+    lang            UTF8String,
+    dataType        UTF8String
+}
+
+RDFPredicate ::= SEQUENCE {
+    predicate       UTF8String,
+    rdfObjects      SEQUENCE OF RDFObject
+}
+
+RDFSubject ::= SEQUENCE {
+    subject         UTF8String,
+    rdfPredicates   SEQUENCE OF RDFPredicate
+}
+
+RDFNT ::= SEQUENCE {
+    version         Version,
+    ntSubject       UTF8String,
+    ntPredicate     UTF8String,
+    ntObject        UTF8String
+}
+
+RDFNtGroup ::= SEQUENCE {
+    version         Version,
+    rdfNT           SEQUENCE OF RDFNT
+}
+
+RDFDataFormat ::= CHOICE {
+    rdfSubject      RDFSubject,
+    rdfNtGroup      RDFNtGroup
+}
+
+
+RDFModel ::= SEQUENCE {
+    action          RDFChange,
+    rdfDataFormat   SEQUENCE OF RDFDataFormat
+}
+
+END
+

@@ -14,6 +14,10 @@ add_library( keto_asn1_common
             PrivateKeyHelper.cpp
             SignatureHelper.cpp
             BerEncodingHelper.cpp
+            RDFObjectHelper.cpp
+            RDFPredicateHelper.cpp
+            RDFSubjectHelper.cpp
+            RDFModelHelper.cpp
 
              ${HEADERS}
            )

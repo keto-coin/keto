@@ -25,7 +25,7 @@ namespace block {
 class GenesisReader {
 public:
     GenesisReader(const boost::filesystem::path& path);
-    GenesisReader(const GenesisReader& orig);
+    GenesisReader(const GenesisReader& orig) = default;
     virtual ~GenesisReader();
     
     nlohmann::json getJsonData();

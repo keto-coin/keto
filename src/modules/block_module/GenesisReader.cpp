@@ -28,10 +28,6 @@ GenesisReader::GenesisReader(const boost::filesystem::path& path) {
     std::ifstream ifs(path.string());
     nlohmann::json jsonData;
     ifs >> this->jsonData;
-    std::cout << "The json data has been loaded" << std::endl;
-}
-
-GenesisReader::GenesisReader(const GenesisReader& orig) {
 }
 
 GenesisReader::~GenesisReader() {
