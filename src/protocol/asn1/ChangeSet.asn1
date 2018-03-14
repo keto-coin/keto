@@ -8,19 +8,18 @@ ChangeData ::= CHOICE {
 }
 
 
-Change ::= SEQUENCE {
-    version             Version,
-    target              Hash,
-    changeData          ChangeData
-}
-
 ChangeSet ::= SEQUENCE {
     version             Version,
     transactionHash     Hash,
     accountHash         Hash,
-    signature           Signature,
-    applyStatus         Status,
-    changes    SEQUENCE OF Change
+    status              Status,
+    changes    SEQUENCE OF ChangeData
+}
+
+SignedChangeSet ::= SEQUENCE {
+    changeSet       ChangeSet,
+    changeSetHash   Hash,
+    signature       Signature
 }
 
 END

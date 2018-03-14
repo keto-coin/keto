@@ -91,6 +91,12 @@ SignedTransactionBuilder::operator uint8_t*() {
     return (uint8_t*)(*(this->serializationHelperPtr));
 }
 
+SignedTransactionBuilder::operator SignedTransaction*() {
+    SignedTransaction* result = this->signedTransaction;
+    this->signedTransaction = NULL;
+    return result;
+}
+
 size_t SignedTransactionBuilder::size() {
     serializeTransaction();
     return this->serializationHelperPtr->size();

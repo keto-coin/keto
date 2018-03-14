@@ -18,6 +18,7 @@ add_library( keto_asn1_common
             RDFPredicateHelper.cpp
             RDFSubjectHelper.cpp
             RDFModelHelper.cpp
+            ChangeSetHelper.cpp
 
              ${HEADERS}
            )

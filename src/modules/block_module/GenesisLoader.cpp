@@ -14,7 +14,7 @@
 #include <iostream>
 #include <string>
 #include "keto/block/GenesisLoader.hpp"
-#include "include/keto/block/GenesisReader.hpp"
+#include "keto/block/GenesisReader.hpp"
 
 namespace keto {
 namespace block {
@@ -32,7 +32,7 @@ void GenesisLoader::load() {
     //std::cout << "Dump : "  << reader.getJsonData().dump() << std::endl;
     //std::cout << "Is object : "  << reader.getJsonData().is_object() << std::endl;
     //std::cout << "Is array : "  << reader.getJsonData().is_array() << std::endl;
-    //std::cout << "Value : "  << reader.getJsonData()["parent"] << std::endl;
+    std::cout << "Value : "  << reader.getJsonData()["parent"] << std::endl;
     //std::cout << "Transaction : "  << reader.getJsonData()["transactions"].is_array() << std::endl;
     nlohmann::json transactions = reader.getJsonData()["transactions"].get<nlohmann::json>();
     for (auto& element : transactions) {

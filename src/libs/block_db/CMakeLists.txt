@@ -10,6 +10,9 @@ add_library( keto_block_db
             BlockChainStore.cpp
             BlockResource.cpp
             BlockResourceManager.cpp
+            BlockBuilder.cpp
+            MerkleUtils.cpp
+            SignedChangeSetBuilder.cpp
 
              ${HEADERS}
            )
@@ -27,7 +30,8 @@ target_include_directories( keto_block_db
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../rocks_db/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
-                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/" 
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/"
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
                             PUBLIC "${PROTO_HDRS}"
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}

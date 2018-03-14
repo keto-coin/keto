@@ -59,6 +59,8 @@ public:
     
     size_t size();
     
+    operator SignedTransaction*();
+    
 private:
     SignedTransaction* signedTransaction;
     keto::asn1::PrivateKeyHelper privateKeyHelper;
