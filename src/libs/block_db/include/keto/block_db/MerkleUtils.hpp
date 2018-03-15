@@ -17,6 +17,8 @@
 #include <string>
 #include <vector>
 
+#include "Block.h"
+
 #include "SignedTransaction.h"
 #include "keto/asn1/HashHelper.hpp"
 #include "keto/block_db/SignedChangeSetBuilder.hpp"
@@ -27,8 +29,7 @@ namespace block_db {
 
 class MerkleUtils {
 public:
-    MerkleUtils(std::vector<SignedTransaction>& transactions,
-            std::vector<SignedChangeSetBuilderPtr> changeSets);
+    MerkleUtils(const Block_t* block);
     MerkleUtils(const MerkleUtils& orig) = default;
     virtual ~MerkleUtils();
     

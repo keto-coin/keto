@@ -41,14 +41,18 @@ public:
             const keto::asn1::PrivateKeyHelper& privateKeyHelper);
     SignedChangeSetBuilder& setChangeSet(
             keto::asn1::ChangeSetHelper& changeSetHelper);
-    
+    SignedChangeSetBuilder& sign();
     operator SignedChangeSet_t*();
     
     keto::asn1::HashHelper getHash();
     
 private:
     keto::asn1::PrivateKeyHelper privateKeyHelper;
-    ChangeSet_t* changeSet;
+    SignedChangeSet_t* signedChangeSet;
+
+    keto::asn1::HashHelper getChangeSetHash(ChangeSet_t* changeSet);
+    
+
 };
 
 

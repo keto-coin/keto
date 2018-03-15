@@ -24,52 +24,55 @@ namespace keto {
 namespace block_db {
 
 BlockBuilder::BlockBuilder() {
+    this->block = (Block_t*)calloc(1, sizeof *block);
+    this->block->version = keto::common::MetaInfo::PROTOCOL_VERSION;
+    this->block->date = keto::asn1::TimeHelper();
+    
 }
 
 
-BlockBuilder::BlockBuilder(const keto::asn1::HashHelper& parentHash) :
-    parentHash(parentHash) {    
+BlockBuilder::BlockBuilder(const keto::asn1::HashHelper& parentHash) {    
+    this->block = (Block_t*)calloc(1, sizeof *block);
+    this->block->version = keto::common::MetaInfo::PROTOCOL_VERSION;
+    this->block->date = keto::asn1::TimeHelper();
+    this->block->parent = parentHash;
+    
 }
     
 
 BlockBuilder::~BlockBuilder() {
+    if (block) {
+        ASN_STRUCT_FREE(asn_DEF_Block, block);
+        block = NULL;
+    }
 }
 
 BlockBuilder& BlockBuilder::addSignedTransaction(
-        const SignedTransaction& transaction) {
-    transactions.push_back(transaction);
+        const SignedTransaction* transaction) {
+    if (0 != ASN_SEQUENCE_ADD(&this->block->transactions,(SignedTransaction*)transaction)) {
+        BOOST_THROW_EXCEPTION(keto::block_db::FailedToAddTheTransactionException());
+    }
     return (*this);
 }
 
 BlockBuilder& BlockBuilder::addChangeSet(
-        const SignedChangeSetBuilderPtr& changeSet) {
-    changeSets.push_back(changeSet);
+        const SignedChangeSet* changeSet) {
+    if (0!= ASN_SEQUENCE_ADD(&this->block->changeSet,(SignedChangeSet*)changeSet)) {
+        ASN_STRUCT_FREE(asn_DEF_Block, block);
+        BOOST_THROW_EXCEPTION(keto::block_db::FailedToAddTheChangeSetException());
+    }
     return (*this);
 }
 
 BlockBuilder::operator Block_t*() {
-    Block_t* block = (Block_t*)calloc(1, sizeof *block);
-    block->version = keto::common::MetaInfo::PROTOCOL_VERSION;
-    block->date = this->date;
-    block->parent = this->parentHash;
+    MerkleUtils merkleUtils(this->block);
     
-    MerkleUtils merkleUtils(this->transactions,this->changeSets);
-    
-    for (SignedTransaction& signedTransaction : this->transactions) {
-        if (0!= ASN_SEQUENCE_ADD(&block->transactions,new SignedTransaction(signedTransaction))) {
-            ASN_STRUCT_FREE(asn_DEF_Block, block);
-            BOOST_THROW_EXCEPTION(keto::block_db::FailedToAddTheTransactionException());
-        }
-    }
-    for (SignedChangeSetBuilderPtr signedChangeSetBuilder : this->changeSets) {
-        if (0!= ASN_SEQUENCE_ADD(&block->changeSet,signedChangeSetBuilder->operator SignedChangeSet_t*())) {
-            ASN_STRUCT_FREE(asn_DEF_Block, block);
-            BOOST_THROW_EXCEPTION(keto::block_db::FailedToAddTheTransactionException());
-        }
-    }
     block->merkelRoot = merkleUtils.computation();
     
-    return block;
+    Block_t* result = block;
+    block = 0;
+    
+    return result;
 }
 
 

@@ -21,13 +21,12 @@
 namespace keto {
 namespace block_db {
 
-MerkleUtils::MerkleUtils(std::vector<SignedTransaction>& transactions,
-            std::vector<SignedChangeSetBuilderPtr> changeSets) {
-    for (SignedTransaction& transaction : transactions) {
-        hashs.push_back(keto::asn1::HashHelper(transaction.transactionHash));
+MerkleUtils::MerkleUtils(const Block_t* block) {
+    for (int index = 0; index < block->transactions.list.count; index++) {
+        hashs.push_back(keto::asn1::HashHelper(block->transactions.list.array[index]->transactionHash));
     }
-    for (SignedChangeSetBuilderPtr changeSet : changeSets) {
-        hashs.push_back(changeSet->getHash());
+    for (int index = 0; index < block->changeSet.list.count; index++) {
+        hashs.push_back(keto::asn1::HashHelper(block->changeSet.list.array[index]->changeSetHash));
     }
     if (!hashs.size()) {
         BOOST_THROW_EXCEPTION(keto::block_db::ZeroLengthHashListException());

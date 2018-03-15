@@ -16,6 +16,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "SignedTransaction.h"
 #include "SignedChangeSet.h"
@@ -29,6 +30,8 @@
 namespace keto {
 namespace block_db {
 
+class BlockBuilder;
+typedef std::shared_ptr<BlockBuilder> BlockBuilderPtr;
 
 class BlockBuilder {
 public:
@@ -39,19 +42,16 @@ public:
     
     
     BlockBuilder& addSignedTransaction(
-            const SignedTransaction& transaction);
+            const SignedTransaction* transaction);
     BlockBuilder& addChangeSet(
-            const SignedChangeSetBuilderPtr& changeSet);
+            const SignedChangeSet* changeSet);
     
     operator Block_t*();
     
     
     
 private:
-    keto::asn1::TimeHelper date;
-    keto::asn1::HashHelper parentHash;
-    std::vector<SignedTransaction> transactions;
-    std::vector<SignedChangeSetBuilderPtr> changeSets;
+    Block_t* block;
     
     
     
