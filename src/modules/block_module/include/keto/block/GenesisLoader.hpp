@@ -14,7 +14,10 @@
 #ifndef GENESISLOADER_HPP
 #define GENESISLOADER_HPP
 
+#include <memory>
+
 #include "keto/block/GenesisReader.hpp"
+#include "keto/crypto/KeyLoader.hpp"
 
 namespace keto {
 namespace block {
@@ -29,7 +32,7 @@ public:
     
 private:
     GenesisReader reader;
-    
+    std::shared_ptr<keto::crypto::KeyLoader> keyLoaderPtr;
     
 };
 

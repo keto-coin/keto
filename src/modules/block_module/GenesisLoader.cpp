@@ -13,13 +13,50 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
+#include <nlohmann/json.hpp>
+
+#include <botan/pkcs8.h>
+#include <botan/hash.h>
+#include <botan/data_src.h>
+#include <botan/pubkey.h>
+#include <botan/rng.h>
+#include <botan/auto_rng.h>
+#include <botan/hex.h>
+
+#include "keto/environment/EnvironmentManager.hpp"
+#include "keto/environment/Config.hpp"
+
 #include "keto/block/GenesisLoader.hpp"
-#include "keto/block/GenesisReader.hpp"
+#include "keto/block/Exception.hpp"
+#include "keto/block/Constants.hpp"
+#include "keto/block_db/BlockBuilder.hpp"
+#include "keto/block_db/SignedBlockBuilder.hpp"
+#include "keto/block_db/BlockChainStore.hpp"
+#include "keto/chain_common/TransactionBuilder.hpp"
+#include "keto/chain_common/SignedTransactionBuilder.hpp"
+#include "include/keto/block/Constants.hpp"
+#include "include/keto/block/GenesisLoader.hpp"
 
 namespace keto {
 namespace block {
 
 GenesisLoader::GenesisLoader(const GenesisReader& reader) : reader(reader) {
+    std::shared_ptr<keto::environment::Config> config = 
+            keto::environment::EnvironmentManager::getInstance()->getConfig();
+    if (!config->getVariablesMap().count(Constants::PRIVATE_KEY)) {
+        BOOST_THROW_EXCEPTION(keto::block::PrivateKeyNotConfiguredException());
+    }
+    std::string privateKeyPath = 
+            config->getVariablesMap()[Constants::PRIVATE_KEY].as<std::string>();
+    if (!config->getVariablesMap().count(Constants::PUBLIC_KEY)) {
+        BOOST_THROW_EXCEPTION(keto::block::PrivateKeyNotConfiguredException());
+    }
+    std::string publicKeyPath = 
+            config->getVariablesMap()[Constants::PUBLIC_KEY].as<std::string>();
+    keyLoaderPtr = std::make_shared<keto::crypto::KeyLoader>(privateKeyPath,
+            publicKeyPath);
+    
 }
 
 GenesisLoader::GenesisLoader(const GenesisLoader& orig) : reader(orig.reader) {
@@ -32,10 +69,24 @@ void GenesisLoader::load() {
     //std::cout << "Dump : "  << reader.getJsonData().dump() << std::endl;
     //std::cout << "Is object : "  << reader.getJsonData().is_object() << std::endl;
     //std::cout << "Is array : "  << reader.getJsonData().is_array() << std::endl;
-    std::cout << "Value : "  << reader.getJsonData()["parent"] << std::endl;
+    keto::asn1::HashHelper parentHash(reader.getJsonData()["parent"],keto::common::HEX);
+    
+    std::cout << "Value : "  << parentHash.getHash(keto::common::HEX) << std::endl;
     //std::cout << "Transaction : "  << reader.getJsonData()["transactions"].is_array() << std::endl;
     nlohmann::json transactions = reader.getJsonData()["transactions"].get<nlohmann::json>();
+    
+    keto::block_db::BlockBuilderPtr blockBuilderPtr = 
+            std::make_shared<keto::block_db::BlockBuilder>(parentHash);
+    
     for (auto& element : transactions) {
+        keto::asn1::HashHelper sourceAccount(element["account_hash"],keto::common::HEX);
+        keto::asn1::NumberHelper numberHelper(
+            atol(element["value"].get<std::string>().c_str()));
+        std::shared_ptr<keto::chain_common::TransactionBuilder> transactionPtr =
+            keto::chain_common::TransactionBuilder::createTransaction();
+        transactionPtr->setParent(parentHash).setSourceAccount(sourceAccount)
+                .setTargetAccount(sourceAccount).setValue(numberHelper);
+        
         //std::cout << element << '\n';
         //std::cout << "Account hash : "  << element["account_hash"] << std::endl;
         //std::cout << "Public Key : "  << element["public_key"] << std::endl;
@@ -50,7 +101,26 @@ void GenesisLoader::load() {
                 }
             }
         }
+        std::cout << "Memory data source private key " << element["private_key"].get<std::string>() << std::endl;
+        std::cout << "Memory data source private key " << Botan::hex_encode(
+            Botan::hex_decode_locked(element["private_key"].get<std::string>(),false),true) << std::endl;
+        keto::asn1::PrivateKeyHelper privateKeyHelper(element["private_key"].get<std::string>(),keto::common::HEX);
+        std::cout << "Signed transaction builder" << std::endl;
+        std::shared_ptr<keto::chain_common::SignedTransactionBuilder> signedTransBuild = 
+            keto::chain_common::SignedTransactionBuilder::createTransaction(
+                privateKeyHelper);
+        std::cout << "Sign transaction" << std::endl;
+        signedTransBuild->setTransaction(transactionPtr).sign();
+        blockBuilderPtr->addSignedTransaction(signedTransBuild->operator SignedTransaction*());
     }
+    
+    keto::block_db::SignedBlockBuilderPtr signedBlockBuilderPtr(new keto::block_db::SignedBlockBuilder(
+            blockBuilderPtr->operator Block_t*(),
+            keyLoaderPtr));
+    signedBlockBuilderPtr->sign();
+    
+    keto::block_db::BlockChainStore::getInstance()->writeBlock(*signedBlockBuilderPtr);
+    
     //for (nlohmann::json::iterator iter = reader.getJsonData()["transactions"].begin();
     //    iter != reader.getJsonData()["transactions"].end(); iter++ ) {
     //    nlohmann::json transaction = iter.value().get<nlohmann::json>();

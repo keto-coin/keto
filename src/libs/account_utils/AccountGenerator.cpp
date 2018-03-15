@@ -58,7 +58,7 @@ keto::crypto::SecureVector AccountGenerator::getAccountHash() {
 }
 
 keto::crypto::SecureVector AccountGenerator::getPrivateKey() {
-    return this->privateKey->private_key_bits();
+    return Botan::PKCS8::BER_encode(*this->privateKey);
 }
 
 std::vector<uint8_t> AccountGenerator::getPublicKey() {

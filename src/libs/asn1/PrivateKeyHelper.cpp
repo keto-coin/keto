@@ -41,6 +41,21 @@ PrivateKeyHelper::PrivateKeyHelper(const PrivateKey_t& privateKey) {
     this->privateKey->key = BerEncodingHelper(privateKey.key);
 }
 
+PrivateKeyHelper::PrivateKeyHelper(
+    const std::string& orig,keto::common::StringEncoding stringEncoding) {
+    initPrivateKey();
+    keto::crypto::SecureVector vector;
+    if (stringEncoding == keto::common::HEX) {
+        vector = Botan::hex_decode_locked(orig,true);
+    } else if (stringEncoding == keto::common::BASE64) {
+        vector = Botan::base64_decode(orig,true);
+    } else {
+        BOOST_THROW_EXCEPTION(keto::asn1::UnsupportedStringFormatException());
+    }
+    this->privateKey->key = BerEncodingHelper(vector);
+}
+    
+
 PrivateKeyHelper::PrivateKeyHelper(const PrivateKeyHelper& privateKeyHelper) {
     initPrivateKey();
     // duplicate the private key

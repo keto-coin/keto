@@ -21,7 +21,10 @@ class Constants {
 public:
     // string constants
     static const char* GENESIS_CONFIG;
-        
+    
+    // keys for server
+    static const char* PRIVATE_KEY;
+    static const char* PUBLIC_KEY;
 };
 
 

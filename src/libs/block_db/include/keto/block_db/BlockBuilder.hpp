@@ -50,6 +50,7 @@ public:
     operator Block_t&();
     
     
+    
 private:
     Block_t* block;
     

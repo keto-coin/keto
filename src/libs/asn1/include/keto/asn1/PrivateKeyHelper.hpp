@@ -31,6 +31,7 @@ public:
     PrivateKeyHelper();
     PrivateKeyHelper(const keto::crypto::SecureVector& privateKey);
     PrivateKeyHelper(const PrivateKey_t& privateKey);
+    PrivateKeyHelper(const std::string& orig,keto::common::StringEncoding stringEncoding);
     PrivateKeyHelper(const PrivateKeyHelper& orig);
     virtual ~PrivateKeyHelper();
     

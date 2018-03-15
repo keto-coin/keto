@@ -21,6 +21,7 @@
 #include "SignedBlock.h"
 
 #include "keto/asn1/PrivateKeyHelper.hpp"
+#include "keto/crypto/KeyLoader.hpp"
 #include "keto/block_db/BlockBuilder.hpp"
 
 namespace keto {
@@ -32,14 +33,15 @@ typedef std::shared_ptr<SignedBlockBuilder> SignedBlockBuilderPtr;
 class SignedBlockBuilder {
 public:
     SignedBlockBuilder();
-    SignedBlockBuilder(const keto::asn1::PrivateKeyHelper& privateKeyHelper);
+    SignedBlockBuilder(const std::shared_ptr<keto::crypto::KeyLoader> keyLoaderPtr);
     SignedBlockBuilder(Block_t* block,
-        const keto::asn1::PrivateKeyHelper& privateKeyHelper);
+        const std::shared_ptr<keto::crypto::KeyLoader> keyLoaderPtr);
     
     SignedBlockBuilder(const SignedBlockBuilder& orig) = delete;
     virtual ~SignedBlockBuilder();
     
-    SignedBlockBuilder& setPrivateKey(const keto::asn1::PrivateKeyHelper& privateKeyHelper);
+    SignedBlockBuilder& setPrivateKey(
+            const std::shared_ptr<keto::crypto::KeyLoader> keyLoaderPtr);
     SignedBlockBuilder& setBlock(Block_t* block);
     
     SignedBlockBuilder& sign();
@@ -48,7 +50,7 @@ public:
     operator SignedBlock_t&();
     
 private:
-    keto::asn1::PrivateKeyHelper privateKeyHelper;
+    std::shared_ptr<keto::crypto::KeyLoader> keyLoaderPtr;
     SignedBlock_t* signedBlock;
     
     keto::asn1::HashHelper getBlockHash(Block_t* block);

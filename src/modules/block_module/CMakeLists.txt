@@ -19,19 +19,22 @@ add_library( 0020_keto_block_module
            )
 
 target_link_libraries( 0020_keto_block_module
-                            PRIVATE keto_block_db keto_rocks_db
+                            PRIVATE keto_block_db keto_chain_common keto_rocks_db
                             PRIVATE keto_server_common keto_asn1_common keto_asn1_protocol
                             PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
                             PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
-                            PRIVATE ${ROCKSDB_LIBRARY} ${ROCKSDB_EXTRA_LIBRARY}
+                            PRIVATE ${ROCKSDB_LIBRARY} ${ROCKSDB_EXTRA_LIBRARY} ${ROCKSDB_SNAPPY_LIBRARY}
                             PRIVATE ${OPENSSL_LIBRARIES} )
 target_include_directories( 0020_keto_block_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/block_db/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/chain_common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/libs/asn1/include/"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
                             PUBLIC "${PROTO_HDRS}"
 

@@ -17,6 +17,10 @@ namespace keto {
 namespace block {
 
 const char* Constants::GENESIS_CONFIG = "genesis_config";
-    
+
+// keys for server
+const char* Constants::PRIVATE_KEY    = "server-private-key";
+const char* Constants::PUBLIC_KEY     = "server-public-key";
+
 }
 }

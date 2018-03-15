@@ -1,6 +1,7 @@
 file(GLOB HEADERS "include/keto/chain_common/*.hpp")
 
 ## SORT .cpp by most likely to change / break compile
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_library( keto_chain_common
             
             TransactionBuilder.cpp 

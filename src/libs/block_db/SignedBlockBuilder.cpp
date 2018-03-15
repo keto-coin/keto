@@ -19,6 +19,7 @@
 #include "keto/crypto/HashGenerator.hpp"
 
 #include "keto/block_db/Exception.hpp"
+#include "include/keto/block_db/SignedBlockBuilder.hpp"
 
 namespace keto {
 namespace block_db {
@@ -30,15 +31,15 @@ SignedBlockBuilder::SignedBlockBuilder() {
 }
 
 SignedBlockBuilder::SignedBlockBuilder(
-    const keto::asn1::PrivateKeyHelper& privateKeyHelper) 
-        : privateKeyHelper(privateKeyHelper) {
+    const std::shared_ptr<keto::crypto::KeyLoader> keyLoaderPtr) : 
+        keyLoaderPtr(keyLoaderPtr) {
     this->signedBlock = (SignedBlock_t*)calloc(1, sizeof *signedBlock);
     this->signedBlock->date = keto::asn1::TimeHelper();
 }
 
 SignedBlockBuilder::SignedBlockBuilder(Block_t* block,
-    const keto::asn1::PrivateKeyHelper& privateKeyHelper) 
-        : privateKeyHelper(privateKeyHelper) {
+    const std::shared_ptr<keto::crypto::KeyLoader> keyLoaderPtr) : 
+        keyLoaderPtr(keyLoaderPtr) {
     this->signedBlock = (SignedBlock_t*)calloc(1, sizeof *signedBlock);
     this->signedBlock->date = keto::asn1::TimeHelper();
     this->signedBlock->block = *block;
@@ -56,8 +57,8 @@ SignedBlockBuilder::~SignedBlockBuilder() {
 
 
 SignedBlockBuilder& SignedBlockBuilder::setPrivateKey(
-        const keto::asn1::PrivateKeyHelper& privateKeyHelper) {
-    this->privateKeyHelper = privateKeyHelper;
+    const std::shared_ptr<keto::crypto::KeyLoader> keyLoaderPtr) {
+    this->keyLoaderPtr = keyLoaderPtr;
     return (*this);
 }
 
@@ -76,8 +77,7 @@ SignedBlockBuilder& SignedBlockBuilder::sign() {
     if (!this->signedBlock) {
         BOOST_THROW_EXCEPTION(keto::block_db::SignedBlockReleasedException());
     }
-    keto::asn1::BerEncodingHelper key = this->privateKeyHelper.getKey();
-    keto::crypto::SignatureGenerator generator((keto::crypto::SecureVector)key);
+    keto::crypto::SignatureGenerator generator(*keyLoaderPtr);
     keto::asn1::HashHelper hashHelper(this->signedBlock->hash);
     keto::asn1::SignatureHelper signatureHelper(generator.sign(hashHelper));
     this->signedBlock->signature = signatureHelper;
