@@ -47,7 +47,7 @@ public:
             const SignedChangeSet* changeSet);
     
     operator Block_t*();
-    
+    operator Block_t&();
     
     
 private:

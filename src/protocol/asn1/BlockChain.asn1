@@ -20,7 +20,8 @@ Block ::= SEQUENCE {
 
 SignedBlock ::= SEQUENCE {
     version         Version,
-    id              Hash,
+    date            UTCTime,
+    parent          Hash,
     block           Block,
     hash            Hash,
     signature       Signature

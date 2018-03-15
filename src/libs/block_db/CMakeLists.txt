@@ -13,6 +13,7 @@ add_library( keto_block_db
             BlockBuilder.cpp
             MerkleUtils.cpp
             SignedChangeSetBuilder.cpp
+            SignedBlockBuilder.cpp
 
              ${HEADERS}
            )

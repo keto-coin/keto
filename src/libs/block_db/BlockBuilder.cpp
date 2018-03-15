@@ -19,6 +19,7 @@
 #include "keto/block_db/MerkleUtils.hpp"
 #include "keto/block_db/SignedChangeSetBuilder.hpp"
 #include "keto/block_db/MerkleUtils.hpp"
+#include "include/keto/block_db/BlockBuilder.hpp"
 
 namespace keto {
 namespace block_db {
@@ -75,6 +76,9 @@ BlockBuilder::operator Block_t*() {
     return result;
 }
 
+BlockBuilder::operator Block_t&() {
+    return *this->block;
+}
 
 
 }
