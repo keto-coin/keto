@@ -60,10 +60,14 @@ std::shared_ptr<BlockChainStore> BlockChainStore::getInstance() {
 
 bool BlockChainStore::requireGenesis() {
     BlockResourcePtr resource = blockResourceManagerPtr->getResource();
+    keto::asn1::HashHelper parentHash(Constants::GENESIS_KEY,keto::common::HEX);
+    keto::crypto::SecureVector vector = 
+            parentHash.operator keto::crypto::SecureVector();
+    keto::rocks_db::SliceHelper keyHelper(keto::crypto::SecureVectorUtils().copyFromSecure(vector));
     rocksdb::Transaction* blockTransaction = resource->getTransaction(Constants::BLOCKS_INDEX);
     rocksdb::ReadOptions readOptions;
     std::string value;
-    if (rocksdb::Status::OK() != blockTransaction->Get(readOptions,Constants::GENESIS_KEY,&value)) {
+    if (rocksdb::Status::OK() != blockTransaction->Get(readOptions,keyHelper,&value)) {
         return true;
     }
     return false;
