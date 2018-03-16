@@ -64,34 +64,42 @@ bool BlockChainStore::requireGenesis() {
     keto::crypto::SecureVector vector = 
             parentHash.operator keto::crypto::SecureVector();
     keto::rocks_db::SliceHelper keyHelper(keto::crypto::SecureVectorUtils().copyFromSecure(vector));
-    rocksdb::Transaction* blockTransaction = resource->getTransaction(Constants::BLOCKS_INDEX);
+    rocksdb::Transaction* childTransaction = resource->getTransaction(Constants::CHILD_INDEX);
     rocksdb::ReadOptions readOptions;
     std::string value;
-    if (rocksdb::Status::OK() != blockTransaction->Get(readOptions,keyHelper,&value)) {
+    if (rocksdb::Status::OK() != childTransaction->Get(readOptions,keyHelper,&value)) {
         return true;
     }
     return false;
 }
 
-void BlockChainStore::writeBlock(SignedBlock* signedBlock) {
+void BlockChainStore::writeBlock(SignedBlock& signedBlock) {
     
     // write the block
     BlockResourcePtr resource = blockResourceManagerPtr->getResource();
     rocksdb::Transaction* blockTransaction = resource->getTransaction(Constants::BLOCKS_INDEX);
+    rocksdb::Transaction* childTransaction = resource->getTransaction(Constants::CHILD_INDEX);
+    rocksdb::Transaction* transactionTransaction = resource->getTransaction(Constants::TRANSACTIONS_INDEX);
     std::shared_ptr<keto::asn1::SerializationHelper<SignedBlock>> serializationHelperPtr =
             std::make_shared<keto::asn1::SerializationHelper<SignedBlock>>(
-                signedBlock,&asn_DEF_SignedBlock);
+                &signedBlock,&asn_DEF_SignedBlock);
     keto::rocks_db::SliceHelper valueHelper((const std::vector<uint8_t>)(*serializationHelperPtr));
     keto::rocks_db::SliceHelper blockHashHelper(keto::crypto::SecureVectorUtils().copyFromSecure(
-        keto::asn1::HashHelper(signedBlock->hash)));
+        keto::asn1::HashHelper(signedBlock.hash)));
+    keto::rocks_db::SliceHelper parentHashHelper(keto::crypto::SecureVectorUtils().copyFromSecure(
+        keto::asn1::HashHelper(signedBlock.parent)));
     blockTransaction->Put(blockHashHelper,valueHelper);
+    childTransaction->Put(parentHashHelper,blockHashHelper);
     
+
     // setup the transaction indexing for the block
-    
-    
-    // setup the account indexing for the block.
-    //ASN_STRUCT_FREE(asn_DEF_SignedBlock, signedBlock);
-    
+    for (int index = 0; index < signedBlock.block.transactions.list.count; index++) {
+        transactionTransaction->Put(keto::rocks_db::SliceHelper(
+            keto::crypto::SecureVectorUtils().copyFromSecure(
+            keto::asn1::HashHelper(
+            signedBlock.block.transactions.list.array[index]->transactionHash))),blockHashHelper);
+    }
+
 }
 
 

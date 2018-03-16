@@ -43,7 +43,7 @@ SignedBlockBuilder::SignedBlockBuilder(Block_t* block,
     this->signedBlock = (SignedBlock_t*)calloc(1, sizeof *signedBlock);
     this->signedBlock->date = keto::asn1::TimeHelper();
     this->signedBlock->block = *block;
-    this->signedBlock->parent = block->parent;
+    this->signedBlock->parent = keto::asn1::HashHelper(block->parent);
     this->signedBlock->hash = getBlockHash(block);
     free(block);
 }
@@ -67,7 +67,7 @@ SignedBlockBuilder& SignedBlockBuilder::setBlock(Block_t* block) {
         BOOST_THROW_EXCEPTION(keto::block_db::SignedBlockReleasedException());
     }
     this->signedBlock->block = *block;
-    this->signedBlock->parent = block->parent;
+    this->signedBlock->parent = keto::asn1::HashHelper(block->parent);
     this->signedBlock->hash = getBlockHash(block);
     free(block);
     return (*this);

@@ -77,6 +77,10 @@ BlockBuilder::operator Block_t*() {
 }
 
 BlockBuilder::operator Block_t&() {
+    MerkleUtils merkleUtils(this->block);
+    
+    block->merkelRoot = merkleUtils.computation();
+    
     return *this->block;
 }
 

@@ -36,7 +36,7 @@ public:
     static std::shared_ptr<BlockChainStore> getInstance();
     
     bool requireGenesis();
-    void writeBlock(SignedBlock* signedBlock);
+    void writeBlock(SignedBlock& signedBlock);
     
     
     

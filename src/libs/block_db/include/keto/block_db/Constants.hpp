@@ -29,6 +29,7 @@ public:
     static const char* BLOCKS_INDEX;
     static const char* TRANSACTIONS_INDEX;
     static const char* ACCOUNTS_INDEX;
+    static const char* CHILD_INDEX;
     
     // boot constants
     static const char* GENESIS_KEY;
