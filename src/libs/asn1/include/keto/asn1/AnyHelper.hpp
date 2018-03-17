@@ -42,6 +42,13 @@ public:
     AnyHelper(AnyInterface* anyInterface);
     
     /**
+     * The any helper
+     * 
+     * @param any
+     */
+    AnyHelper(ANY_t& any);
+    
+    /**
      * The constructor taking a pointer reference to 
      * @param any
      */

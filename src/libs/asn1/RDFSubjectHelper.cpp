@@ -44,9 +44,9 @@ RDFSubjectHelper::operator RDFSubject_t*() {
 
 RDFSubjectHelper::operator ANY_t*() {
     RDFSubject_t* ptr = this->operator RDFSubject_t*();
-    ANY_t* anyPtr = (ANY_t*)calloc(1, sizeof anyPtr);
-    if (ANY_fromType(anyPtr, &asn_DEF_RDFSubject, ptr) == -1) {
-        free(anyPtr);
+    ANY_t* anyPtr = ANY_new_fromType(&asn_DEF_RDFSubject, ptr);
+    ASN_STRUCT_FREE(asn_DEF_RDFSubject, ptr);
+    if (!anyPtr) {
         BOOST_THROW_EXCEPTION(keto::asn1::TypeToAnyConversionFailedException());
     }
     return anyPtr;

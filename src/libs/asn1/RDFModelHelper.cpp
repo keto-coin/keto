@@ -60,9 +60,9 @@ RDFModelHelper::operator RDFModel_t*() {
 
 RDFModelHelper::operator ANY_t*() {
     RDFModel_t* ptr = this->operator RDFModel_t*();
-    ANY_t* anyPtr = (ANY_t*)calloc(1, sizeof anyPtr);
-    if (ANY_fromType(anyPtr, &asn_DEF_RDFModel, ptr) == -1) {
-        free(anyPtr);
+    ANY_t* anyPtr = ANY_new_fromType(&asn_DEF_RDFModel, ptr);
+    ASN_STRUCT_FREE(asn_DEF_RDFModel, ptr);
+    if (!anyPtr) {
         BOOST_THROW_EXCEPTION(keto::asn1::TypeToAnyConversionFailedException());
     }
     return anyPtr;

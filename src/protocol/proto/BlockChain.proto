@@ -41,3 +41,11 @@ message Block {
     bytes block_signature = 3;
     bytes asn1_block = 4;
 }
+
+
+/**
+ * The change set
+ */
+message ChangeSet {
+    bytes asn1_change_set = 1;
+}

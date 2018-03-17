@@ -44,9 +44,9 @@ RDFPredicateHelper::operator RDFPredicate_t*() {
 
 RDFPredicateHelper::operator ANY_t*() {
     RDFPredicate_t* ptr = this->operator RDFPredicate_t*();
-    ANY_t* anyPtr = (ANY_t*)calloc(1, sizeof anyPtr);
-    if (ANY_fromType(anyPtr, &asn_DEF_RDFPredicate, ptr) == -1) {
-        free(anyPtr);
+    ANY_t* anyPtr = ANY_new_fromType(&asn_DEF_RDFPredicate, ptr);
+    ASN_STRUCT_FREE(asn_DEF_RDFPredicate, ptr);
+    if (!anyPtr) {
         BOOST_THROW_EXCEPTION(keto::asn1::TypeToAnyConversionFailedException());
     }
     

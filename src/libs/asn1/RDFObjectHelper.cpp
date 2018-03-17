@@ -50,9 +50,9 @@ RDFObjectHelper::operator RDFObject_t*() {
 
 RDFObjectHelper::operator ANY_t*() {
     RDFObject_t* ptr = this->operator RDFObject_t*();
-    ANY_t* anyPtr = (ANY_t*)calloc(1, sizeof anyPtr);
-    if (ANY_fromType(anyPtr, &asn_DEF_RDFObject, ptr) == -1) {
-        free(anyPtr);
+    ANY_t* anyPtr = ANY_new_fromType(&asn_DEF_RDFObject, ptr);
+    ASN_STRUCT_FREE(asn_DEF_RDFObject, ptr);
+    if (!anyPtr) {
         BOOST_THROW_EXCEPTION(keto::asn1::TypeToAnyConversionFailedException());
     }
     

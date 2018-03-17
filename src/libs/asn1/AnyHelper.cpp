@@ -12,7 +12,9 @@
  */
 
 #include "keto/asn1/AnyHelper.hpp"
-#include "include/keto/asn1/AnyInterface.hpp"
+#include "keto/asn1/AnyInterface.hpp"
+#include "keto/asn1/SerializationHelper.hpp"
+#include "keto/asn1/DeserializationHelper.hpp"
 #include <stdlib.h>
 
 namespace keto {
@@ -25,28 +27,48 @@ AnyHelper::AnyHelper(AnyInterface* anyInterface) :
     
 }
 
+AnyHelper::AnyHelper(ANY_t& any) {
+    this->any = keto::asn1::DeserializationHelper<ANY_t>(
+        keto::asn1::SerializationHelper<ANY_t>(&any,&asn_DEF_ANY).
+        operator std::vector<uint8_t>&(),&asn_DEF_ANY).takePtr();
+    
+    this->anyInterface = 0;
+}
+
 AnyHelper::AnyHelper(ANY_t* any) : 
     any(any)  {
     this->anyInterface = 0;
 }
 
 AnyHelper::~AnyHelper() {
+    if (any) {
+        //free(this->any->buf);
+        //free(this->any);
+        ASN_STRUCT_FREE(asn_DEF_ANY, this->any);
+        any=0;
+    }
 }
 
 AnyHelper::operator ANY_t() {
+    ANY_t result;
     if (any) {
-        return *any;
-    }
-    ANY_t* ptr = (ANY_t*)calloc(1, sizeof ptr);
-    if (!anyInterface) {
-        BOOST_THROW_EXCEPTION(keto::asn1::NoAnyTypeInfoFailedException());
-    }
-    if (ANY_fromType(ptr, anyInterface->getType(), anyInterface->getPtr()) == -1) {
+        // duplicate the any
+        ANY_t* ptr = keto::asn1::DeserializationHelper<ANY_t>(
+            keto::asn1::SerializationHelper<ANY_t>(this->any,&asn_DEF_ANY).
+            operator std::vector<uint8_t>&(),&asn_DEF_ANY).takePtr();
+        result = *ptr;
         free(ptr);
-        BOOST_THROW_EXCEPTION(keto::asn1::TypeToAnyConversionFailedException());
+    } else {
+        if (!anyInterface) {
+            BOOST_THROW_EXCEPTION(keto::asn1::NoAnyTypeInfoFailedException());
+        }
+        ANY_t* ptr = ANY_new_fromType(anyInterface->getType(), anyInterface->getPtr());
+        if (!ptr) {
+            BOOST_THROW_EXCEPTION(keto::asn1::TypeToAnyConversionFailedException());
+        }
+        result = (*ptr);
+        free(ptr);
     }
-    ANY_t result = (*ptr);
-    free(ptr);
     return result;
 }
 

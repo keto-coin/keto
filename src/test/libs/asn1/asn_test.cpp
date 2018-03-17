@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE( asn1_test ) {
     keto::asn1::AnyHelper anyHelper(&testEntityHelper);
     ANY_t any = (ANY_t)anyHelper;
     
-    keto::asn1::AnyHelper anyHelper2(&any);
+    keto::asn1::AnyHelper anyHelper2(any);
     TestEntity* testEntity5 = (TestEntity*)anyHelper2.extract<TestEntity>(&asn_DEF_TestEntity);
     
     keto::asn1::TimeHelper timeHelper3 = testEntity5->date;

@@ -30,9 +30,14 @@
 #include "keto/block/GenesisLoader.hpp"
 #include "keto/block/Exception.hpp"
 #include "keto/block/Constants.hpp"
+#include "keto/asn1/RDFObjectHelper.hpp"
+#include "keto/asn1/RDFPredicateHelper.hpp"
+#include "keto/asn1/RDFSubjectHelper.hpp"
+#include "keto/asn1/RDFModelHelper.hpp"
 #include "keto/block_db/BlockBuilder.hpp"
 #include "keto/block_db/SignedBlockBuilder.hpp"
 #include "keto/block_db/BlockChainStore.hpp"
+#include "keto/chain_common/ActionBuilder.hpp"
 #include "keto/chain_common/TransactionBuilder.hpp"
 #include "keto/chain_common/SignedTransactionBuilder.hpp"
 #include "include/keto/block/Constants.hpp"
@@ -77,7 +82,6 @@ void GenesisLoader::load() {
     
     keto::block_db::BlockBuilderPtr blockBuilderPtr = 
             std::make_shared<keto::block_db::BlockBuilder>(parentHash);
-    
     for (auto& element : transactions) {
         keto::asn1::HashHelper sourceAccount(element["account_hash"],keto::common::HEX);
         keto::asn1::NumberHelper numberHelper(
@@ -90,17 +94,39 @@ void GenesisLoader::load() {
         //std::cout << element << '\n';
         //std::cout << "Account hash : "  << element["account_hash"] << std::endl;
         //std::cout << "Public Key : "  << element["public_key"] << std::endl;
-        nlohmann::json changeset = element["change_set"].get<nlohmann::json>();
-        for (nlohmann::json& element2 : changeset["rdf"]) {
+        nlohmann::json model = element["model"].get<nlohmann::json>();
+        keto::asn1::RDFModelHelper modelHelper;
+        for (nlohmann::json& element2 : model["rdf"]) {
             //std::cout << "Change set : "  << element2 << std::endl;
             for (nlohmann::json::iterator it = element2.begin(); it != element2.end(); ++it) {
                 nlohmann::json predicate = it.value();
+                keto::asn1::RDFSubjectHelper subjectHelper(it.key()); 
                 std::cout << "key : " << it.key() << " : [" << predicate << "]" << std::endl;
                 for (nlohmann::json::iterator predIter = predicate.begin(); predIter != predicate.end(); ++predIter) {
+                    keto::asn1::RDFPredicateHelper predicateHelper(predIter.key()); 
                     std::cout << "key : " << predIter.key() << std::endl;
+                    nlohmann::json contentWrapper = predIter.value();
+                    std::cout << "Content wrapper" << contentWrapper << std::endl;
+                    nlohmann::json jsonObj = contentWrapper.begin().value();
+                    std::cout << "Json object" << jsonObj << std::endl;
+                    keto::asn1::RDFObjectHelper objectHelper;
+                    objectHelper.setDataType(jsonObj["datatype"].get<std::string>()).
+                    setType(jsonObj["type"].get<std::string>()).
+                    setValue(jsonObj["value"].get<std::string>());
+                    std::cout << "Add object to predicate" << std::endl;
+                    predicateHelper.addObject(objectHelper);
+                    subjectHelper.addPredicate(predicateHelper);
                 }
+                modelHelper.addSubject(subjectHelper);
             }
         }
+        keto::asn1::AnyHelper anyModel(modelHelper);
+        std::shared_ptr<keto::chain_common::ActionBuilder> actionBuilderPtr =
+                keto::chain_common::ActionBuilder::createAction();
+        actionBuilderPtr->setModel(anyModel);
+        transactionPtr->addAction(actionBuilderPtr);
+        
+        
         std::cout << "Memory data source private key " << element["private_key"].get<std::string>() << std::endl;
         std::cout << "Memory data source private key " << Botan::hex_encode(
             Botan::hex_decode_locked(element["private_key"].get<std::string>(),false),true) << std::endl;
