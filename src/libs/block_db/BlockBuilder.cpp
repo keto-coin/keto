@@ -48,19 +48,10 @@ BlockBuilder::~BlockBuilder() {
     }
 }
 
-BlockBuilder& BlockBuilder::addSignedTransaction(
-        const SignedTransaction* transaction) {
-    if (0 != ASN_SEQUENCE_ADD(&this->block->transactions,(SignedTransaction*)transaction)) {
+BlockBuilder& BlockBuilder::addTransactionMessage(
+        const TransactionMessage* transaction) {
+    if (0 != ASN_SEQUENCE_ADD(&this->block->transactions,(TransactionMessage*)transaction)) {
         BOOST_THROW_EXCEPTION(keto::block_db::FailedToAddTheTransactionException());
-    }
-    return (*this);
-}
-
-BlockBuilder& BlockBuilder::addChangeSet(
-        const SignedChangeSet* changeSet) {
-    if (0!= ASN_SEQUENCE_ADD(&this->block->changeSet,(SignedChangeSet*)changeSet)) {
-        ASN_STRUCT_FREE(asn_DEF_Block, block);
-        BOOST_THROW_EXCEPTION(keto::block_db::FailedToAddTheChangeSetException());
     }
     return (*this);
 }

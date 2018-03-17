@@ -20,12 +20,12 @@
 
 #include "SignedTransaction.h"
 #include "SignedChangeSet.h"
+#include "TransactionMessage.h"
 #include "Block.h"
 
 #include "keto/asn1/TimeHelper.hpp"
 #include "keto/asn1/HashHelper.hpp"
 
-#include "keto/block_db/SignedChangeSetBuilder.hpp"
 
 namespace keto {
 namespace block_db {
@@ -41,10 +41,8 @@ public:
     virtual ~BlockBuilder();
     
     
-    BlockBuilder& addSignedTransaction(
-            const SignedTransaction* transaction);
-    BlockBuilder& addChangeSet(
-            const SignedChangeSet* changeSet);
+    BlockBuilder& addTransactionMessage(
+            const TransactionMessage* transaction);
     
     operator Block_t*();
     operator Block_t&();

@@ -5,7 +5,7 @@ BlockChainModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
         FROM AccountModule
         Action
         FROM ActionModule
-        Transaction, SignedTransaction, ChangeSet, SignedChangeSet
+        Transaction, SignedTransaction, ChangeSet, SignedChangeSet, TransactionMessage
         FROM TransactionModule;
 
 
@@ -13,8 +13,7 @@ Block ::= SEQUENCE {
     version             Version,
     date                UTCTime,
     parent              Hash,
-    transactions        SEQUENCE OF SignedTransaction,
-    changeSet           SEQUENCE OF SignedChangeSet,
+    transactions        SEQUENCE OF TransactionMessage,
     merkelRoot          Hash
 }
 

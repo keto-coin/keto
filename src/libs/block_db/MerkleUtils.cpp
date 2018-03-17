@@ -23,10 +23,11 @@ namespace block_db {
 
 MerkleUtils::MerkleUtils(const Block_t* block) {
     for (int index = 0; index < block->transactions.list.count; index++) {
-        hashs.push_back(keto::asn1::HashHelper(block->transactions.list.array[index]->transactionHash));
-    }
-    for (int index = 0; index < block->changeSet.list.count; index++) {
-        hashs.push_back(keto::asn1::HashHelper(block->changeSet.list.array[index]->changeSetHash));
+        TransactionMessage* transactionMessage = block->transactions.list.array[index];
+        hashs.push_back(keto::asn1::HashHelper(transactionMessage->transactionHash));
+        for (int changeIndex = 0; changeIndex < transactionMessage->changeSet.list.count; changeIndex++) {
+            hashs.push_back(keto::asn1::HashHelper(transactionMessage->changeSet.list.array[changeIndex]->changeSetHash));
+        }
     }
     if (!hashs.size()) {
         BOOST_THROW_EXCEPTION(keto::block_db::ZeroLengthHashListException());

@@ -5,7 +5,7 @@ TransactionModule DEFINITIONS AUTOMATIC TAGS ::= BEGIN
         FROM AccountModule
         Action
         FROM ActionModule
-        ChangeSet
+        ChangeSet, SignedTransaction
         FROM ChangeSetModule;
 
 Transaction ::= SEQUENCE {
@@ -51,11 +51,11 @@ TransactionMessage ::= SEQUENCE {
     transactionHash     Hash,
     signature           Signature,
     -- transaction 
-    signedTransaction   ANY,
+    signedTransaction   SignedTransaction,
     transactionTrace    SEQUENCE OF TransactionTrace,
     -- status and changeset
     currentStatus       Status,
-    changeSet           SEQUENCE OF ChangeSet
+    changeSet           SEQUENCE OF SignedChangeSet
 }
 
 

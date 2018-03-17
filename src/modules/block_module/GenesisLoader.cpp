@@ -34,6 +34,7 @@
 #include "keto/asn1/RDFPredicateHelper.hpp"
 #include "keto/asn1/RDFSubjectHelper.hpp"
 #include "keto/asn1/RDFModelHelper.hpp"
+#include "keto/transaction_common/TransactionMessageHelper.hpp"
 #include "keto/block_db/BlockBuilder.hpp"
 #include "keto/block_db/SignedBlockBuilder.hpp"
 #include "keto/block_db/BlockChainStore.hpp"
@@ -137,7 +138,8 @@ void GenesisLoader::load() {
                 privateKeyHelper);
         std::cout << "Sign transaction" << std::endl;
         signedTransBuild->setTransaction(transactionPtr).sign();
-        blockBuilderPtr->addSignedTransaction(signedTransBuild->operator SignedTransaction*());
+        keto::transaction_common::TransactionMessageHelper transactionMessageHelper(signedTransBuild->operator SignedTransaction*());
+        blockBuilderPtr->addTransactionMessage(transactionMessageHelper);
     }
     
     keto::block_db::SignedBlockBuilderPtr signedBlockBuilderPtr(new keto::block_db::SignedBlockBuilder(

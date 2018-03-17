@@ -15,6 +15,7 @@
 
 #include "keto/asn1/SerializationHelper.hpp"
 #include "keto/asn1/BerEncodingHelper.hpp"
+#include "keto/asn1/SignatureHelper.hpp"
 #include "keto/crypto/SignatureGenerator.hpp"
 #include "keto/crypto/HashGenerator.hpp"
 
