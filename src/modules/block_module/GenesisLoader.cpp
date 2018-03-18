@@ -24,6 +24,8 @@
 #include <botan/auto_rng.h>
 #include <botan/hex.h>
 
+#include "Status.h"
+
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/environment/Config.hpp"
 
@@ -35,6 +37,8 @@
 #include "keto/asn1/RDFSubjectHelper.hpp"
 #include "keto/asn1/RDFModelHelper.hpp"
 #include "keto/transaction_common/TransactionMessageHelper.hpp"
+#include "keto/transaction_common/ChangeSetBuilder.hpp"
+#include "keto/transaction_common/SignedChangeSetBuilder.hpp"
 #include "keto/block_db/BlockBuilder.hpp"
 #include "keto/block_db/SignedBlockBuilder.hpp"
 #include "keto/block_db/BlockChainStore.hpp"
@@ -139,6 +143,21 @@ void GenesisLoader::load() {
         std::cout << "Sign transaction" << std::endl;
         signedTransBuild->setTransaction(transactionPtr).sign();
         keto::transaction_common::TransactionMessageHelper transactionMessageHelper(signedTransBuild->operator SignedTransaction*());
+        transactionMessageHelper.setStatus(Status_complete);
+        
+        // create a change set set
+        keto::transaction_common::ChangeSetBuilderPtr changeSetBuilder(new keto::transaction_common::ChangeSetBuilder(
+            keto::asn1::HashHelper(transactionMessageHelper.operator TransactionMessage_t&().transactionHash),
+            sourceAccount));
+        changeSetBuilder->addChange(anyModel).setStatus(Status_complete);
+        keto::transaction_common::SignedChangeSetBuilderPtr signedChangeSetBuilder(new
+            keto::transaction_common::SignedChangeSetBuilder(*changeSetBuilder,*keyLoaderPtr));
+        signedChangeSetBuilder->sign();
+        
+        transactionMessageHelper.addChangeSet(*signedChangeSetBuilder);
+        
+        
+        
         blockBuilderPtr->addTransactionMessage(transactionMessageHelper);
     }
     

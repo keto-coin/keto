@@ -40,7 +40,7 @@ public:
     ChangeSetBuilder& setTransaction(const keto::asn1::HashHelper& transactionHash);
     ChangeSetBuilder& setAccount(const keto::asn1::HashHelper& accountHash);
     ChangeSetBuilder& setStatus(const Status& status);
-    ChangeSetBuilder& addChange(ANY_t* asn1Change);
+    ChangeSetBuilder& addChange(const ANY_t& asn1Change);
     
     operator ChangeSet_t*();
     operator ChangeSet_t&();

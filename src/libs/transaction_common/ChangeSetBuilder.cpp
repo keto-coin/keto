@@ -65,11 +65,10 @@ ChangeSetBuilder& ChangeSetBuilder::setStatus(const Status& status) {
 }
 
 
-ChangeSetBuilder& ChangeSetBuilder::addChange(ANY_t* asn1Change) {
+ChangeSetBuilder& ChangeSetBuilder::addChange(const ANY_t& asn1Change) {
     ChangeData_t* changeData = (ChangeData_t*)calloc(1, sizeof *changeData);
     changeData->present = ChangeData_PR_asn1Change;
-    changeData->choice.asn1Change = *asn1Change;
-    free(asn1Change);
+    changeData->choice.asn1Change = asn1Change;
     if (0!= ASN_SEQUENCE_ADD(&this->changeSet->changes,changeData)) {
         BOOST_THROW_EXCEPTION(keto::transaction_common::ChangeSequenceAddFailedException());
     }
