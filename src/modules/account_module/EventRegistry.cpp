@@ -33,14 +33,22 @@ keto::event::Event EventRegistry::checkAccount(const keto::event::Event& event) 
     return AccountService::getInstance()->checkAccount(event);
 }
 
+keto::event::Event EventRegistry::applyTransaction(const keto::event::Event& event) {
+    return AccountService::getInstance()->applyTransaction(event);
+}
+
 void EventRegistry::registerEventHandlers() {
     keto::server_common::registerEventHandler (
             keto::server_common::Events::CHECK_ACCOUNT_MESSAGE,
             &keto::account::EventRegistry::checkAccount);
-    
+    keto::server_common::registerEventHandler (
+            keto::server_common::Events::APPLY_ACCOUNT_TRANSACTION_MESSAGE,
+            &keto::account::EventRegistry::applyTransaction);
 }
 
 void EventRegistry::deregisterEventHandlers() {
+    keto::server_common::deregisterEventHandler(
+            keto::server_common::Events::APPLY_ACCOUNT_TRANSACTION_MESSAGE);
     keto::server_common::deregisterEventHandler(
             keto::server_common::Events::CHECK_ACCOUNT_MESSAGE);
 }

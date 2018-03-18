@@ -26,6 +26,7 @@
 #include "keto/chain_common/TransactionBuilder.hpp"
 #include "keto/chain_common/SignedTransactionBuilder.hpp"
 #include "keto/chain_common/ActionBuilder.hpp"
+#include "keto/transaction_common/TransactionMessageHelper.hpp"
 
 #include "keto/account_utils/AccountGenerator.hpp"
 
@@ -177,9 +178,15 @@ int generateTransaction(std::shared_ptr<ketoEnv::Config> config,
     std::shared_ptr<keto::chain_common::SignedTransactionBuilder> signedTransBuild = 
         keto::chain_common::SignedTransactionBuilder::createTransaction(
             privateKeyHelper);
+    
+    
     signedTransBuild->setTransaction(transactionPtr);
     signedTransBuild->sign();
-
+    
+    keto::transaction_common::TransactionMessageHelperPtr transactionMessageHelperPtr(
+        new keto::transaction_common::TransactionMessageHelper(
+        *signedTransBuild));
+    
     // The io_context is required for all I/O
     boost::asio::io_context ioc;
 
@@ -193,7 +200,7 @@ int generateTransaction(std::shared_ptr<ketoEnv::Config> config,
             privateKey,publicKey);
     std::string result= 
             session.setHost(host).setPort(port).handShake().makeRequest(
-            signedTransBuild);
+            transactionMessageHelperPtr);
 
     // Write the message to standard out
     std::cout << result << std::endl;

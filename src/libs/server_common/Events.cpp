@@ -26,6 +26,7 @@ const char* Events::ROUTE_MESSAGE = "ROUTE_MESSAGE";
 
 // account events
 const char* Events::CHECK_ACCOUNT_MESSAGE = "CHECK_ACCOUNT_MESSAGE";
+const char* Events::APPLY_ACCOUNT_TRANSACTION_MESSAGE = "APPLY_ACCOUNT_TRANSACTION_MESSAGE";
 
 }
 }

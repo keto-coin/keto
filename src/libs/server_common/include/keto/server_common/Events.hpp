@@ -32,6 +32,8 @@ public:
     
     // account events
     static const char* CHECK_ACCOUNT_MESSAGE;
+    static const char* APPLY_ACCOUNT_TRANSACTION_MESSAGE;
+    
 private:
 
 };

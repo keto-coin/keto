@@ -45,6 +45,7 @@
 #include "keto/ssl/RootCertificate.hpp"
 #include "keto/crypto/KeyLoader.hpp"
 #include "keto/chain_common/SignedTransactionBuilder.hpp"
+#include "keto/transaction_common/TransactionMessageHelper.hpp"
 
 namespace keto {
 namespace session {
@@ -66,7 +67,7 @@ public:
     
     HttpSession& handShake();
     
-    std::string makeRequest(std::shared_ptr<keto::chain_common::SignedTransactionBuilder>& request);
+    std::string makeRequest(keto::transaction_common::TransactionMessageHelperPtr& request);
     
 private:
     boost::asio::io_context& ioc;

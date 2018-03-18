@@ -16,6 +16,7 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "Transaction.h"
 #include "SignedTransaction.h"
@@ -24,6 +25,7 @@
 #include "TransactionTrace.h"
 
 #include "keto/asn1/HashHelper.hpp"
+#include "keto/asn1/SignatureHelper.hpp"
 
 namespace keto {
 namespace transaction_common {
@@ -52,6 +54,12 @@ public:
     operator TransactionMessage_t&();
     operator TransactionMessage_t*();
     operator ANY_t*();
+    
+    operator std::vector<uint8_t>();
+    
+    keto::asn1::HashHelper getSourceAccount();
+    keto::asn1::HashHelper getHash();
+    keto::asn1::SignatureHelper getSignature();
     
 private:
     TransactionMessage_t* transactionMessage;

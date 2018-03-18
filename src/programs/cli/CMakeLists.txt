@@ -44,7 +44,8 @@ target_include_directories(keto_cli
 
 target_link_libraries( keto_cli 
         PRIVATE keto_http_client_session keto_crypto  keto_account_utils
-        PRIVATE keto_server_common keto_environment keto_common keto_chain_common
+        PRIVATE keto_transaction_common keto_server_common keto_environment 
+        PRIVATE keto_common keto_chain_common
         PRIVATE keto_asn1_common keto_asn1_protocol
         PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} 
         PRIVATE ${BOTAN_LIBRARIES} ${Boost_LIBRARIES} 

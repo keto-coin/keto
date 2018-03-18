@@ -15,6 +15,7 @@
 #include <iostream>
 
 #include "Account.pb.h"
+#include "BlockChain.pb.h"
 
 #include "keto/asn1/HashHelper.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
@@ -48,6 +49,16 @@ void AccountService::fin() {
 std::shared_ptr<AccountService> AccountService::getInstance() {
     return singleton;
 }
+
+keto::event::Event AccountService::applyTransaction(const keto::event::Event& event) {
+    keto::proto::Transaction  transactionWrapper = 
+            keto::server_common::fromEvent<keto::proto::Transaction>(event);
+    
+    transactionWrapper.asn1_transaction_message();
+    
+    return keto::server_common::toEvent<keto::proto::Transaction>(transactionWrapper);
+}
+    
 
 // account methods
 keto::event::Event AccountService::checkAccount(const keto::event::Event& event) {

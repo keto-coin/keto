@@ -96,24 +96,24 @@ HttpSession& HttpSession::handShake() {
 }
 
 std::string HttpSession::makeRequest(
-    std::shared_ptr<keto::chain_common::SignedTransactionBuilder>& signedTransaction) {
+    keto::transaction_common::TransactionMessageHelperPtr& request) {
     
     keto::proto::Transaction transaction;
-    keto::asn1::HashHelper hashHelper = signedTransaction->getHash();
+    keto::asn1::HashHelper hashHelper = request->getHash();
     transaction.set_transaction_hash(
         hashHelper.operator keto::crypto::SecureVector().data(),
         hashHelper.operator keto::crypto::SecureVector().size());
-    hashHelper = signedTransaction->getHash();
+    keto::asn1::SignatureHelper signatureHelper = request->getSignature();
     transaction.set_transaction_signature(
-        hashHelper.operator keto::crypto::SecureVector().data(),
-        hashHelper.operator keto::crypto::SecureVector().size());
-    hashHelper = signedTransaction->getSourceAccount();
+        signatureHelper.operator std::vector<uint8_t>().data(),
+        signatureHelper.operator std::vector<uint8_t>().size());
+    hashHelper = request->getSourceAccount();
     transaction.set_activeaccount(
         hashHelper.operator keto::crypto::SecureVector().data(),
         hashHelper.operator keto::crypto::SecureVector().size());
     transaction.set_status(keto::proto::INIT);
     std::vector<uint8_t> serializedTransaction = 
-        signedTransaction->operator std::vector<uint8_t>&();
+        request->operator std::vector<uint8_t>();
     transaction.set_asn1_transaction_message(
         serializedTransaction.data(),serializedTransaction.size());
     

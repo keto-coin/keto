@@ -16,6 +16,7 @@
 #include "keto/asn1/HashHelper.hpp"
 #include "keto/asn1/SignatureHelper.hpp"
 #include "keto/transaction_common/Exception.hpp"
+#include "keto/asn1/SerializationHelper.hpp"
 
 namespace keto {
 namespace transaction_common {
@@ -121,6 +122,12 @@ TransactionMessageHelper::operator TransactionMessage_t*() {
     return result;
 }
 
+TransactionMessageHelper::operator std::vector<uint8_t>() {
+    return keto::asn1::SerializationHelper<TransactionMessage>(this->transactionMessage,
+        &asn_DEF_TransactionMessage).operator std::vector<uint8_t>&();
+}
+    
+
 TransactionMessageHelper::operator ANY_t*() {
     ANY_t* anyPtr = ANY_new_fromType(&asn_DEF_TransactionMessage, this->transactionMessage);
     if (!anyPtr) {
@@ -128,6 +135,19 @@ TransactionMessageHelper::operator ANY_t*() {
     }
     return anyPtr;
 }
+
+keto::asn1::HashHelper TransactionMessageHelper::getSourceAccount() {
+    return this->transactionMessage->sourceAccount;
+}
+
+keto::asn1::HashHelper TransactionMessageHelper::getHash() {
+    return this->transactionMessage->transactionHash;
+}
+
+keto::asn1::SignatureHelper TransactionMessageHelper::getSignature() {
+    return this->transactionMessage->signature;
+}
+
 
 }
 }
