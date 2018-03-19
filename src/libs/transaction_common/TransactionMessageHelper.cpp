@@ -17,6 +17,7 @@
 #include "keto/asn1/SignatureHelper.hpp"
 #include "keto/transaction_common/Exception.hpp"
 #include "keto/asn1/SerializationHelper.hpp"
+#include "keto/asn1/DeserializationHelper.hpp"
 
 namespace keto {
 namespace transaction_common {
@@ -58,6 +59,11 @@ TransactionMessageHelper::TransactionMessageHelper(TransactionMessage_t* transac
     transactionMessage(transactionMessage) {
 }
 
+TransactionMessageHelper::TransactionMessageHelper(const std::string& transactionMessage) {
+    this->transactionMessage = 
+            keto::asn1::DeserializationHelper<TransactionMessage_t>((const uint8_t*)transactionMessage.data(), 
+            transactionMessage.size(),&asn_DEF_TransactionMessage).takePtr();
+}
 
 TransactionMessageHelper::~TransactionMessageHelper() {
     if (transactionMessage) {
@@ -109,6 +115,13 @@ TransactionMessageHelper& TransactionMessageHelper::addChangeSet(
     if (0!= ASN_SEQUENCE_ADD(&this->transactionMessage->changeSet,signedChangeSet)) {
         BOOST_THROW_EXCEPTION(keto::transaction_common::SignedChangeSetSequenceAddFailedException());
     }
+    return (*this);
+}
+
+TransactionMessageHelper& TransactionMessageHelper::operator =(const std::string& transactionMessage) {
+    this->transactionMessage = 
+            keto::asn1::DeserializationHelper<TransactionMessage_t>((const uint8_t*)transactionMessage.data(), 
+            transactionMessage.size(),&asn_DEF_TransactionMessage).takePtr();
     return (*this);
 }
 

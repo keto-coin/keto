@@ -28,6 +28,7 @@
 #include "keto/crypto/SecureVectorUtils.hpp"
 #include "keto/session/HttpSession.hpp"
 #include "keto/session/Exception.hpp"
+#include "keto/transaction_common/TransactionProtoHelper.hpp"
 
 
 namespace keto {
@@ -97,31 +98,13 @@ HttpSession& HttpSession::handShake() {
 
 std::string HttpSession::makeRequest(
     keto::transaction_common::TransactionMessageHelperPtr& request) {
+    keto::transaction_common::TransactionProtoHelper 
+        transactionProtoHelper(request);
     
-    keto::proto::Transaction transaction;
-    keto::asn1::HashHelper hashHelper = request->getHash();
-    transaction.set_transaction_hash(
-        hashHelper.operator keto::crypto::SecureVector().data(),
-        hashHelper.operator keto::crypto::SecureVector().size());
-    keto::asn1::SignatureHelper signatureHelper = request->getSignature();
-    transaction.set_transaction_signature(
-        signatureHelper.operator std::vector<uint8_t>().data(),
-        signatureHelper.operator std::vector<uint8_t>().size());
-    hashHelper = request->getSourceAccount();
-    transaction.set_activeaccount(
-        hashHelper.operator keto::crypto::SecureVector().data(),
-        hashHelper.operator keto::crypto::SecureVector().size());
-    transaction.set_status(keto::proto::INIT);
-    std::vector<uint8_t> serializedTransaction = 
-        request->operator std::vector<uint8_t>();
-    transaction.set_asn1_transaction_message(
-        serializedTransaction.data(),serializedTransaction.size());
-    
-    std::string buffer;
-    transaction.SerializeToString(&buffer);
     boost::beast::http::response<boost::beast::http::string_body> response = 
         this->makeRequest(this->createProtobufRequest(
-            keto::common::HttpEndPoints::TRANSACTION,buffer));
+            keto::common::HttpEndPoints::TRANSACTION,
+            transactionProtoHelper.operator std::string()));
     
     std::stringstream ss;
     ss << "Made request : " << response.body();

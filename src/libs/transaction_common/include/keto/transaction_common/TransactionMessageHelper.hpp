@@ -41,6 +41,7 @@ public:
             const keto::asn1::HashHelper& sourceAccount, 
             const keto::asn1::HashHelper& targetAccount);
     TransactionMessageHelper(TransactionMessage_t* transactionMessage);
+    TransactionMessageHelper(const std::string& transactionMessage);
     TransactionMessageHelper(const TransactionMessageHelper& orig) = delete;
     virtual ~TransactionMessageHelper();
     
@@ -51,6 +52,7 @@ public:
     TransactionMessageHelper& addTransactionTrace(TransactionTrace_t* transactionTrace);
     TransactionMessageHelper& addChangeSet(SignedChangeSet_t* signedChangeSet);
     
+    TransactionMessageHelper& operator =(const std::string& transactionMessage);
     operator TransactionMessage_t&();
     operator TransactionMessage_t*();
     operator ANY_t*();
