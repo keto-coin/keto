@@ -93,6 +93,12 @@ TransactionProtoHelper::operator keto::proto::Transaction&() {
     return this->transaction;
 }
 
+
+TransactionProtoHelper& TransactionProtoHelper::operator = (const keto::proto::Transaction& transaction) {
+    this->transaction.CopyFrom(transaction);
+    return (*this);
+}
+
 TransactionMessageHelperPtr TransactionProtoHelper::getTransactionMessageHelper() {
     return TransactionMessageHelperPtr(
             new TransactionMessageHelper(this->transaction.asn1_transaction_message()));

@@ -25,6 +25,9 @@
 #include <botan/hex.h>
 
 #include "Status.h"
+#include "BlockChain.pb.h"
+
+#include "keto/common/Log.hpp"
 
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/environment/Config.hpp"
@@ -32,21 +35,31 @@
 #include "keto/block/GenesisLoader.hpp"
 #include "keto/block/Exception.hpp"
 #include "keto/block/Constants.hpp"
+
 #include "keto/asn1/RDFObjectHelper.hpp"
 #include "keto/asn1/RDFPredicateHelper.hpp"
 #include "keto/asn1/RDFSubjectHelper.hpp"
-#include "keto/asn1/RDFModelHelper.hpp"
+#include "keto/asn1/RDFModelHelper.hpp"\
+
 #include "keto/transaction_common/TransactionMessageHelper.hpp"
 #include "keto/transaction_common/ChangeSetBuilder.hpp"
 #include "keto/transaction_common/SignedChangeSetBuilder.hpp"
+#include "keto/transaction_common/TransactionProtoHelper.hpp"
+
 #include "keto/block_db/BlockBuilder.hpp"
 #include "keto/block_db/SignedBlockBuilder.hpp"
 #include "keto/block_db/BlockChainStore.hpp"
+
 #include "keto/chain_common/ActionBuilder.hpp"
 #include "keto/chain_common/TransactionBuilder.hpp"
 #include "keto/chain_common/SignedTransactionBuilder.hpp"
-#include "include/keto/block/Constants.hpp"
-#include "include/keto/block/GenesisLoader.hpp"
+
+#include "keto/block/Constants.hpp"
+#include "keto/block/GenesisLoader.hpp"
+
+#include "keto/server_common/EventUtils.hpp"
+#include "keto/server_common/Events.hpp"
+#include "keto/server_common/EventServiceHelpers.hpp"
 
 namespace keto {
 namespace block {
@@ -81,7 +94,7 @@ void GenesisLoader::load() {
     //std::cout << "Is array : "  << reader.getJsonData().is_array() << std::endl;
     keto::asn1::HashHelper parentHash(reader.getJsonData()["parent"],keto::common::HEX);
     
-    std::cout << "Value : "  << parentHash.getHash(keto::common::HEX) << std::endl;
+    KETO_LOG_INFO << "Value : "  << parentHash.getHash(keto::common::HEX);
     //std::cout << "Transaction : "  << reader.getJsonData()["transactions"].is_array() << std::endl;
     nlohmann::json transactions = reader.getJsonData()["transactions"].get<nlohmann::json>();
     
@@ -106,19 +119,19 @@ void GenesisLoader::load() {
             for (nlohmann::json::iterator it = element2.begin(); it != element2.end(); ++it) {
                 nlohmann::json predicate = it.value();
                 keto::asn1::RDFSubjectHelper subjectHelper(it.key()); 
-                std::cout << "key : " << it.key() << " : [" << predicate << "]" << std::endl;
+                KETO_LOG_INFO << "key : " << it.key() << " : [" << predicate << "]";
                 for (nlohmann::json::iterator predIter = predicate.begin(); predIter != predicate.end(); ++predIter) {
                     keto::asn1::RDFPredicateHelper predicateHelper(predIter.key()); 
-                    std::cout << "key : " << predIter.key() << std::endl;
+                    KETO_LOG_INFO << "key : " << predIter.key();
                     nlohmann::json contentWrapper = predIter.value();
-                    std::cout << "Content wrapper" << contentWrapper << std::endl;
+                    KETO_LOG_INFO << "Content wrapper" << contentWrapper;
                     nlohmann::json jsonObj = contentWrapper.begin().value();
-                    std::cout << "Json object" << jsonObj << std::endl;
+                    KETO_LOG_INFO << "Json object" << jsonObj;
                     keto::asn1::RDFObjectHelper objectHelper;
                     objectHelper.setDataType(jsonObj["datatype"].get<std::string>()).
                     setType(jsonObj["type"].get<std::string>()).
                     setValue(jsonObj["value"].get<std::string>());
-                    std::cout << "Add object to predicate" << std::endl;
+                    KETO_LOG_INFO << "Add object to predicate";
                     predicateHelper.addObject(objectHelper);
                     subjectHelper.addPredicate(predicateHelper);
                 }
@@ -132,33 +145,40 @@ void GenesisLoader::load() {
         transactionPtr->addAction(actionBuilderPtr);
         
         
-        std::cout << "Memory data source private key " << element["private_key"].get<std::string>() << std::endl;
-        std::cout << "Memory data source private key " << Botan::hex_encode(
-            Botan::hex_decode_locked(element["private_key"].get<std::string>(),false),true) << std::endl;
+        KETO_LOG_INFO << "Memory data source private key " << element["private_key"].get<std::string>();
+        KETO_LOG_INFO << "Memory data source private key " << Botan::hex_encode(
+            Botan::hex_decode_locked(element["private_key"].get<std::string>(),false),true);
         keto::asn1::PrivateKeyHelper privateKeyHelper(element["private_key"].get<std::string>(),keto::common::HEX);
-        std::cout << "Signed transaction builder" << std::endl;
+        KETO_LOG_INFO << "Signed transaction builder";
         std::shared_ptr<keto::chain_common::SignedTransactionBuilder> signedTransBuild = 
             keto::chain_common::SignedTransactionBuilder::createTransaction(
                 privateKeyHelper);
-        std::cout << "Sign transaction" << std::endl;
+        KETO_LOG_INFO << "Sign transaction" << std::endl;
         signedTransBuild->setTransaction(transactionPtr).sign();
-        keto::transaction_common::TransactionMessageHelper transactionMessageHelper(signedTransBuild->operator SignedTransaction*());
-        transactionMessageHelper.setStatus(Status_complete);
+        keto::transaction_common::TransactionMessageHelperPtr transactionMessageHelper(
+            new keto::transaction_common::TransactionMessageHelper(signedTransBuild->operator SignedTransaction*()));
+        transactionMessageHelper->setStatus(Status_complete);
         
         // create a change set set
-        keto::transaction_common::ChangeSetBuilderPtr changeSetBuilder(new keto::transaction_common::ChangeSetBuilder(
-            keto::asn1::HashHelper(transactionMessageHelper.operator TransactionMessage_t&().transactionHash),
-            sourceAccount));
+        keto::transaction_common::ChangeSetBuilderPtr changeSetBuilder(
+            new keto::transaction_common::ChangeSetBuilder(
+                transactionMessageHelper->getHash(),
+                sourceAccount));
         changeSetBuilder->addChange(anyModel).setStatus(Status_complete);
         keto::transaction_common::SignedChangeSetBuilderPtr signedChangeSetBuilder(new
             keto::transaction_common::SignedChangeSetBuilder(*changeSetBuilder,*keyLoaderPtr));
         signedChangeSetBuilder->sign();
         
-        transactionMessageHelper.addChangeSet(*signedChangeSetBuilder);
+        transactionMessageHelper->addChangeSet(*signedChangeSetBuilder);
         
+        keto::transaction_common::TransactionProtoHelper transactionProtoHelper(
+                transactionMessageHelper);
+        transactionProtoHelper = 
+            keto::server_common::fromEvent<keto::proto::Transaction>(
+            keto::server_common::processEvent(keto::server_common::toEvent<keto::proto::Transaction>(
+            keto::server_common::Events::APPLY_ACCOUNT_TRANSACTION_MESSAGE,transactionProtoHelper)));
         
-        
-        blockBuilderPtr->addTransactionMessage(transactionMessageHelper);
+        blockBuilderPtr->addTransactionMessage(*transactionProtoHelper.getTransactionMessageHelper());
     }
     
     keto::block_db::SignedBlockBuilderPtr signedBlockBuilderPtr(new keto::block_db::SignedBlockBuilder(
@@ -166,7 +186,9 @@ void GenesisLoader::load() {
             keyLoaderPtr));
     signedBlockBuilderPtr->sign();
     
+    KETO_LOG_INFO << "Create the genesis BLOCK";
     keto::block_db::BlockChainStore::getInstance()->writeBlock(*signedBlockBuilderPtr);
+    KETO_LOG_INFO << "Created the genesis BLOCK";
     
     //for (nlohmann::json::iterator iter = reader.getJsonData()["transactions"].begin();
     //    iter != reader.getJsonData()["transactions"].end(); iter++ ) {

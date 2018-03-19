@@ -56,6 +56,8 @@ keto::event::Event AccountService::applyTransaction(const keto::event::Event& ev
     
     transactionWrapper.asn1_transaction_message();
     
+    std::cout << "Apply changes to the account " << std::endl;
+    
     return keto::server_common::toEvent<keto::proto::Transaction>(transactionWrapper);
 }
     

@@ -40,6 +40,7 @@ public:
     
     operator std::string();
     operator keto::proto::Transaction&();
+    TransactionProtoHelper& operator = (const keto::proto::Transaction& transaction);
     
     TransactionMessageHelperPtr getTransactionMessageHelper();
     
