@@ -21,6 +21,7 @@
 #include "keto/server_common/EventServiceHelpers.hpp"
 #include "keto/account/AccountService.hpp"
 #include "keto/account_db/AccountStore.hpp"
+#include "keto/transaction_common/TransactionProtoHelper.hpp"
 
 
 namespace keto {
@@ -51,14 +52,17 @@ std::shared_ptr<AccountService> AccountService::getInstance() {
 }
 
 keto::event::Event AccountService::applyTransaction(const keto::event::Event& event) {
-    keto::proto::Transaction  transactionWrapper = 
+    keto::proto::Transaction  transaction = 
             keto::server_common::fromEvent<keto::proto::Transaction>(event);
     
-    transactionWrapper.asn1_transaction_message();
+    keto::transaction_common::TransactionProtoHelper transactionProtoHelper;
+    transactionProtoHelper = transaction;
+    keto::account_db::AccountStore::getInstance()->applyTransaction(
+        transactionProtoHelper.getTransactionMessageHelper());
     
     std::cout << "Apply changes to the account " << std::endl;
     
-    return keto::server_common::toEvent<keto::proto::Transaction>(transactionWrapper);
+    return keto::server_common::toEvent<keto::proto::Transaction>(transaction);
 }
     
 

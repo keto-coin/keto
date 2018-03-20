@@ -20,6 +20,7 @@
 #include "keto/rocks_db/DBManager.hpp"
 #include "keto/account_db/AccountResourceManager.hpp"
 #include "keto/account_db/AccountGraphStoreManager.hpp"
+#include "keto/transaction_common/TransactionMessageHelper.hpp"
 
 namespace keto {
 namespace account_db {
@@ -35,7 +36,10 @@ public:
     static std::shared_ptr<AccountStore> getInstance();
     
     bool getAccountInfo(const keto::asn1::HashHelper& accountHash,
-            keto::proto::AccountInfo& result);
+        keto::proto::AccountInfo& result);
+    void applyTransaction(
+        const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper);
+    
     
 private:
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;

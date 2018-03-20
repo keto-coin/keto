@@ -71,5 +71,10 @@ bool AccountStore::getAccountInfo(const keto::asn1::HashHelper& accountHash,
     return true;
 }
 
+void AccountStore::applyTransaction(
+        const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper) {
+    
+}
+
 }
 }

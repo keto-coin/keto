@@ -26,6 +26,7 @@ target_include_directories( keto_account_db
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../transaction_manager_api/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../server_common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../module_manager/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../transaction_common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../rocks_db/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
