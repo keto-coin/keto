@@ -29,8 +29,7 @@ static std::shared_ptr<AccountStore> singleton;
 AccountStore::AccountStore() {
     dbManagerPtr = std::shared_ptr<keto::rocks_db::DBManager>(
             new keto::rocks_db::DBManager(Constants::DB_LIST));
-    accountGraphStorePtr = AccountGraphStorePtr(new AccountGraphStore(
-            Constants::BASE_GRAPH));
+    accountGraphStoreManagerPtr = AccountGraphStoreManagerPtr(new AccountGraphStoreManager());
     accountResourceManagerPtr  =  AccountResourceManagerPtr(
             new AccountResourceManager(dbManagerPtr));
 
@@ -38,7 +37,7 @@ AccountStore::AccountStore() {
 
 AccountStore::~AccountStore() {
     accountResourceManagerPtr.reset();
-    accountGraphStorePtr.reset();
+    accountGraphStoreManagerPtr.reset();
     dbManagerPtr.reset();
 }
 

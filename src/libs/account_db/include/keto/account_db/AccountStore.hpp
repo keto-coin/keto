@@ -19,7 +19,7 @@
 #include "keto/asn1/HashHelper.hpp"
 #include "keto/rocks_db/DBManager.hpp"
 #include "keto/account_db/AccountResourceManager.hpp"
-#include "keto/account_db/AccountGraphStore.hpp"
+#include "keto/account_db/AccountGraphStoreManager.hpp"
 
 namespace keto {
 namespace account_db {
@@ -39,7 +39,7 @@ public:
     
 private:
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;
-    AccountGraphStorePtr accountGraphStorePtr;
+    AccountGraphStoreManagerPtr accountGraphStoreManagerPtr;
     AccountResourceManagerPtr accountResourceManagerPtr;
     
     AccountStore();

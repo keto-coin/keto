@@ -21,6 +21,7 @@
 
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/environment/Config.hpp"
+#include "include/keto/account_db/Constants.hpp"
 
 namespace keto {
 namespace account_db {
@@ -30,19 +31,28 @@ AccountGraphStore::AccountGraphStore(const std::string& dbName) {
     world = librdf_new_world();
     librdf_world_open(world);
     
+    
     // setup the bdb hash db
     std::shared_ptr<keto::environment::Config> config = 
             keto::environment::EnvironmentManager::getInstance()->getConfig();
-    if (!config->getVariablesMap().count(dbName)) {
+    if (!config->getVariablesMap().count(Constants::GRAPH_BASE_DIR)) {
         std::stringstream ss;
-        ss << "The db name supplied is not configured : " << dbName;
+        ss << "The graph db base directory is not configured : " << Constants::GRAPH_BASE_DIR;
         BOOST_THROW_EXCEPTION(keto::account_db::AccountsInvalidDBNameException(
             ss.str()));
     }
     
-    boost::filesystem::path dbPath =  
+    // create a db directory
+    boost::filesystem::path graphBaseDir =  
         keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / 
-        config->getVariablesMap()[dbName].as<std::string>();
+        config->getVariablesMap()[Constants::GRAPH_BASE_DIR].as<std::string>();
+    
+    if (!boost::filesystem::exists(graphBaseDir)) {
+        boost::filesystem::create_directory(graphBaseDir);
+    }    
+    
+    boost::filesystem::path dbPath =  graphBaseDir / 
+        dbName;
     if (!boost::filesystem::exists(dbPath)) {
         boost::filesystem::create_directory(dbPath);
     }
@@ -63,6 +73,32 @@ AccountGraphStore::~AccountGraphStore() {
     librdf_free_world(world);
 }
 
+bool AccountGraphStore::checkForDb(const std::string& dbName) {
+    std::shared_ptr<keto::environment::Config> config = 
+            keto::environment::EnvironmentManager::getInstance()->getConfig();
+    if (!config->getVariablesMap().count(Constants::GRAPH_BASE_DIR)) {
+        std::stringstream ss;
+        ss << "The graph db base directory is not configured : " << Constants::GRAPH_BASE_DIR;
+        BOOST_THROW_EXCEPTION(keto::account_db::AccountsInvalidDBNameException(
+            ss.str()));
+    }
+    
+    // create a db directory
+    boost::filesystem::path graphBaseDir =  
+        keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / 
+        config->getVariablesMap()[Constants::GRAPH_BASE_DIR].as<std::string>();
+    
+    if (!boost::filesystem::exists(graphBaseDir)) {
+        return false;
+    }    
+    
+    boost::filesystem::path dbPath =  graphBaseDir / 
+        dbName;
+    if (!boost::filesystem::exists(dbPath)) {
+        return false;
+    }
+    return true;
+}
 
 }
 }

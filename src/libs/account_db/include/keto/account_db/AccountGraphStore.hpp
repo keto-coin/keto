@@ -33,6 +33,7 @@ public:
     AccountGraphStore(const AccountGraphStore& orig) = delete;
     virtual ~AccountGraphStore();
     
+    static bool checkForDb(const std::string& dbName);
     
 private:
     librdf_world* world;
