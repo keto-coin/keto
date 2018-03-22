@@ -15,6 +15,7 @@
 #define RDFOBJECTHELPLER_HPP
 
 #include <string>
+#include <memory>
 
 #include "RDFObject.h"
 #include "UTF8String.h"
@@ -23,11 +24,14 @@
 namespace keto {
 namespace asn1 {
 
+class RDFObjectHelper;
+typedef std::shared_ptr<RDFObjectHelper> RDFObjectHelperPtr;
 
 class RDFObjectHelper {
 public:
     RDFObjectHelper();
     RDFObjectHelper(const std::string& value, const std::string& dataType);
+    RDFObjectHelper(const RDFObject& rdfObject);
     RDFObjectHelper(const RDFObjectHelper& orig) = default;
     virtual ~RDFObjectHelper();
     
@@ -36,9 +40,13 @@ public:
     
     
     RDFObjectHelper& setValue(const std::string& value);
+    std::string getValue();
     RDFObjectHelper& setType(const std::string& type);
+    std::string getType();
     RDFObjectHelper& setLang(const std::string& lang);
+    std::string getLang();
     RDFObjectHelper& setDataType(const std::string& dataType);
+    std::string getDataType();
     
     
 private:

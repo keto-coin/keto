@@ -153,6 +153,12 @@ keto::asn1::HashHelper TransactionMessageHelper::getSourceAccount() {
     return this->transactionMessage->sourceAccount;
 }
 
+
+keto::asn1::HashHelper TransactionMessageHelper::getTargetAccount() {
+    return this->transactionMessage->targetAccount;
+}
+
+
 keto::asn1::HashHelper TransactionMessageHelper::getHash() {
     return this->transactionMessage->transactionHash;
 }

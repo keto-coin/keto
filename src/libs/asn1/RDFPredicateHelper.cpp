@@ -14,56 +14,80 @@
 #include "keto/asn1/RDFPredicateHelper.hpp"
 #include "keto/asn1/Exception.hpp"
 #include "keto/asn1/RDFObjectHelper.hpp"
+#include "keto/asn1/CloneHelper.hpp"
 
 namespace keto {
 namespace asn1 {
 
 RDFPredicateHelper::RDFPredicateHelper() {
+    this->rdfPredicate = (RDFPredicate_t*)calloc(1, sizeof *rdfPredicate);
 }
 
-RDFPredicateHelper::RDFPredicateHelper(const std::string& predicate) : 
-    predicate(predicate) {
+RDFPredicateHelper::RDFPredicateHelper(RDFPredicate_t* rdfPredicate) : 
+    rdfPredicate(rdfPredicate) {
 }
     
 
+RDFPredicateHelper::RDFPredicateHelper(const std::string& predicate) {
+    this->rdfPredicate = (RDFPredicate_t*)calloc(1, sizeof *rdfPredicate);
+    OCTET_STRING_fromBuf(&rdfPredicate->predicate,
+            predicate.c_str(),predicate.size());
+}
+
+RDFPredicateHelper::RDFPredicateHelper(const RDFPredicateHelper& orig) {
+    this->rdfPredicate = keto::asn1::clone<RDFPredicate_t>(orig.rdfPredicate,
+            &asn_DEF_RDFPredicate);
+}
+
 RDFPredicateHelper::~RDFPredicateHelper() {
+    if (this->rdfPredicate) {
+        ASN_STRUCT_FREE(asn_DEF_RDFPredicate, this->rdfPredicate);
+    }
 }
 
 RDFPredicateHelper::operator RDFPredicate_t*() {
-    RDFPredicate_t* rdfPredicate = (RDFPredicate_t*)calloc(1, sizeof *rdfPredicate);
-    OCTET_STRING_fromBuf(&rdfPredicate->predicate,
-            this->predicate.c_str(),this->predicate.size());
-    
-    for (RDFObjectHelper rdfObject : this->objects) {
-        if (0!= ASN_SEQUENCE_ADD(&rdfPredicate->rdfObjects,rdfObject.operator RDFObject_t*())) {
-            BOOST_THROW_EXCEPTION(keto::asn1::FailedToAddObjectToPredicateException());
-        }
-    }
-    return rdfPredicate;
+    RDFPredicate_t* result = this->rdfPredicate;
+    this->rdfPredicate = 0;
+    return result;
 }
 
+
 RDFPredicateHelper::operator ANY_t*() {
-    RDFPredicate_t* ptr = this->operator RDFPredicate_t*();
-    ANY_t* anyPtr = ANY_new_fromType(&asn_DEF_RDFPredicate, ptr);
-    ASN_STRUCT_FREE(asn_DEF_RDFPredicate, ptr);
+    ANY_t* anyPtr = ANY_new_fromType(&asn_DEF_RDFPredicate, this->rdfPredicate);
     if (!anyPtr) {
         BOOST_THROW_EXCEPTION(keto::asn1::TypeToAnyConversionFailedException());
     }
-    
     return anyPtr;
 }
 
-RDFPredicateHelper& RDFPredicateHelper::addObject(const RDFObjectHelper& rdfObject) {
-    this->objects.push_back(rdfObject);
+
+RDFPredicateHelper& RDFPredicateHelper::addObject(RDFObjectHelper& rdfObject) {
+    if (0!= ASN_SEQUENCE_ADD(&rdfPredicate->rdfObjects,rdfObject.operator RDFObject_t*())) {
+        BOOST_THROW_EXCEPTION(keto::asn1::FailedToAddObjectToPredicateException());
+    }
     return (*this);
 }
 
 
 RDFPredicateHelper& RDFPredicateHelper::setPredicate(const std::string& predicate) {
-    this->predicate = predicate;
+    OCTET_STRING_fromBuf(&rdfPredicate->predicate,
+            predicate.c_str(),predicate.size());
     return (*this);
 }
-    
+
+std::string RDFPredicateHelper::getPredicate() {
+    return std::string((const char*)this->rdfPredicate->predicate.buf);
+}
+
+std::vector<RDFObjectHelperPtr> RDFPredicateHelper::listObjects() {
+    std::vector<RDFObjectHelperPtr> result;
+    for (int index = 0; index < this->rdfPredicate->rdfObjects.list.count; index++) {
+        result.push_back(RDFObjectHelperPtr(
+                new RDFObjectHelper(*this->rdfPredicate->rdfObjects.list.array[index])));
+    }
+    return result;
+}
+
 
 }
 }

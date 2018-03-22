@@ -60,6 +60,7 @@ public:
     operator std::vector<uint8_t>();
     
     keto::asn1::HashHelper getSourceAccount();
+    keto::asn1::HashHelper getTargetAccount();
     keto::asn1::HashHelper getHash();
     keto::asn1::SignatureHelper getSignature();
     

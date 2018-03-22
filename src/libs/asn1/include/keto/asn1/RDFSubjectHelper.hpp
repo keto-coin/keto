@@ -29,19 +29,26 @@ namespace asn1 {
 class RDFSubjectHelper {
 public:
     RDFSubjectHelper();
+    RDFSubjectHelper(RDFSubject_t* subject);
     RDFSubjectHelper(const std::string& subject);
-    RDFSubjectHelper(const RDFSubjectHelper& orig) = default;
+    RDFSubjectHelper(const RDFSubjectHelper& orig);
     virtual ~RDFSubjectHelper();
     
     operator RDFSubject_t*();
+    operator RDFSubject_t&();
     operator ANY_t*();
+    RDFPredicateHelper operator [](const std::string& predicate); 
     
     RDFSubjectHelper& setSubject(const std::string& subject);
-    RDFSubjectHelper& addPredicate(const RDFPredicateHelper& predicate);
+    RDFSubjectHelper& addPredicate(RDFPredicateHelper& predicate);
+    
+    std::string getOntologyClass();
+    std::string getSubject();
+    std::vector<std::string> listPredicates();
+    
     
 private:
-    std::string subject;
-    std::vector<RDFPredicateHelper> predicates;
+    RDFSubject_t* rdfSubject;
     
     
 };

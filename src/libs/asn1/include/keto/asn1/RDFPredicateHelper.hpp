@@ -29,19 +29,22 @@ namespace asn1 {
 class RDFPredicateHelper {
 public:
     RDFPredicateHelper();
+    RDFPredicateHelper(RDFPredicate_t* rdfPredicate);
     RDFPredicateHelper(const std::string& predicate);
-    RDFPredicateHelper(const RDFPredicateHelper& orig) = default;
+    RDFPredicateHelper(const RDFPredicateHelper& orig);
     virtual ~RDFPredicateHelper();
     
     operator RDFPredicate_t*();
     operator ANY_t*();
     
-    RDFPredicateHelper& addObject(const RDFObjectHelper& rdfObject);
+    RDFPredicateHelper& addObject(RDFObjectHelper& rdfObject);
     RDFPredicateHelper& setPredicate(const std::string& predicate);
     
+    std::string getPredicate();
+    std::vector<RDFObjectHelperPtr> listObjects();
+    
 private:
-    std::string predicate;
-    std::vector<RDFObjectHelper> objects;
+    RDFPredicate_t* rdfPredicate;
 };
 
 }

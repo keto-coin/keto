@@ -36,6 +36,7 @@ KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddObjectToPredicateExcep
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddPredicateToSubjectException , "Could not add RDF predicate to subject");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddSubjectToModelException , "Could not add RDF subject to model");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddChangeToChangeSetException , "Could not add Change to ChangeSet");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, PredicateNotFoundException , "Predicate not found");
 
 
 }

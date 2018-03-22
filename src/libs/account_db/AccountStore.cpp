@@ -73,6 +73,14 @@ bool AccountStore::getAccountInfo(const keto::asn1::HashHelper& accountHash,
 
 void AccountStore::applyTransaction(
         const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper) {
+    keto::proto::AccountInfo accountInfo;
+    
+    
+    if (!getAccountInfo(transactionMessageHelper->getTargetAccount(),accountInfo)) {
+        
+    } else {
+        
+    }
     
 }
 

@@ -24,6 +24,12 @@ RDFObjectHelper::RDFObjectHelper() :
 {
 }
 
+RDFObjectHelper::RDFObjectHelper(const RDFObject& rdfObject) :
+    value((const char*)rdfObject.value.buf),type((const char*)rdfObject.value.buf), 
+        lang((const char*)rdfObject.value.buf), dataType((const char*)rdfObject.dataType.buf) {    
+}
+    
+
 RDFObjectHelper::RDFObjectHelper(const std::string& value, const std::string& dataType) :
     value(value),type(Constants::RDF_TYPE), lang(Constants::RDF_LANGUAGE), dataType(dataType) {
 }
@@ -65,22 +71,35 @@ RDFObjectHelper& RDFObjectHelper::setValue(const std::string& value) {
     return (*this);
 }
 
+std::string RDFObjectHelper::getValue() {
+    return this->value;
+}
 
 RDFObjectHelper& RDFObjectHelper::setType(const std::string& type) {
     this->type = type;
     return (*this);
 }
 
+std::string RDFObjectHelper::getType() {
+    return this->type;
+}
 
 RDFObjectHelper& RDFObjectHelper::setLang(const std::string& lang) {
     this->lang = lang;
     return (*this);
 }
 
+std::string RDFObjectHelper::getLang() {
+    return this->lang;
+}
 
 RDFObjectHelper& RDFObjectHelper::setDataType(const std::string& dataType) {
     this->dataType = dataType;
     return (*this);
+}
+
+std::string RDFObjectHelper::getDataType() {
+    return this->dataType;
 }
 
 

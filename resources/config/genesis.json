@@ -44,6 +44,20 @@
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
                         }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#type":[
+                        {
+                           "value":"system",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#status":[
+                        {
+                           "value":"create",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
                      ]
                   }
                }
@@ -92,6 +106,20 @@
                            "value":"1000000000",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#type":[
+                        {
+                           "value":"system",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#status":[
+                        {
+                           "value":"create",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
                      ]
                   }
@@ -142,6 +170,20 @@
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
                         }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#type":[
+                        {
+                           "value":"system",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#status":[
+                        {
+                           "value":"create",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
                      ]
                   }
                }
@@ -190,6 +232,20 @@
                            "value":"1000000000",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#type":[
+                        {
+                           "value":"system",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#status":[
+                        {
+                           "value":"create",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
                      ]
                   }
