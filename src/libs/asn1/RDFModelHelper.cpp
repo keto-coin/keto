@@ -15,53 +15,111 @@
 #include "keto/asn1/RDFModelHelper.hpp"
 #include "keto/asn1/RDFSubjectHelper.hpp"
 #include "keto/asn1/Exception.hpp"
+#include "keto/asn1/CloneHelper.hpp"
+
 
 namespace keto {
 namespace asn1 {
 
-RDFModelHelper::RDFModelHelper() : change(RDFChange_persist) {
+RDFModelHelper::RDFModelHelper() {
+    this->rdfModel = (RDFModel_t*)calloc(1, sizeof *rdfModel);
+    this->rdfModel->action = RDFChange_persist;
 }
 
-RDFModelHelper::RDFModelHelper(const RDFChange_t& change) : change(change) {
+RDFModelHelper::RDFModelHelper(const RDFChange_t& change) {
+    this->rdfModel = (RDFModel_t*)calloc(1, sizeof *rdfModel);
+    this->rdfModel->action = change;
+}
+
+RDFModelHelper::RDFModelHelper(RDFModel_t* rdfModel) : rdfModel(rdfModel) {
+    
+}
+    
+RDFModelHelper::RDFModelHelper(const RDFModelHelper& orig) {
+    this->rdfModel = keto::asn1::clone<RDFModel>(orig.rdfModel,
+            &asn_DEF_RDFModel);
 }
     
 
 RDFModelHelper::~RDFModelHelper() {
+    if (this->rdfModel) {
+        ASN_STRUCT_FREE(asn_DEF_RDFModel, this->rdfModel);
+    }
 }
 
 RDFModelHelper& RDFModelHelper::setChange(const RDFChange_t& change) {
-    this->change = change;
+    this->rdfModel->action = change;
     return (*this);
 }
 
 
-RDFModelHelper& RDFModelHelper::addSubject(const RDFSubjectHelper& subject) {
-    this->subjects.push_back(subject);
+RDFModelHelper& RDFModelHelper::addSubject(RDFSubjectHelper& rdfSubject) {
+    RDFDataFormat_t* dataFormat = (RDFDataFormat_t*)calloc(1, sizeof *dataFormat);
+    dataFormat->present = RDFDataFormat_PR_rdfSubject;
+    RDFSubject_t* subject = rdfSubject.operator RDFSubject_t*();
+    dataFormat->choice.rdfSubject = *subject;
+    if (0!= ASN_SEQUENCE_ADD(&this->rdfModel->rdfDataFormat,dataFormat)) {
+        BOOST_THROW_EXCEPTION(keto::asn1::FailedToAddSubjectToModelException());
+    }
     return (*this);
+}
+
+std::vector<std::string> RDFModelHelper::subjects() {
+    std::vector<std::string> result;
+    for (int index = 0; index < this->rdfModel->rdfDataFormat.list.count; index++) {
+        if (this->rdfModel->rdfDataFormat.list.array[index]->present != RDFDataFormat_PR_rdfSubject) {
+            continue;
+        }
+        result.push_back(std::string((const char*)
+                this->rdfModel->rdfDataFormat.list.array[index]->choice.rdfSubject.subject.buf));
+    }
+    return result;
+}
+
+bool RDFModelHelper::contains(const std::string& subject) {
+    for (int index = 0; index < this->rdfModel->rdfDataFormat.list.count; index++) {
+        if (this->rdfModel->rdfDataFormat.list.array[index]->present != RDFDataFormat_PR_rdfSubject) {
+            continue;
+        }
+        std::string subjectName((const char*)
+                this->rdfModel->rdfDataFormat.list.array[index]->choice.rdfSubject.subject.buf);
+        if (subjectName.compare(subject) != 0) {
+            continue;
+        }
+        return true;
+    }
+    return false;
+}
+
+RDFSubjectHelper RDFModelHelper::operator [](const std::string& subject) {
+    for (int index = 0; index < this->rdfModel->rdfDataFormat.list.count; index++) {
+        if (this->rdfModel->rdfDataFormat.list.array[index]->present != RDFDataFormat_PR_rdfSubject) {
+            continue;
+        }
+        std::string subjectName((const char*)
+                this->rdfModel->rdfDataFormat.list.array[index]->choice.rdfSubject.subject.buf);
+        if (subjectName.compare(subject) != 0) {
+            continue;
+        }
+        return RDFSubjectHelper(keto::asn1::clone<RDFSubject>(
+                &this->rdfModel->rdfDataFormat.list.array[index]->choice.rdfSubject,
+                &asn_DEF_RDFSubject));
+    }
+    BOOST_THROW_EXCEPTION(keto::asn1::SubjectNotFoundInModelException());
+}
+
+RDFModelHelper::operator RDFModel_t&() {
+    return *this->rdfModel;
 }
 
 RDFModelHelper::operator RDFModel_t*() {
-    RDFModel_t* rdfModel = (RDFModel_t*)calloc(1, sizeof *rdfModel);
-    rdfModel->action = change;
-    
-    for (RDFSubjectHelper rdfSubject : this->subjects) {
-        RDFDataFormat_t* dataFormat = (RDFDataFormat_t*)calloc(1, sizeof *dataFormat);
-        dataFormat->present = RDFDataFormat_PR_rdfSubject;
-        RDFSubject_t* subject = rdfSubject.operator RDFSubject_t*();
-        dataFormat->choice.rdfSubject = *subject;
-        // free the subject memory, the rest is copied.
-        free(subject);
-        if (0!= ASN_SEQUENCE_ADD(&rdfModel->rdfDataFormat,dataFormat)) {
-            BOOST_THROW_EXCEPTION(keto::asn1::FailedToAddSubjectToModelException());
-        }
-    }
-    return rdfModel;
+    RDFModel_t* result = this->rdfModel;
+    this->rdfModel = 0;
+    return result;
 }
 
 RDFModelHelper::operator ANY_t*() {
-    RDFModel_t* ptr = this->operator RDFModel_t*();
-    ANY_t* anyPtr = ANY_new_fromType(&asn_DEF_RDFModel, ptr);
-    ASN_STRUCT_FREE(asn_DEF_RDFModel, ptr);
+    ANY_t* anyPtr = ANY_new_fromType(&asn_DEF_RDFModel, this->rdfModel);
     if (!anyPtr) {
         BOOST_THROW_EXCEPTION(keto::asn1::TypeToAnyConversionFailedException());
     }

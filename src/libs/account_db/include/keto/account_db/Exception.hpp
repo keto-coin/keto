@@ -25,7 +25,8 @@ KETO_DECLARE_EXCEPTION( AccountsDBException, "Accounts DB Exception." );
 
 KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, AccountsInvalidDBNameException , "The accounts db could not be founds.");
 KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, AccountDBInitFailureException , "Could not init the accounts db.");
-    KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, DuplicateGraphDBException , "A graph db exists by this name.");
+KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, DuplicateGraphDBException , "A graph db exists by this name.");
+KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, UnsupportedChangeTypeFormatException , "Unsupported type change.");
 }
 }
 

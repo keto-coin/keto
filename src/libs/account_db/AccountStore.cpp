@@ -20,6 +20,9 @@
 #include "keto/rocks_db/SliceHelper.hpp"
 #include "keto/account_db/Constants.hpp"
 #include "keto/account_db/AccountStore.hpp"
+#include "keto/account_db/AccountRDFStatement.hpp"
+#include "keto/account_db/AccountRDFStatementBuilder.hpp"
+
 
 namespace keto {
 namespace account_db {
@@ -74,7 +77,8 @@ bool AccountStore::getAccountInfo(const keto::asn1::HashHelper& accountHash,
 void AccountStore::applyTransaction(
         const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper) {
     keto::proto::AccountInfo accountInfo;
-    
+    AccountRDFStatementBuilderPtr accountRDFStatementBuilder(new AccountRDFStatementBuilder(
+        transactionMessageHelper));
     
     if (!getAccountInfo(transactionMessageHelper->getTargetAccount(),accountInfo)) {
         

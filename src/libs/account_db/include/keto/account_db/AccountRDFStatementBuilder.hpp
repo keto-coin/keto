@@ -16,11 +16,17 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 #include <librdf.h>
 #include <redland.h>
 #include <rdf_storage.h>
 #include <rdf_model.h>
+
+#include "ChangeSet.h"
+
+#include "keto/account_db/AccountRDFStatement.hpp"
+#include "keto/transaction_common/TransactionMessageHelper.hpp"
 
 
 namespace keto {
@@ -31,16 +37,16 @@ typedef std::shared_ptr<AccountRDFStatementBuilder> AccountRDFStatementBuilderPt
 
 class AccountRDFStatementBuilder {
 public:
-    AccountRDFStatementBuilder(const ChangeSet_t& changeSet);
+    AccountRDFStatementBuilder(const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper);
     AccountRDFStatementBuilder(const AccountRDFStatementBuilder& orig) = delete;
     virtual ~AccountRDFStatementBuilder();
     
-    
-    
+    std::vector<AccountRDFStatementPtr> getStatements();
     
     
 private:
-    ChangeSet_t changeSet;
+    keto::transaction_common::TransactionMessageHelperPtr transactionMessageHelper;
+    std::vector<AccountRDFStatementPtr> statements;
 };
 
 

@@ -16,6 +16,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "RDFChange.h"
 #include "RDFModel.h"
@@ -25,22 +26,30 @@
 namespace keto {
 namespace asn1 {
 
+class RDFModelHelper;
+typedef std::shared_ptr<RDFModelHelper> RDFModelHelperPtr;
+    
 class RDFModelHelper {
 public:
     RDFModelHelper();
     RDFModelHelper(const RDFChange_t& change);
-    RDFModelHelper(const RDFModelHelper& orig) = default;
+    RDFModelHelper(RDFModel_t* rdfModel);
+    RDFModelHelper(const RDFModelHelper& orig);
     virtual ~RDFModelHelper();
     
     RDFModelHelper& setChange(const RDFChange_t& change);
-    RDFModelHelper& addSubject(const RDFSubjectHelper& subject);
+    RDFModelHelper& addSubject(RDFSubjectHelper& rdfSubject);
     
+    std::vector<std::string> subjects();
+    bool contains(const std::string& subject);
+    RDFSubjectHelper operator [](const std::string& subject); 
+    
+    operator RDFModel_t&();
     operator RDFModel_t*();
     operator ANY_t*();
     
 private:
-    RDFChange_t change;
-    std::vector<RDFSubjectHelper> subjects;
+    RDFModel_t* rdfModel;
 };
 
 

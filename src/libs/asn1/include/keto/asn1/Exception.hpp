@@ -35,8 +35,10 @@ KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, NoAnyTypeInfoFailedException , "N
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddObjectToPredicateException , "Could not add RDF object to predicate");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddPredicateToSubjectException , "Could not add RDF predicate to subject");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddSubjectToModelException , "Could not add RDF subject to model");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, SubjectNotFoundInModelException , "The subject was not found in the model");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddChangeToChangeSetException , "Could not add Change to ChangeSet");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, PredicateNotFoundException , "Predicate not found");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, UnsupportedChangeTypeFormatException , "This change type is not currently supported");
 
 
 }

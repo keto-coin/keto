@@ -14,29 +14,34 @@
 #ifndef ACCOUNTRDFSTATEMENT_HPP
 #define ACCOUNTRDFSTATEMENT_HPP
 
+#include <string>
+#include <memory>
+
+#include "ChangeData.h"
+
 #include "keto/asn1/RDFSubjectHelper.hpp"
+#include "keto/asn1/RDFModelHelper.hpp"
 #include "keto/account_db/RDFDBOperation.hpp"
 
 namespace keto {
 namespace account_db {
 
 class AccountRDFStatement;
-typedef 
+typedef std::shared_ptr<AccountRDFStatement> AccountRDFStatementPtr;
 
 class AccountRDFStatement {
 public:
-    AccountRDFStatement(const RDFSubject* subject);
-    AccountRDFStatement(const AccountRDFStatement& orig);
+    AccountRDFStatement(ChangeData* changeData);
+    AccountRDFStatement(const AccountRDFStatement& orig) = delete;
     virtual ~AccountRDFStatement();
     
     RDFDBOperation getOperation();
-    keto::asn1::RDFSubjectHelper getSubject();
+    keto::asn1::RDFModelHelperPtr getModel();
     
     
     
 private:
-    RDFDBOperation operation;
-    keto::asn1::RDFSubjectHelper rdfSubjectHelper;
+    keto::asn1::RDFModelHelperPtr rdfModelHelper;
     
 };
 

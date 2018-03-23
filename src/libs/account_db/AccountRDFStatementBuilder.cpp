@@ -11,20 +11,36 @@
  * Created on March 20, 2018, 11:54 AM
  */
 
-#include "keto/account_db/AccountStatementBuilder.hpp"
+#include <vector>
+
+#include "TransactionMessage.h"
+
+#include "keto/account_db/AccountRDFStatementBuilder.hpp"
+#include "include/keto/account_db/AccountRDFStatementBuilder.hpp"
 
 namespace keto {
 namespace account_db {
 
-AccountRDFStatementBuilder::AccountRDFStatementBuilder() {
+AccountRDFStatementBuilder::AccountRDFStatementBuilder(
+    const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper) :
+    transactionMessageHelper(transactionMessageHelper) {
+    for (int count = 0; count < 
+            transactionMessageHelper->operator TransactionMessage_t&().changeSet.list.count; count++) {
+        SignedChangeSet* signedChangeSet =
+                transactionMessageHelper->operator TransactionMessage_t&().changeSet.list.array[count];
+        for (int index = 0 ; index < signedChangeSet->changeSet.changes.list.count; index++) {
+            statements.push_back(AccountRDFStatementPtr(new AccountRDFStatement(
+                signedChangeSet->changeSet.changes.list.array[index])));
+        }
+    }
 }
-
-AccountRDFStatementBuilder::AccountRDFStatementBuilder(librdf_world* world, const ChangeSet_t& changeSet) {
-    
-}
-    
 
 AccountRDFStatementBuilder::~AccountRDFStatementBuilder() {
+    
+}
+
+std::vector<AccountRDFStatementPtr> AccountRDFStatementBuilder::getStatements() {
+    return this->statements;
 }
 
 
