@@ -26,7 +26,11 @@ RDFPredicateHelper::RDFPredicateHelper() {
 RDFPredicateHelper::RDFPredicateHelper(RDFPredicate_t* rdfPredicate) : 
     rdfPredicate(rdfPredicate) {
 }
-    
+
+RDFPredicateHelper::RDFPredicateHelper(RDFPredicate_t& rdfPredicate) {
+    this->rdfPredicate = keto::asn1::clone<RDFPredicate_t>(&rdfPredicate,
+            &asn_DEF_RDFPredicate);
+}
 
 RDFPredicateHelper::RDFPredicateHelper(const std::string& predicate) {
     this->rdfPredicate = (RDFPredicate_t*)calloc(1, sizeof *rdfPredicate);

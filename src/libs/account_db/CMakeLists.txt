@@ -14,6 +14,7 @@ add_library( keto_account_db
             AccountGraphStoreManager.cpp
             AccountRDFStatement.cpp
             AccountRDFStatementBuilder.cpp
+            AccountSystemOntologyTypes.cpp
 
             ${HEADERS}
            )

@@ -70,11 +70,12 @@ RDFSubjectHelper::operator ANY_t*() {
 }
 
 
-RDFPredicateHelper RDFSubjectHelper::operator [](const std::string& predicate) {
+RDFPredicateHelperPtr RDFSubjectHelper::operator [](const std::string& predicate) {
     for (int index = 0; index < this->rdfSubject->rdfPredicates.list.count; index++) {
         std::string name = (const char*)this->rdfSubject->rdfPredicates.list.array[index]->predicate.buf;
         if (name.compare(predicate) == 0) {
-            return RDFPredicateHelper(this->rdfSubject->rdfPredicates.list.array[index]);
+            return RDFPredicateHelperPtr(new RDFPredicateHelper(
+                    *this->rdfSubject->rdfPredicates.list.array[index]));
         }
     }
     BOOST_THROW_EXCEPTION(keto::asn1::PredicateNotFoundException());

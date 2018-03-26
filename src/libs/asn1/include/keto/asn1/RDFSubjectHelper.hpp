@@ -16,6 +16,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "RDFSubject.h"
 #include "ANY.h"
@@ -25,6 +26,8 @@
 namespace keto {
 namespace asn1 {
 
+class RDFSubjectHelper;
+typedef std::shared_ptr<RDFSubjectHelper> RDFSubjectHelperPtr;
 
 class RDFSubjectHelper {
 public:
@@ -37,7 +40,7 @@ public:
     operator RDFSubject_t*();
     operator RDFSubject_t&();
     operator ANY_t*();
-    RDFPredicateHelper operator [](const std::string& predicate); 
+    RDFPredicateHelperPtr operator [](const std::string& predicate); 
     
     RDFSubjectHelper& setSubject(const std::string& subject);
     RDFSubjectHelper& addPredicate(RDFPredicateHelper& predicate);

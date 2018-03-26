@@ -42,7 +42,7 @@ public:
     
     std::vector<std::string> subjects();
     bool contains(const std::string& subject);
-    RDFSubjectHelper operator [](const std::string& subject); 
+    RDFSubjectHelperPtr operator [](const std::string& subject); 
     
     operator RDFModel_t&();
     operator RDFModel_t*();

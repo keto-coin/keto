@@ -16,6 +16,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "RDFPredicate.h"
 #include "ANY.h"
@@ -25,11 +26,14 @@
 namespace keto {
 namespace asn1 {
 
+class RDFPredicateHelper;
+typedef std::shared_ptr<RDFPredicateHelper> RDFPredicateHelperPtr;
 
 class RDFPredicateHelper {
 public:
     RDFPredicateHelper();
     RDFPredicateHelper(RDFPredicate_t* rdfPredicate);
+    RDFPredicateHelper(RDFPredicate_t& rdfPredicate);
     RDFPredicateHelper(const std::string& predicate);
     RDFPredicateHelper(const RDFPredicateHelper& orig);
     virtual ~RDFPredicateHelper();

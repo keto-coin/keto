@@ -36,6 +36,10 @@ TransactionMessageHelper::TransactionMessageHelper(SignedTransaction_t* signedTr
             signedTransaction->transactionHash);
     this->transactionMessage->signature = keto::asn1::SignatureHelper(
             signedTransaction->signature);
+    this->transactionMessage->sourceAccount = keto::asn1::HashHelper(
+            signedTransaction->transaction.sourceAccount);
+    this->transactionMessage->targetAccount = keto::asn1::HashHelper(
+            signedTransaction->transaction.targetAccount);
 }
 
 
@@ -51,6 +55,8 @@ TransactionMessageHelper::TransactionMessageHelper(SignedTransaction_t* signedTr
             signedTransaction->transactionHash);
     this->transactionMessage->signature = keto::asn1::SignatureHelper(
             signedTransaction->signature);
+    this->transactionMessage->sourceAccount = sourceAccount;
+    this->transactionMessage->targetAccount = targetAccount;
     
 }
 

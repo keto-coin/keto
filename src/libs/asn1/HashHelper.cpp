@@ -107,7 +107,7 @@ HashHelper& HashHelper::setHash(const std::string& hash,keto::common::StringEnco
 }
 
 
-std::string HashHelper::getHash(keto::common::StringEncoding stringEncoding) {
+std::string HashHelper::getHash(keto::common::StringEncoding stringEncoding)  const {
     if (stringEncoding == keto::common::HEX) {
         return Botan::hex_encode(this->hash,true);
     } else if (stringEncoding == keto::common::BASE64) {

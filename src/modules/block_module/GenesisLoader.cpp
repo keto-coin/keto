@@ -101,7 +101,8 @@ void GenesisLoader::load() {
     keto::block_db::BlockBuilderPtr blockBuilderPtr = 
             std::make_shared<keto::block_db::BlockBuilder>(parentHash);
     for (auto& element : transactions) {
-        keto::asn1::HashHelper sourceAccount(element["account_hash"],keto::common::HEX);
+        keto::asn1::HashHelper sourceAccount(element["account_hash"].get<std::string>().c_str(),keto::common::HEX);
+        std::cout << "Account hash : " << sourceAccount.getHash(keto::common::HEX) << std::endl;
         keto::asn1::NumberHelper numberHelper(
             atol(element["value"].get<std::string>().c_str()));
         std::shared_ptr<keto::chain_common::TransactionBuilder> transactionPtr =
@@ -157,7 +158,8 @@ void GenesisLoader::load() {
         signedTransBuild->setTransaction(transactionPtr).sign();
         keto::transaction_common::TransactionMessageHelperPtr transactionMessageHelper(
             new keto::transaction_common::TransactionMessageHelper(signedTransBuild->operator SignedTransaction*()));
-        transactionMessageHelper->setStatus(Status_complete);
+        transactionMessageHelper->setStatus(Status_complete).setSourceAccount(sourceAccount).setTargetAccount(sourceAccount);
+        
         
         // create a change set set
         keto::transaction_common::ChangeSetBuilderPtr changeSetBuilder(

@@ -91,7 +91,7 @@ bool RDFModelHelper::contains(const std::string& subject) {
     return false;
 }
 
-RDFSubjectHelper RDFModelHelper::operator [](const std::string& subject) {
+RDFSubjectHelperPtr RDFModelHelper::operator [](const std::string& subject) {
     for (int index = 0; index < this->rdfModel->rdfDataFormat.list.count; index++) {
         if (this->rdfModel->rdfDataFormat.list.array[index]->present != RDFDataFormat_PR_rdfSubject) {
             continue;
@@ -101,9 +101,9 @@ RDFSubjectHelper RDFModelHelper::operator [](const std::string& subject) {
         if (subjectName.compare(subject) != 0) {
             continue;
         }
-        return RDFSubjectHelper(keto::asn1::clone<RDFSubject>(
+        return RDFSubjectHelperPtr(new RDFSubjectHelper(keto::asn1::clone<RDFSubject>(
                 &this->rdfModel->rdfDataFormat.list.array[index]->choice.rdfSubject,
-                &asn_DEF_RDFSubject));
+                &asn_DEF_RDFSubject)));
     }
     BOOST_THROW_EXCEPTION(keto::asn1::SubjectNotFoundInModelException());
 }
