@@ -19,32 +19,37 @@
 namespace keto {
 namespace asn1 {
 
-RDFPredicateHelper::RDFPredicateHelper() {
+RDFPredicateHelper::RDFPredicateHelper() : own(true) {
     this->rdfPredicate = (RDFPredicate_t*)calloc(1, sizeof *rdfPredicate);
 }
 
 RDFPredicateHelper::RDFPredicateHelper(RDFPredicate_t* rdfPredicate) : 
-    rdfPredicate(rdfPredicate) {
+    rdfPredicate(rdfPredicate), own(true) {
 }
 
-RDFPredicateHelper::RDFPredicateHelper(RDFPredicate_t& rdfPredicate) {
+RDFPredicateHelper::RDFPredicateHelper(RDFPredicate_t* rdfPredicate, bool own) : 
+    rdfPredicate(rdfPredicate), own(own) {
+}
+
+
+RDFPredicateHelper::RDFPredicateHelper(RDFPredicate_t& rdfPredicate) : own(true) {
     this->rdfPredicate = keto::asn1::clone<RDFPredicate_t>(&rdfPredicate,
             &asn_DEF_RDFPredicate);
 }
 
-RDFPredicateHelper::RDFPredicateHelper(const std::string& predicate) {
+RDFPredicateHelper::RDFPredicateHelper(const std::string& predicate) : own(true) {
     this->rdfPredicate = (RDFPredicate_t*)calloc(1, sizeof *rdfPredicate);
     OCTET_STRING_fromBuf(&rdfPredicate->predicate,
             predicate.c_str(),predicate.size());
 }
 
-RDFPredicateHelper::RDFPredicateHelper(const RDFPredicateHelper& orig) {
+RDFPredicateHelper::RDFPredicateHelper(const RDFPredicateHelper& orig) : own(true) {
     this->rdfPredicate = keto::asn1::clone<RDFPredicate_t>(orig.rdfPredicate,
             &asn_DEF_RDFPredicate);
 }
 
 RDFPredicateHelper::~RDFPredicateHelper() {
-    if (this->rdfPredicate) {
+    if (this->rdfPredicate && own) {
         ASN_STRUCT_FREE(asn_DEF_RDFPredicate, this->rdfPredicate);
     }
 }

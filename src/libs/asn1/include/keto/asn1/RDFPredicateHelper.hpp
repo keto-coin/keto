@@ -33,6 +33,7 @@ class RDFPredicateHelper {
 public:
     RDFPredicateHelper();
     RDFPredicateHelper(RDFPredicate_t* rdfPredicate);
+    RDFPredicateHelper(RDFPredicate_t* rdfPredicate, bool own);
     RDFPredicateHelper(RDFPredicate_t& rdfPredicate);
     RDFPredicateHelper(const std::string& predicate);
     RDFPredicateHelper(const RDFPredicateHelper& orig);
@@ -49,6 +50,7 @@ public:
     
 private:
     RDFPredicate_t* rdfPredicate;
+    bool own;
 };
 
 }

@@ -75,7 +75,7 @@ RDFPredicateHelperPtr RDFSubjectHelper::operator [](const std::string& predicate
         std::string name = (const char*)this->rdfSubject->rdfPredicates.list.array[index]->predicate.buf;
         if (name.compare(predicate) == 0) {
             return RDFPredicateHelperPtr(new RDFPredicateHelper(
-                    *this->rdfSubject->rdfPredicates.list.array[index]));
+                    this->rdfSubject->rdfPredicates.list.array[index],false));
         }
     }
     BOOST_THROW_EXCEPTION(keto::asn1::PredicateNotFoundException());
