@@ -45,6 +45,7 @@ boost::program_options::options_description generateOptionDescriptions() {
             ("accgen,A", "Generate an account.")
             ("account_key,K", po::value<std::string>(),"Private key file.")
             ("transgen,T", "Generate a transaction.")
+            ("sessiongen,S", "Generate a new session ID.")
             ("action,a", po::value<std::string>(),"Action Hash or Name.")
             ("parent,p", po::value<std::string>(),"Parent Transaction.")
             ("source,s", po::value<std::string>(),"Source Account Hash.")
@@ -207,6 +208,62 @@ int generateTransaction(std::shared_ptr<ketoEnv::Config> config,
     return 0;
 }
 
+int generateSession(std::shared_ptr<ketoEnv::Config> config) {
+    // retrieve the host information from the configuration file
+    if (!config->getVariablesMap().count(keto::cli::Constants::KETOD_SERVER)) {
+        std::cerr << "Please configure the ketod server host information [" << 
+                keto::cli::Constants::KETOD_SERVER << "]" << std::endl;
+        return -1;
+    }
+    std::string host = config->getVariablesMap()[keto::cli::Constants::KETOD_SERVER].as<std::string>();
+
+    // retrieve the host information from the configuration file
+    if (!config->getVariablesMap().count(keto::cli::Constants::KETOD_PORT)) {
+        std::cerr << "Please configure the ketod server port information [" << 
+                keto::cli::Constants::KETOD_PORT << "]" << std::endl;
+        return -1;
+    }
+    std::string port = config->getVariablesMap()[keto::cli::Constants::KETOD_PORT].as<std::string>();
+
+    // retrieve the host information from the configuration file
+    if (!config->getVariablesMap().count(keto::cli::Constants::PRIVATE_KEY)) {
+        std::cerr << "Please configure the private key [" << 
+                keto::cli::Constants::PRIVATE_KEY << "]" << std::endl;
+        return -1;
+    }
+    std::string privateKey = config->getVariablesMap()[keto::cli::Constants::PRIVATE_KEY].as<std::string>();
+
+    // retrieve the host information from the configuration file
+    if (!config->getVariablesMap().count(keto::cli::Constants::PUBLIC_KEY)) {
+        std::cerr << "Please configure the public key [" << 
+                keto::cli::Constants::PUBLIC_KEY << "]" << std::endl;
+        return -1;
+    }
+    std::string publicKey = config->getVariablesMap()[keto::cli::Constants::PUBLIC_KEY].as<std::string>();
+
+    // read in the keys
+    keto::crypto::KeyLoader keyLoader(privateKey, publicKey);
+
+    // The io_context is required for all I/O
+    boost::asio::io_context ioc;
+
+    // The SSL context is required, and holds certificates
+    ssl::context ctx{ssl::context::sslv23_client};
+
+    // This holds the root certificate used for verification
+    keto::ssl::load_root_certificates(ctx);
+
+    keto::session::HttpSession session(ioc,ctx,
+            privateKey,publicKey);
+    std::string result= 
+            session.setHost(host).setPort(port).handShake().getSessionId();
+
+    // Write the message to standard out
+    std::cout << "Session id : " << result << std::endl;
+    return 0;
+}
+
+
 int generateAccount(std::shared_ptr<ketoEnv::Config> config,
         boost::program_options::options_description optionDescription) {
     if (config->getVariablesMap().count(keto::cli::Constants::KETO_ACCOUNT_KEY)) {
@@ -254,6 +311,8 @@ int main(int argc, char** argv)
             return generateTransaction(config,optionDescription);
         } else if (config->getVariablesMap().count(keto::cli::Constants::KETO_ACCOUNT_GEN)) {
             return generateAccount(config,optionDescription);
+        } else if (config->getVariablesMap().count(keto::cli::Constants::KETO_SESSION_GEN)) {
+            return generateSession(config);
         }
         KETO_LOG_INFO << "CLI Executed";
     } catch (keto::common::Exception& ex) {

@@ -69,6 +69,8 @@ public:
     
     std::string makeRequest(keto::transaction_common::TransactionMessageHelperPtr& request);
     
+    std::string getSessionId();
+    
 private:
     boost::asio::io_context& ioc;
     boost::asio::ssl::context& ctx;

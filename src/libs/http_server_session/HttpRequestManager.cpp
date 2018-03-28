@@ -11,6 +11,7 @@
  * Created on February 15, 2018, 10:05 AM
  */
 
+#include <string.h>
 #include <iostream>
 #include <memory>
 #include "keto/server_session/HttpRequestManager.hpp"
@@ -26,17 +27,22 @@ HttpRequestManager::HttpRequestManager() {
     httpSessionManagerPtr = std::make_shared<HttpSessionManager>();
     httpTransactionManagerPtr = std::make_shared<HttpTransactionManager>(
             httpSessionManagerPtr);
+    this->httpSparqlManagerPtr = std::make_shared<HttpSparqlManager>(
+            httpSessionManagerPtr);
+    
 }
 
 HttpRequestManager::~HttpRequestManager() {
+    httpSparqlManagerPtr.reset();
     httpTransactionManagerPtr.reset();
     httpSessionManagerPtr.reset();
+    
 }
 
 bool
 HttpRequestManager::checkRequest(boost::beast::http::request<boost::beast::http::string_body>& req) {
     boost::beast::string_view path = req.target();
-    
+    std::cout << "The path is : " << path << std::endl;
     if (path.empty()) {
         return false;
     }
@@ -44,6 +50,8 @@ HttpRequestManager::checkRequest(boost::beast::http::request<boost::beast::http:
     if (0 == target.compare(keto::common::HttpEndPoints::HAND_SHAKE)) {
         return true;
     } else if (0 == target.compare(keto::common::HttpEndPoints::TRANSACTION)) {
+        return true;
+    } else if (0 == target.compare(0,strlen(keto::common::HttpEndPoints::DATA_QUERY),keto::common::HttpEndPoints::DATA_QUERY)) {
         return true;
     }
     
@@ -60,6 +68,8 @@ HttpRequestManager::handle_request(
         result = this->httpSessionManagerPtr->processHello(req.body());
     } else if (0 == target.compare(keto::common::HttpEndPoints::TRANSACTION)) {
         result = this->httpTransactionManagerPtr->processTransaction(req,req.body());
+    } else if (0 == target.compare(0,strlen(keto::common::HttpEndPoints::DATA_QUERY),keto::common::HttpEndPoints::DATA_QUERY)) {
+        result = this->httpSparqlManagerPtr->processTransaction(req,req.body());
     }
     boost::beast::http::response<boost::beast::http::string_body> response;
     response.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);

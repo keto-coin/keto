@@ -34,6 +34,7 @@ public:
     // commands
     static constexpr const char* KETO_TRANSACTION_GEN = "transgen";
     static constexpr const char* KETO_ACCOUNT_GEN = "accgen";
+    static constexpr const char* KETO_SESSION_GEN = "sessiongen";
     static constexpr const char* KETO_ACCOUNT_KEY = "account_key";
     
     static const int HTTP_VERSION = 11;

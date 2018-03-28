@@ -96,6 +96,13 @@ HttpSession& HttpSession::handShake() {
     return (*this);
 }
 
+
+std::string HttpSession::getSessionId() {
+    keto::asn1::HashHelper hashHelper(
+            this->clientResponse.session_hash());
+    return hashHelper.getHash(keto::common::HEX);
+}
+
 std::string HttpSession::makeRequest(
     keto::transaction_common::TransactionMessageHelperPtr& request) {
     keto::transaction_common::TransactionProtoHelper 

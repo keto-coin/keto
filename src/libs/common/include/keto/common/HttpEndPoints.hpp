@@ -26,6 +26,7 @@ public:
     // end points
     static constexpr const char* HAND_SHAKE = "/hand_shake";
     static constexpr const char* TRANSACTION = "/transaction";
+    static constexpr const char* DATA_QUERY = "/data/";
     
     // headers
     static constexpr const char* HEADER_SESSION_HASH = "session_hash";

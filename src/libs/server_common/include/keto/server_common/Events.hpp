@@ -34,6 +34,9 @@ public:
     static const char* CHECK_ACCOUNT_MESSAGE;
     static const char* APPLY_ACCOUNT_TRANSACTION_MESSAGE;
     
+    // sparql events
+    static const char* SPARQL_QUERY_MESSAGE;
+    
 private:
 
 };

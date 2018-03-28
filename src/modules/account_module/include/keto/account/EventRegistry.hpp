@@ -27,6 +27,7 @@ public:
     
     static keto::event::Event checkAccount(const keto::event::Event& event);
     static keto::event::Event applyTransaction(const keto::event::Event& event);
+    static keto::event::Event sparqlQuery(const keto::event::Event& event);
     
     static void registerEventHandlers();
     static void deregisterEventHandlers();

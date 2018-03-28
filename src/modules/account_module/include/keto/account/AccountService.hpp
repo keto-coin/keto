@@ -33,7 +33,7 @@ public:
     // account methods
     keto::event::Event checkAccount(const keto::event::Event& event);
     keto::event::Event applyTransaction(const keto::event::Event& event);
-    
+    keto::event::Event sparqlQuery(const keto::event::Event& event);
     
 private:
     AccountService();
