@@ -14,6 +14,9 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <sstream>
+
+#include "Account.pb.h"
 
 #include "keto/crypto/Containers.hpp"
 #include "keto/crypto/SecureVectorUtils.hpp"
@@ -25,6 +28,8 @@
 #include "keto/account_db/AccountSystemOntologyTypes.hpp"
 #include "keto/account_db/Exception.hpp"
 #include "keto/asn1/RDFSubjectHelper.hpp"
+#include "include/keto/account_db/AccountRDFStatement.hpp"
+#include "include/keto/account_db/AccountGraphSession.hpp"
 
 namespace keto {
 namespace account_db {
@@ -36,7 +41,7 @@ AccountStore::AccountStore() {
             new keto::rocks_db::DBManager(Constants::DB_LIST));
     accountGraphStoreManagerPtr = AccountGraphStoreManagerPtr(new AccountGraphStoreManager());
     accountResourceManagerPtr  =  AccountResourceManagerPtr(
-            new AccountResourceManager(dbManagerPtr));
+            new AccountResourceManager(dbManagerPtr,accountGraphStoreManagerPtr));
 
 }
 
@@ -76,39 +81,95 @@ bool AccountStore::getAccountInfo(const keto::asn1::HashHelper& accountHash,
     return true;
 }
 
+
 void AccountStore::applyTransaction(
         const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper) {
+    AccountResourcePtr resource = accountResourceManagerPtr->getResource();
     keto::proto::AccountInfo accountInfo;
-    AccountRDFStatementBuilderPtr accountRDFStatementBuilder(new AccountRDFStatementBuilder(
-        transactionMessageHelper));
-    bool existingAccount = true;
+    AccountRDFStatementBuilderPtr accountRDFStatementBuilder;
     if (!getAccountInfo(transactionMessageHelper->getTargetAccount(),accountInfo)) {
-        existingAccount = false;
-        std::cout << "The account has not been found [" << 
-                transactionMessageHelper->getTargetAccount().getHash(keto::common::HEX) 
-                << "][" << 
-                transactionMessageHelper->getSourceAccount().getHash(keto::common::HEX)
-                << "]" << std::endl;
+        accountRDFStatementBuilder =  AccountRDFStatementBuilderPtr(
+                new AccountRDFStatementBuilder(
+                transactionMessageHelper,false));
+        createAccount(transactionMessageHelper,accountRDFStatementBuilder,accountInfo);
+    } else {
+        accountRDFStatementBuilder =  AccountRDFStatementBuilderPtr(
+                new AccountRDFStatementBuilder(
+                transactionMessageHelper,true));
     }
+    AccountGraphSessionPtr sessionPtr = resource->getGraphSession(accountInfo.graph_name());
+        
     
     for (AccountRDFStatementPtr accountRDFStatement : accountRDFStatementBuilder->getStatements()) {
-        for (std::string subject : accountRDFStatement->getModel()->subjects()) {
-            keto::asn1::RDFSubjectHelperPtr subjectPtr = 
-                    accountRDFStatement->getModel()->operator [](subject);
-            if (!AccountSystemOntologyTypes::validateClassOperation(
-                transactionMessageHelper->getTargetAccount(),
-                existingAccount,subjectPtr)) {
-                BOOST_THROW_EXCEPTION(keto::account_db::InvalidAccountOperationException());
-            }
-
-                    std::cout << "The subject : " << subject << std::endl;
-            std::cout << "The class : " << subjectPtr->getOntologyClass() << std::endl;
-            for (std::string predicates : subjectPtr->listPredicates()) {
-                std::cout << "The predicates : " << predicates << std::endl;
+        keto::asn1::RDFModelHelperPtr rdfModel = accountRDFStatement->getModel();
+        for (keto::asn1::RDFSubjectHelperPtr rdfSubject : rdfModel->getSubjects()) {
+            if (accountRDFStatement->getOperation() == PERSIST) {
+                sessionPtr->persist(rdfSubject);
+            } else {
+                sessionPtr->remove(rdfSubject);
             }
         }
     }
 }
+
+void AccountStore::createAccount(
+            const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper,
+            AccountRDFStatementBuilderPtr accountRDFStatementBuilder,
+            keto::proto::AccountInfo& accountInfo) {
+    if (accountRDFStatementBuilder->accountAction().compare(
+                AccountSystemOntologyTypes::ACCOUNT_CREATE_OBJECT_STATUS)) {
+        std::stringstream ss;
+        ss << "The account does not exist [" << 
+                transactionMessageHelper->getTargetAccount().getHash(keto::common::HEX) << "]";
+        BOOST_THROW_EXCEPTION(keto::account_db::InvalidAccountOperationException(
+                ss.str()));
+    }
+    accountInfo = accountRDFStatementBuilder->getAccountInfo();
+
+    if (accountInfo.account_type().compare(AccountSystemOntologyTypes::ACCOUNT_TYPE::MASTER) ==0) {
+        // We assume that the top most master account will not have a parent
+        // we thus assume this will be during the genesis process and we set it to the base graph
+        // for all future masters we set it to the hex hash value for the master account hash.
+        if (accountInfo.parent_account_hash().empty()) {
+            accountInfo.set_graph_name(Constants::BASE_GRAPH);
+        } else {
+            accountInfo.set_graph_name(transactionMessageHelper->getTargetAccount().getHash(keto::common::HEX));
+        }
+        if (!this->accountGraphStoreManagerPtr->checkForDb(accountInfo.graph_name())) {
+            this->accountGraphStoreManagerPtr->createStore(accountInfo.graph_name());
+        }
+    } else {
+        keto::asn1::HashHelper parentAccountHash(
+                    accountInfo.parent_account_hash());
+        keto::proto::AccountInfo parentAccountInfo;
+        if (!getAccountInfo(parentAccountHash,parentAccountInfo)) {
+            std::stringstream ss;
+            ss << "The parent account [" << parentAccountHash.getHash(keto::common::HEX) << 
+                    "] was not found for the account [" << 
+                    transactionMessageHelper->getTargetAccount().getHash(keto::common::HEX) << "]["
+                    << accountInfo.account_type() << "]";
+            BOOST_THROW_EXCEPTION(keto::account_db::InvalidParentAccountException(
+                    ss.str()));
+        }
+        accountInfo.set_graph_name(parentAccountInfo.graph_name());
+    }
+    setAccountInfo(transactionMessageHelper->getTargetAccount(),accountInfo);
+}
+
+void AccountStore::setAccountInfo(const keto::asn1::HashHelper& accountHash,
+            keto::proto::AccountInfo& accountInfo) {
+    AccountResourcePtr resource = accountResourceManagerPtr->getResource();
+    rocksdb::Transaction* accountTransaction = resource->getTransaction(Constants::ACCOUNTS_MAPPING);
+    keto::rocks_db::SliceHelper accountHashHelper(keto::crypto::SecureVectorUtils().copyFromSecure(
+        accountHash));
+    std::string pbValue;
+    accountInfo.SerializeToString(&pbValue);
+    keto::rocks_db::SliceHelper valueHelper(pbValue);
+    accountTransaction->Put(accountHashHelper,valueHelper);
+}
+
+
+
 
 }
 }

@@ -27,9 +27,29 @@ namespace account_db {
 class AccountSystemOntologyTypes {
 public:
     static const char* ACCOUNT_ONTOLOGY_CLASS;
-    static const char* ACCOUNT_STATUS_PREDICATE;
-    static const char* ACCOUNT_ID_PREDICATE;
-    static const char* ACCOUNT_OBJECT_STATUS;
+    
+    // PREDICATE identifiers
+    class ACCOUNT_PREDICATES {
+    public:
+        static const char* STATUS;
+        static const char* ID;
+        static const char* PARENT;
+        static const char* TYPE;
+    };
+    
+    class ACCOUNT_TYPE {
+    public:
+        static const char* MASTER;
+        static const char* ROOT;
+        static const char* SYSTEM;
+        static const char* PROXY;
+        static const char* STANDARD;
+        static const char* SLAVE;
+        
+    };
+    
+    // object literal values
+    static const char* ACCOUNT_CREATE_OBJECT_STATUS;
     
     
     static const std::vector<std::string> ONTOLOGY_CLASSES; 
@@ -37,8 +57,8 @@ public:
     static bool validateClassOperation(
         const keto::asn1::HashHelper& targetAccount,
         const bool existingAccount,
-        const keto::asn1::RDFSubjectHelperPtr& accountRDFStatement);
-    
+        const keto::asn1::RDFSubjectHelperPtr& rdfSubjectHelperPtr);
+    static bool isAccountOntologyClass(const keto::asn1::RDFSubjectHelperPtr& rdfSubjectHelperPtr);
 private:
     
     

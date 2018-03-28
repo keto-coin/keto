@@ -48,6 +48,9 @@ public:
     std::string getPredicate();
     std::vector<RDFObjectHelperPtr> listObjects();
     
+    std::string getStringLiteral();
+    long getLongLiteral();
+    
 private:
     RDFPredicate_t* rdfPredicate;
     bool own;

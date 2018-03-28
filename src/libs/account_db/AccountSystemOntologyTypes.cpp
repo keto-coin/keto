@@ -14,16 +14,27 @@
 #include <algorithm>
 
 #include "keto/account_db/AccountSystemOntologyTypes.hpp"
+#include "include/keto/account_db/AccountSystemOntologyTypes.hpp"
 
 namespace keto {
 namespace account_db {
 
 
 const char* AccountSystemOntologyTypes::ACCOUNT_ONTOLOGY_CLASS = "http://keto-coin.io/schema/rdf/1.0/keto/Account#Account";
-const char* AccountSystemOntologyTypes::ACCOUNT_STATUS_PREDICATE = "http://keto-coin.io/schema/rdf/1.0/keto/Account#status";
-const char* AccountSystemOntologyTypes::ACCOUNT_ID_PREDICATE = "http://keto-coin.io/schema/rdf/1.0/keto/Account#id";
-const char* AccountSystemOntologyTypes::ACCOUNT_OBJECT_STATUS = "create";
 
+const char* AccountSystemOntologyTypes::ACCOUNT_PREDICATES::STATUS = "http://keto-coin.io/schema/rdf/1.0/keto/Account#status";
+const char* AccountSystemOntologyTypes::ACCOUNT_PREDICATES::ID = "http://keto-coin.io/schema/rdf/1.0/keto/Account#id";
+const char* AccountSystemOntologyTypes::ACCOUNT_PREDICATES::PARENT = "http://keto-coin.io/schema/rdf/1.0/keto/Account#parent";
+const char* AccountSystemOntologyTypes::ACCOUNT_PREDICATES::TYPE = "http://keto-coin.io/schema/rdf/1.0/keto/Account#type";
+
+const char* AccountSystemOntologyTypes::ACCOUNT_CREATE_OBJECT_STATUS = "create";
+
+const char* AccountSystemOntologyTypes::ACCOUNT_TYPE::MASTER        = "master";
+const char* AccountSystemOntologyTypes::ACCOUNT_TYPE::ROOT          = "root";
+const char* AccountSystemOntologyTypes::ACCOUNT_TYPE::SYSTEM        = "system";
+const char* AccountSystemOntologyTypes::ACCOUNT_TYPE::PROXY         = "proxy";
+const char* AccountSystemOntologyTypes::ACCOUNT_TYPE::STANDARD      = "standard";
+const char* AccountSystemOntologyTypes::ACCOUNT_TYPE::SLAVE         = "slave";
 
 
 const std::vector<std::string> AccountSystemOntologyTypes::ONTOLOGY_CLASSES = {
@@ -57,9 +68,9 @@ bool AccountSystemOntologyTypes::validateClassOperation(
     
     // at present 
     if (rdfSubjectHelperPtr->getOntologyClass().compare(AccountSystemOntologyTypes::ACCOUNT_ONTOLOGY_CLASS) == 0) {
-        if (!existingAccount && (!objectEqual((*rdfSubjectHelperPtr)[ACCOUNT_STATUS_PREDICATE]->listObjects(),
-            AccountSystemOntologyTypes::ACCOUNT_OBJECT_STATUS) ||
-            !objectEqual((*rdfSubjectHelperPtr)[ACCOUNT_ID_PREDICATE]->listObjects(),
+        if (!existingAccount && (!objectEqual((*rdfSubjectHelperPtr)[ACCOUNT_PREDICATES::STATUS]->listObjects(),
+            AccountSystemOntologyTypes::ACCOUNT_CREATE_OBJECT_STATUS) ||
+            !objectEqual((*rdfSubjectHelperPtr)[ACCOUNT_PREDICATES::ID]->listObjects(),
             targetAccount.getHash(keto::common::HEX)))) {
             return false;
         }
@@ -69,6 +80,14 @@ bool AccountSystemOntologyTypes::validateClassOperation(
 }
 
 
+bool AccountSystemOntologyTypes::isAccountOntologyClass(
+        const keto::asn1::RDFSubjectHelperPtr& rdfSubjectHelperPtr) {
+    if (rdfSubjectHelperPtr->getOntologyClass().compare(
+            AccountSystemOntologyTypes::ACCOUNT_ONTOLOGY_CLASS) == 0) {
+       return true; 
+    }
+    return false;
+}
 
 
 }

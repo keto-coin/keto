@@ -21,6 +21,7 @@
 #include "keto/account_db/AccountResourceManager.hpp"
 #include "keto/account_db/AccountGraphStoreManager.hpp"
 #include "keto/transaction_common/TransactionMessageHelper.hpp"
+#include "keto/account_db/AccountRDFStatementBuilder.hpp"
 
 namespace keto {
 namespace account_db {
@@ -47,6 +48,14 @@ private:
     AccountResourceManagerPtr accountResourceManagerPtr;
     
     AccountStore();
+    
+    void createAccount(
+            const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper,
+            AccountRDFStatementBuilderPtr accountRDFStatementBuilder,
+            keto::proto::AccountInfo& accountInfo);
+    
+    void setAccountInfo(const keto::asn1::HashHelper& accountHash,
+            keto::proto::AccountInfo& accountInfo);
     
 };
 

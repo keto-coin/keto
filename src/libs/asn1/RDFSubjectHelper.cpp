@@ -20,21 +20,23 @@
 namespace keto {
 namespace asn1 {
 
-RDFSubjectHelper::RDFSubjectHelper() {
+RDFSubjectHelper::RDFSubjectHelper() : own(true) {
     rdfSubject = (RDFSubject_t*)calloc(1, sizeof *rdfSubject);
 }
 
 RDFSubjectHelper::RDFSubjectHelper(RDFSubject_t* rdfSubject) :
-    rdfSubject(rdfSubject){
+    rdfSubject(rdfSubject), own(true) {
+}
+
+RDFSubjectHelper::RDFSubjectHelper(RDFSubject_t* rdfSubject, bool own) :
+    rdfSubject(rdfSubject), own(own) {
     
 }
-    
 
-RDFSubjectHelper::RDFSubjectHelper(const std::string& subject)  {
+RDFSubjectHelper::RDFSubjectHelper(const std::string& subject) : own(true) {
     rdfSubject = (RDFSubject_t*)calloc(1, sizeof *rdfSubject);
     OCTET_STRING_fromBuf(&rdfSubject->subject,
             subject.c_str(),subject.size());
-    
 }
 
 
@@ -45,7 +47,7 @@ RDFSubjectHelper::RDFSubjectHelper(const RDFSubjectHelper& orig) {
 }
 
 RDFSubjectHelper::~RDFSubjectHelper() {
-    if (this->rdfSubject) {
+    if (own && this->rdfSubject) {
         ASN_STRUCT_FREE(asn_DEF_RDFSubject, this->rdfSubject);
     }
 }
@@ -69,6 +71,15 @@ RDFSubjectHelper::operator ANY_t*() {
     return anyPtr;
 }
 
+bool RDFSubjectHelper::containsPredicate(const std::string& predicate) {
+    for (int index = 0; index < this->rdfSubject->rdfPredicates.list.count; index++) {
+        std::string name = (const char*)this->rdfSubject->rdfPredicates.list.array[index]->predicate.buf;
+        if (name.compare(predicate) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
 
 RDFPredicateHelperPtr RDFSubjectHelper::operator [](const std::string& predicate) {
     for (int index = 0; index < this->rdfSubject->rdfPredicates.list.count; index++) {
@@ -101,6 +112,15 @@ std::string RDFSubjectHelper::getOntologyClass() {
 
 std::string RDFSubjectHelper::getSubject() {
     return (const char*)this->rdfSubject->subject.buf;
+}
+
+std::vector<RDFPredicateHelperPtr> RDFSubjectHelper::getPredicates() {
+    std::vector<RDFPredicateHelperPtr> result;
+    for (int index = 0; index < this->rdfSubject->rdfPredicates.list.count; index++) {
+        result.push_back(RDFPredicateHelperPtr(new RDFPredicateHelper(
+                    this->rdfSubject->rdfPredicates.list.array[index],false)));
+    }
+    return result;
 }
 
 std::vector<std::string> RDFSubjectHelper::listPredicates() {

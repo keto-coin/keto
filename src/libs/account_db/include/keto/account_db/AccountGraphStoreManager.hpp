@@ -33,6 +33,7 @@ public:
     virtual ~AccountGraphStoreManager();
     
     AccountGraphStorePtr operator[](const std::string& dbName);
+    bool checkForDb(const std::string& dbName);
     AccountGraphStorePtr createStore(const std::string& dbName);
     
 private:

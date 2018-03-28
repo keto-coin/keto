@@ -41,6 +41,7 @@ public:
     RDFModelHelper& addSubject(RDFSubjectHelper& rdfSubject);
     
     std::vector<std::string> subjects();
+    std::vector<RDFSubjectHelperPtr> getSubjects();
     bool contains(const std::string& subject);
     RDFSubjectHelperPtr operator [](const std::string& subject); 
     

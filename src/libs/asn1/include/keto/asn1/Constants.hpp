@@ -22,7 +22,12 @@ Constants {
 public:
     
     static constexpr const char* RDF_LANGUAGE = "en";
-    static constexpr const char* RDF_TYPE = "literal";
+    class RDF_NODE {
+    public:
+        static constexpr const char* LITERAL = "literal";
+        static constexpr const char* URI = "uri";
+    };
+    
     
 };
 

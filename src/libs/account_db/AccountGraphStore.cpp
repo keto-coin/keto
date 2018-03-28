@@ -26,7 +26,7 @@
 namespace keto {
 namespace account_db {
 
-AccountGraphStore::AccountGraphStore(const std::string& dbName) {
+AccountGraphStore::AccountGraphStore(const std::string& dbName) : dbName(dbName) {
     // setup the world
     world = librdf_new_world();
     librdf_world_open(world);
@@ -73,6 +73,12 @@ AccountGraphStore::~AccountGraphStore() {
     librdf_free_world(world);
 }
 
+
+std::string AccountGraphStore::getDbName() {
+    return this->dbName;
+}
+
+
 bool AccountGraphStore::checkForDb(const std::string& dbName) {
     std::shared_ptr<keto::environment::Config> config = 
             keto::environment::EnvironmentManager::getInstance()->getConfig();
@@ -98,6 +104,19 @@ bool AccountGraphStore::checkForDb(const std::string& dbName) {
         return false;
     }
     return true;
+}
+
+
+librdf_world* AccountGraphStore::getWorld() {
+    return this->world;
+}
+
+librdf_storage* AccountGraphStore::getStorage() {
+    return this->storage;
+}
+
+librdf_model* AccountGraphStore::getModel() {
+    return this->model;
 }
 
 }

@@ -22,8 +22,12 @@ namespace account_db {
 
 
 AccountGraphStoreManager::AccountGraphStoreManager() {
-    this->graphs[Constants::BASE_GRAPH] = AccountGraphStorePtr(new AccountGraphStore(
-            Constants::BASE_GRAPH));
+    // if the base graph exists load it otherwise assume it will not be
+    // created until the genesis process is called
+    if (AccountGraphStoreManager::checkForDb(Constants::BASE_GRAPH)) {
+        this->graphs[Constants::BASE_GRAPH] = AccountGraphStorePtr(new AccountGraphStore(
+                Constants::BASE_GRAPH));
+    }
 }
 
 AccountGraphStoreManager::~AccountGraphStoreManager() {
@@ -39,6 +43,13 @@ AccountGraphStorePtr AccountGraphStoreManager::operator[](const std::string& dbN
     AccountGraphStorePtr result(new AccountGraphStore(dbName));
     this->graphs[Constants::BASE_GRAPH] = result;
     return result;
+}
+
+bool AccountGraphStoreManager::checkForDb(const std::string& dbName) {
+    if (this->graphs.count(dbName)) {
+        return true;
+    }
+    return AccountGraphStore::checkForDb(dbName);
 }
 
 AccountGraphStorePtr AccountGraphStoreManager::createStore(const std::string& dbName) {

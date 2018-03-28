@@ -76,6 +76,16 @@ std::vector<std::string> RDFModelHelper::subjects() {
     return result;
 }
 
+std::vector<RDFSubjectHelperPtr> RDFModelHelper::getSubjects() {
+    std::vector<RDFSubjectHelperPtr> result;
+    for (int index = 0; index < this->rdfModel->rdfDataFormat.list.count; index++) {
+        result.push_back(RDFSubjectHelperPtr(new RDFSubjectHelper(
+                &this->rdfModel->rdfDataFormat.list.array[index]->choice.rdfSubject,false)));
+    }
+    
+    return result;
+}
+
 bool RDFModelHelper::contains(const std::string& subject) {
     for (int index = 0; index < this->rdfModel->rdfDataFormat.list.count; index++) {
         if (this->rdfModel->rdfDataFormat.list.array[index]->present != RDFDataFormat_PR_rdfSubject) {

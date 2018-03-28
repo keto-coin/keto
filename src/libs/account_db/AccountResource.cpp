@@ -19,8 +19,9 @@ namespace keto {
 namespace account_db {
 
 
-AccountResource::AccountResource(std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr) : 
-dbManagerPtr(dbManagerPtr) {
+AccountResource::AccountResource(std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr,
+        const AccountGraphStoreManagerPtr& accountGraphStoreManagerPtr) : 
+dbManagerPtr(dbManagerPtr),accountGraphStoreManagerPtr(accountGraphStoreManagerPtr)  {
 }
 
 AccountResource::~AccountResource() {
@@ -42,6 +43,12 @@ void AccountResource::commit() {
         delete iter->second;
     }
     transactionMap.clear();
+    for(std::map<std::string,AccountGraphSessionPtr>::iterator iter = 
+            sessionMap.begin(); iter != sessionMap.end(); iter++)
+    {
+        iter->second->commit();
+    }
+    sessionMap.clear();
 }
 
 void AccountResource::rollback() {
@@ -53,6 +60,12 @@ void AccountResource::rollback() {
         delete iter->second;
     }
     transactionMap.clear();
+    for(std::map<std::string,AccountGraphSessionPtr>::iterator iter = 
+            sessionMap.begin(); iter != sessionMap.end(); iter++)
+    {
+        iter->second->rollback();
+    }
+    sessionMap.clear();
 }
 
 
@@ -68,6 +81,14 @@ rocksdb::Transaction* AccountResource::getTransaction(const std::string& name) {
     return transactionMap[name];
 }
 
+AccountGraphSessionPtr AccountResource::getGraphSession(const std::string& name) {
+    if (!this->sessionMap.count(name)) {
+        AccountGraphStorePtr accountGraphStorePtr = (*this->accountGraphStoreManagerPtr)[name];
+        this->sessionMap[name] = AccountGraphSessionPtr(
+                new AccountGraphSession(accountGraphStorePtr));
+    }
+    return this->sessionMap[name];
+}
 
 }
 }

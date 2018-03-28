@@ -33,6 +33,7 @@ class RDFSubjectHelper {
 public:
     RDFSubjectHelper();
     RDFSubjectHelper(RDFSubject_t* subject);
+    RDFSubjectHelper(RDFSubject_t* subject, bool own);
     RDFSubjectHelper(const std::string& subject);
     RDFSubjectHelper(const RDFSubjectHelper& orig);
     virtual ~RDFSubjectHelper();
@@ -41,18 +42,20 @@ public:
     operator RDFSubject_t&();
     operator ANY_t*();
     RDFPredicateHelperPtr operator [](const std::string& predicate); 
+    bool containsPredicate(const std::string& predicate);
     
     RDFSubjectHelper& setSubject(const std::string& subject);
     RDFSubjectHelper& addPredicate(RDFPredicateHelper& predicate);
     
     std::string getOntologyClass();
     std::string getSubject();
+    std::vector<RDFPredicateHelperPtr> getPredicates();
     std::vector<std::string> listPredicates();
     
     
 private:
     RDFSubject_t* rdfSubject;
-    
+    bool own;
     
 };
 

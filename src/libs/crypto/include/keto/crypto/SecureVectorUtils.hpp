@@ -33,6 +33,8 @@ public:
     SecureVector copyToSecure(const std::vector<uint8_t>& vector);
     SecureVector copyToSecure(std::vector<uint8_t>& vector);
     
+    SecureVector copyStringToSecure(const std::string& str);
+    std::string copySecureToString(const SecureVector& vec);
 private:
 
 };

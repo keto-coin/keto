@@ -39,7 +39,7 @@
 #include "keto/asn1/RDFObjectHelper.hpp"
 #include "keto/asn1/RDFPredicateHelper.hpp"
 #include "keto/asn1/RDFSubjectHelper.hpp"
-#include "keto/asn1/RDFModelHelper.hpp"\
+#include "keto/asn1/RDFModelHelper.hpp"
 
 #include "keto/transaction_common/TransactionMessageHelper.hpp"
 #include "keto/transaction_common/ChangeSetBuilder.hpp"

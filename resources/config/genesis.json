@@ -47,7 +47,7 @@
                      ],
                      "http://keto-coin.io/schema/rdf/1.0/keto/Account#type":[
                         {
-                           "value":"system",
+                           "value":"master",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
@@ -110,7 +110,7 @@
                      ],
                      "http://keto-coin.io/schema/rdf/1.0/keto/Account#type":[
                         {
-                           "value":"system",
+                           "value":"root",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
@@ -118,6 +118,13 @@
                      "http://keto-coin.io/schema/rdf/1.0/keto/Account#status":[
                         {
                            "value":"create",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#parent":[
+                        {
+                           "value":"D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
@@ -184,6 +191,13 @@
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#parent":[
+                        {
+                           "value":"D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
                      ]
                   }
                }
@@ -244,6 +258,13 @@
                      "http://keto-coin.io/schema/rdf/1.0/keto/Account#status":[
                         {
                            "value":"create",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#parent":[
+                        {
+                           "value":"D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }

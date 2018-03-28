@@ -20,8 +20,9 @@ namespace account_db {
 thread_local AccountResourcePtr AccountResourceManager::accountResourcePtr;
 
 AccountResourceManager::AccountResourceManager(
-    std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr) :
-    dbManagerPtr(dbManagerPtr) {
+        std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr,
+        const AccountGraphStoreManagerPtr& accountGraphStoreManagerPtr) :
+    dbManagerPtr(dbManagerPtr), accountGraphStoreManagerPtr(accountGraphStoreManagerPtr) {
 }
 
 AccountResourceManager::~AccountResourceManager() {
@@ -43,7 +44,7 @@ void AccountResourceManager::rollback() {
 
 AccountResourcePtr AccountResourceManager::getResource() {
     if (!accountResourcePtr) {
-        accountResourcePtr = AccountResourcePtr(new AccountResource(dbManagerPtr));
+        accountResourcePtr = AccountResourcePtr(new AccountResource(dbManagerPtr,accountGraphStoreManagerPtr));
         keto::server_common::enlistResource(*this);
     }
     return accountResourcePtr;

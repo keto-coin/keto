@@ -21,6 +21,7 @@
 
 #include "keto/rocks_db/DBManager.hpp"
 #include "keto/account_db/AccountResource.hpp"
+#include "keto/account_db/AccountGraphStoreManager.hpp"
 
 
 namespace keto {
@@ -32,7 +33,8 @@ typedef std::shared_ptr<AccountResourceManager> AccountResourceManagerPtr;
     
 class AccountResourceManager : keto::transaction::Resource {
 public:
-    AccountResourceManager(std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr);
+    AccountResourceManager(std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr,
+            const AccountGraphStoreManagerPtr& accountGraphStoreManagerPtr);
     AccountResourceManager(const AccountResourceManager& orig) = delete;
     virtual ~AccountResourceManager();
     
@@ -44,6 +46,7 @@ public:
 private:
     static thread_local AccountResourcePtr accountResourcePtr;
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;
+    AccountGraphStoreManagerPtr accountGraphStoreManagerPtr;
 };
 
 

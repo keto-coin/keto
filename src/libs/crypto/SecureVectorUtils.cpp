@@ -11,6 +11,9 @@
  * Created on February 16, 2018, 11:42 AM
  */
 
+#include <sstream>
+#include <iterator>
+
 #include "keto/crypto/SecureVectorUtils.hpp"
 
 namespace keto {
@@ -50,6 +53,21 @@ SecureVector SecureVectorUtils::copyToSecure(std::vector<uint8_t>& vector) {
     return result;
 }
 
+
+SecureVector SecureVectorUtils::copyStringToSecure(const std::string& str) {
+    SecureVector result;
+    for (int index = 0; index < str.size(); index++) {
+        result.push_back(str[index]);
+    }
+    return result;
+}
+
+std::string SecureVectorUtils::copySecureToString(const SecureVector& vec) {
+    std::stringstream ss; 
+    std::copy(vec.begin(), vec.end(),
+         std::ostream_iterator<uint8_t>(ss));
+    return ss.str();
+}
 
 }
 }

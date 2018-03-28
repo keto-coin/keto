@@ -97,6 +97,23 @@ std::vector<RDFObjectHelperPtr> RDFPredicateHelper::listObjects() {
     return result;
 }
 
+std::string RDFPredicateHelper::getStringLiteral() {
+    for (int index = 0; index < this->rdfPredicate->rdfObjects.list.count; index++) {
+        RDFObjectHelperPtr objectHelperPtr(
+                new RDFObjectHelper(*this->rdfPredicate->rdfObjects.list.array[index]));
+        return objectHelperPtr->getValue();
+    }
+    return "";
+}
+
+long RDFPredicateHelper::getLongLiteral() {
+    for (int index = 0; index < this->rdfPredicate->rdfObjects.list.count; index++) {
+        RDFObjectHelperPtr objectHelperPtr(
+                new RDFObjectHelper(*this->rdfPredicate->rdfObjects.list.array[index]));
+        return atol(objectHelperPtr->getValue().c_str());
+    }
+    return 0;
+}
 
 }
 }

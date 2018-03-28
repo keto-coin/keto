@@ -29,13 +29,22 @@ typedef std::shared_ptr<AccountGraphStore> AccountGraphStorePtr;
     
 class AccountGraphStore {
 public:
+    friend class AccountGraphSession;
     AccountGraphStore(const std::string& dbName);
     AccountGraphStore(const AccountGraphStore& orig) = delete;
     virtual ~AccountGraphStore();
     
+    std::string getDbName();
+    
     static bool checkForDb(const std::string& dbName);
     
+protected:
+    librdf_world* getWorld();
+    librdf_storage* getStorage();
+    librdf_model* getModel();
+    
 private:
+    std::string dbName;
     librdf_world* world;
     librdf_storage* storage;
     librdf_model* model;

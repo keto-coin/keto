@@ -28,6 +28,12 @@ KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, AccountDBInitFailureExcepti
 KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, DuplicateGraphDBException , "A graph db exists by this name.");
 KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, UnsupportedChangeTypeFormatException , "Unsupported type change.");
 KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, InvalidAccountOperationException , "The operation on the account is invalid.");
+KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, InvalidParentAccountException , "Parent account was not found.");
+KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, FailedToInitGraphTransactionException , "Failed to init a graph transaction.");
+KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, FailedToCommitGraphTransactionException , "Failed to rollback a graph transaction.");
+KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, FailedToRollbackGraphTransactionException , "Failed to rollback a graph transaction.");
+KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, UnsupportedDataTypeTransactionException , "Failed to rollback a graph transaction.");
+
 }
 }
 

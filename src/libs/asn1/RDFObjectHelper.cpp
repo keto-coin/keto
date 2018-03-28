@@ -20,7 +20,7 @@ namespace asn1 {
 
 
 RDFObjectHelper::RDFObjectHelper() : 
-    type(Constants::RDF_TYPE), lang(Constants::RDF_LANGUAGE)
+    type(Constants::RDF_NODE::LITERAL), lang(Constants::RDF_LANGUAGE)
 {
 }
 
@@ -31,7 +31,7 @@ RDFObjectHelper::RDFObjectHelper(const RDFObject& rdfObject) :
     
 
 RDFObjectHelper::RDFObjectHelper(const std::string& value, const std::string& dataType) :
-    value(value),type(Constants::RDF_TYPE), lang(Constants::RDF_LANGUAGE), dataType(dataType) {
+    value(value),type(Constants::RDF_NODE::LITERAL), lang(Constants::RDF_LANGUAGE), dataType(dataType) {
 }
     
 

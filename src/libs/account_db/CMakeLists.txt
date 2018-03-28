@@ -12,6 +12,7 @@ add_library( keto_account_db
             AccountResourceManager.cpp
             AccountGraphStore.cpp
             AccountGraphStoreManager.cpp
+            AccountGraphSession.cpp
             AccountRDFStatement.cpp
             AccountRDFStatementBuilder.cpp
             AccountSystemOntologyTypes.cpp
@@ -33,7 +34,8 @@ target_include_directories( keto_account_db
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../rocks_db/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
-                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/" 
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/"
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/" 
                             PUBLIC "${PROTO_HDRS}"
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}
