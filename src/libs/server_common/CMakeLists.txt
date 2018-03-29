@@ -11,6 +11,7 @@ add_library( keto_server_common
               Events.cpp
               EventServiceHelpers.cpp
               TransactionHelper.cpp
+              URLUtils.cpp
 
              ${HEADERS}
            )

@@ -11,6 +11,7 @@ add_library( keto_http_server_session
             HttpSession.cpp
             HttpTransactionManager.cpp
             HttpSparqlManager.cpp
+            URISparqlParser.cpp
 
              ${HEADERS}
            )

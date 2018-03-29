@@ -16,6 +16,7 @@
 
 #include "Account.pb.h"
 #include "BlockChain.pb.h"
+#include "Sparql.pb.h"
 
 #include "keto/asn1/HashHelper.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
@@ -83,6 +84,19 @@ keto::event::Event AccountService::checkAccount(const keto::event::Event& event)
     return keto::server_common::toEvent<keto::proto::CheckForAccount>(checkForAccount);
 }
 
+keto::event::Event AccountService::sparqlQuery(const keto::event::Event& event) {
+    keto::proto::SparqlQuery  sparlQuery = 
+            keto::server_common::fromEvent<keto::proto::SparqlQuery>(event);
+    
+    keto::proto::AccountInfo accountInfo;
+    keto::asn1::HashHelper accountHashHelper(sparlQuery.account_hash());
+    if (keto::account_db::AccountStore::getInstance()->getAccountInfo(accountHashHelper,
+            accountInfo)) {
+        sparlQuery.set_result("test");
+    }
+    
+    return keto::server_common::toEvent<keto::proto::SparqlQuery>(sparlQuery);
+}
 
 }
 }

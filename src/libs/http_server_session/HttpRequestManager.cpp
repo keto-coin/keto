@@ -42,7 +42,6 @@ HttpRequestManager::~HttpRequestManager() {
 bool
 HttpRequestManager::checkRequest(boost::beast::http::request<boost::beast::http::string_body>& req) {
     boost::beast::string_view path = req.target();
-    std::cout << "The path is : " << path << std::endl;
     if (path.empty()) {
         return false;
     }

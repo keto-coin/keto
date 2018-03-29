@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>KETO Sparql Console</title>
+        <link href='//cdn.jsdelivr.net/npm/yasgui@2.7.21/dist/yasgui.min.css' rel='stylesheet' type='text/css'/>
+        <script src='//cdn.jsdelivr.net/npm/yasgui@2.7.21/dist/yasgui.min.js'></script>
+    </head>
+    <body>
+        <div id="sparql_div"></div>
+        <script>
+            var yasqe = YASGUI(document.getElementById("sparql_div"), {
+                        //Uncomment below to change the default endpoint
+                        //Note: If you've already opened the YASGUI page before, you should first clear your
+                        //local-storage cache before you will see the changes taking effect 
+                        yasqe:{sparql:{endpoint:'/data/D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2/'}}
+            });
+        </script>
+    </body>
+</html>

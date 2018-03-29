@@ -6,7 +6,7 @@ package keto.proto;
  * This is an example of a protobuf message.
  */
 message SparqlQuery {
-    string account_hash = 1;
+    bytes account_hash = 1;
     string query = 2;
     string result = 3;
 }

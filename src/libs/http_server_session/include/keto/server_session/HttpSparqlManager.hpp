@@ -35,7 +35,7 @@ public:
     
     std::string processTransaction(
             boost::beast::http::request<boost::beast::http::string_body>& req,
-            const std::string& transactionMsg);
+            const std::string& body);
     
 private:
     std::shared_ptr<HttpSessionManager> httpSessionManagerPtr;
