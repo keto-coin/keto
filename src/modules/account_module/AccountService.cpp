@@ -85,17 +85,17 @@ keto::event::Event AccountService::checkAccount(const keto::event::Event& event)
 }
 
 keto::event::Event AccountService::sparqlQuery(const keto::event::Event& event) {
-    keto::proto::SparqlQuery  sparlQuery = 
+    keto::proto::SparqlQuery  sparqlQuery = 
             keto::server_common::fromEvent<keto::proto::SparqlQuery>(event);
     
     keto::proto::AccountInfo accountInfo;
-    keto::asn1::HashHelper accountHashHelper(sparlQuery.account_hash());
+    keto::asn1::HashHelper accountHashHelper(sparqlQuery.account_hash());
     if (keto::account_db::AccountStore::getInstance()->getAccountInfo(accountHashHelper,
             accountInfo)) {
-        sparlQuery.set_result("test");
+        keto::account_db::AccountStore::getInstance()->sparqlQuery(accountInfo,sparqlQuery);
     }
     
-    return keto::server_common::toEvent<keto::proto::SparqlQuery>(sparlQuery);
+    return keto::server_common::toEvent<keto::proto::SparqlQuery>(sparqlQuery);
 }
 
 }

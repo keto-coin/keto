@@ -84,7 +84,7 @@ void AccountGraphSession::remove(keto::asn1::RDFSubjectHelperPtr& subject) {
                                 NULL, 
                                 librdf_new_uri(
                                     this->accountGraphStore->getWorld(),
-                                    (const unsigned char*)objectHelper->getType().c_str()))
+                                    (const unsigned char*)objectHelper->getDataType().c_str()))
                         );
             } else if (objectHelper->getType().compare(keto::asn1::Constants::RDF_NODE::URI)) {
                     statement= librdf_new_statement_from_nodes(this->accountGraphStore->getWorld(), 
@@ -104,6 +104,31 @@ void AccountGraphSession::remove(keto::asn1::RDFSubjectHelperPtr& subject) {
             librdf_free_statement(statement);
         }
     }
+}
+
+std::string AccountGraphSession::query(const std::string& queryStr) {
+    librdf_query* query;
+    librdf_query_results* results;
+    query = librdf_new_query(this->accountGraphStore->getWorld(), "sparql", 
+            NULL, (const unsigned char *)queryStr.c_str(), NULL);
+    results = librdf_model_query_execute(this->accountGraphStore->getModel(), query);
+    if (!results) {
+        librdf_free_query(query);
+        return "NA";
+    }
+    unsigned char* strBuffer = librdf_query_results_to_string2(results,"json",NULL,NULL,NULL);
+    if (!strBuffer) {
+        librdf_free_query_results(results);
+        librdf_free_query(query);
+        return "NA";
+    }
+    std::string strResult((const char*)strBuffer);
+    
+    librdf_free_memory(strBuffer);
+    librdf_free_query_results(results);
+    librdf_free_query(query);
+    
+    return strResult;
 }
 
 

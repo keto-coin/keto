@@ -38,6 +38,7 @@ public:
     
     void persist(keto::asn1::RDFSubjectHelperPtr& subject);
     void remove(keto::asn1::RDFSubjectHelperPtr& subject);
+    std::string query(const std::string& query);
     
 protected:
     AccountGraphSession(const AccountGraphStorePtr& accountGraphStore);

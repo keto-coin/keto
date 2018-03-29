@@ -15,6 +15,7 @@
 #define ACCOUNTSTORE_HPP
 
 #include "Account.pb.h"
+#include "Sparql.pb.h"
 
 #include "keto/asn1/HashHelper.hpp"
 #include "keto/rocks_db/DBManager.hpp"
@@ -40,6 +41,9 @@ public:
         keto::proto::AccountInfo& result);
     void applyTransaction(
         const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper);
+    void sparqlQuery(
+        const keto::proto::AccountInfo& accountInfo,
+        keto::proto::SparqlQuery& sparlQuery);
     
     
 private:

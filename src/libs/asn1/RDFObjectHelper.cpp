@@ -25,8 +25,8 @@ RDFObjectHelper::RDFObjectHelper() :
 }
 
 RDFObjectHelper::RDFObjectHelper(const RDFObject& rdfObject) :
-    value((const char*)rdfObject.value.buf),type((const char*)rdfObject.value.buf), 
-        lang((const char*)rdfObject.value.buf), dataType((const char*)rdfObject.dataType.buf) {    
+    value((const char*)rdfObject.value.buf),type((const char*)rdfObject.type.buf), 
+        lang((const char*)rdfObject.lang.buf), dataType((const char*)rdfObject.dataType.buf) {    
 }
     
 

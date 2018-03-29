@@ -11,6 +11,8 @@
  * Created on March 29, 2018, 6:19 AM
  */
 
+#include <iostream>
+
 #include "keto/server_session/URISparqlParser.hpp"
 #include "keto/server_common/URLUtils.hpp"
 #include "keto/server_session/Exception.hpp"
@@ -26,15 +28,28 @@ URISparqlParser::URISparqlParser(const std::string& uri,const std::string& body)
     int nextSlash = subUri.find("/");
     this->accountHash = subUri.substr(0,nextSlash);
     subUri = subUri.substr(nextSlash+1);
+    
     int queryBegin = subUri.find(QUERY_PARAM);
+    
     if (queryBegin != std::string::npos) {
         int queryEnd = subUri.find("&",queryBegin);
-        this->query = keto::server_common::URLUtils::unescape(
+        if (queryEnd == std::string::npos) {
+            this->query = keto::server_common::URLUtils::unescape(
+                subUri.substr(queryBegin + strlen(QUERY_PARAM)));
+        } else {
+            this->query = keto::server_common::URLUtils::unescape(
                 subUri.substr(queryBegin + strlen(QUERY_PARAM),queryEnd));
+        }
+        
     } else if ((queryBegin = body.find(QUERY_PARAM)) != std::string::npos) {
         int queryEnd = subUri.find("&",queryBegin);
-        this->query = keto::server_common::URLUtils::unescape(
-                subUri.substr(queryBegin + strlen(QUERY_PARAM),queryEnd));
+        if (queryEnd == std::string::npos) {
+            this->query = keto::server_common::URLUtils::unescape(
+                    body.substr(queryBegin + strlen(QUERY_PARAM)));
+        } else {
+            this->query = keto::server_common::URLUtils::unescape(
+                    body.substr(queryBegin + strlen(QUERY_PARAM),queryEnd));
+        }
     } else {
         BOOST_THROW_EXCEPTION(keto::server_session::InvalidSparqlRequestException());
     }

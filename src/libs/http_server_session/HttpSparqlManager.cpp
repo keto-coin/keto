@@ -22,10 +22,12 @@
 #include "keto/common/HttpEndPoints.hpp"
 #include "keto/crypto/SecureVectorUtils.hpp"
 
+
 #include "keto/server_common/EventUtils.hpp"
 #include "keto/server_common/Events.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
 
+#include "keto/server_session/Exception.hpp"
 #include "keto/server_session/HttpSparqlManager.hpp"
 #include "keto/server_session/URISparqlParser.hpp"
 #include "include/keto/server_session/URISparqlParser.hpp"
@@ -42,20 +44,23 @@ HttpSparqlManager::~HttpSparqlManager() {
     
 }
 
-std::string HttpSparqlManager::processTransaction(
+std::string HttpSparqlManager::processQuery(
         boost::beast::http::request<boost::beast::http::string_body>& req,
         const std::string& body) {
-    //std::string sessionHash = (const std::string&)req.base().at(keto::common::HttpEndPoints::HEADER_SESSION_HASH);
-    //keto::asn1::HashHelper hashHelper(
-    //        sessionHash,keto::common::HEX);
-    //std::vector<uint8_t> vectorHash = keto::crypto::SecureVectorUtils().copyFromSecure(hashHelper);
+    if (!req.base().count(keto::common::HttpEndPoints::HEADER_SESSION_HASH)) {
+        BOOST_THROW_EXCEPTION(keto::server_session::InvalidSessionException());
+    }
+    std::string sessionHash = (const std::string&)req.base().at(keto::common::HttpEndPoints::HEADER_SESSION_HASH);
+    keto::asn1::HashHelper sessionHashHelper(
+            sessionHash,keto::common::HEX);
+    std::vector<uint8_t> vectorHash = keto::crypto::SecureVectorUtils().copyFromSecure(sessionHashHelper);
+    if (!httpSessionManagerPtr->isValid(vectorHash)) {
+        BOOST_THROW_EXCEPTION(keto::server_session::InvalidSessionException());
+    }
     
     boost::beast::string_view path = req.target();
-    std::cout << "The path for the request is : " << path << std::endl;
     std::string target = path.to_string();
     URISparqlParser uriSparql(target,body);
-    std::cout << "The account : " << uriSparql.getAccountHash() << std::endl;
-    std::cout << "The query : " << uriSparql.getQuery() << std::endl;
     
     keto::asn1::HashHelper hashHelper(uriSparql.getAccountHash(),keto::common::HEX);
     

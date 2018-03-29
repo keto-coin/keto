@@ -112,6 +112,14 @@ void AccountStore::applyTransaction(
     }
 }
 
+void AccountStore::sparqlQuery(
+        const keto::proto::AccountInfo& accountInfo,
+        keto::proto::SparqlQuery& sparlQuery) {
+    AccountResourcePtr resource = accountResourceManagerPtr->getResource();
+    AccountGraphSessionPtr sessionPtr = resource->getGraphSession(accountInfo.graph_name());
+    sparlQuery.set_result(sessionPtr->query(sparlQuery.query()));
+}
+
 void AccountStore::createAccount(
             const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper,
             AccountRDFStatementBuilderPtr accountRDFStatementBuilder,

@@ -12,13 +12,14 @@
  */
 
 #include <sstream>
+#include <iostream>
 
 #include "keto/server_common/URLUtils.hpp"
 
 namespace keto {
 namespace server_common {
 
-int hex_decode(const char ch)
+int hex_decode_char(const char ch)
 {
     int r;
     if ('0' <= ch && ch <= '9')
@@ -37,7 +38,7 @@ std::string hex_decode(const std::string& substr) {
         return substr;
     }
     std::stringstream ss;
-    ss << ((char)(hex_decode(substr[0]) * 16 + hex_decode(substr[1])));
+    ss << ((char)(hex_decode_char((const char)substr[0]) * 16 + hex_decode_char((const char)substr[1])));
     return ss.str();
 }
 
@@ -49,7 +50,8 @@ std::string URLUtils::unescape(const std::string& escapedString) {
         index++;
         if (pos == '%') {
             std::stringstream tmp;
-            ss << escapedString.substr(index,2);            
+            ss << hex_decode(escapedString.substr(index,2));
+            index +=2;
         }else if (pos == '+') {
             ss << " ";
         } else {

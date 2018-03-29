@@ -68,7 +68,17 @@ HttpRequestManager::handle_request(
     } else if (0 == target.compare(keto::common::HttpEndPoints::TRANSACTION)) {
         result = this->httpTransactionManagerPtr->processTransaction(req,req.body());
     } else if (0 == target.compare(0,strlen(keto::common::HttpEndPoints::DATA_QUERY),keto::common::HttpEndPoints::DATA_QUERY)) {
-        result = this->httpSparqlManagerPtr->processTransaction(req,req.body());
+        result = this->httpSparqlManagerPtr->processQuery(req,req.body());
+        // for the sparql queries we force the connect to close otherwise
+        // the body gets appended to rather than freshly executed.
+        boost::beast::http::response<boost::beast::http::string_body> response;
+        response.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
+        response.set(boost::beast::http::field::content_type, "application/sparql-results+json");
+        response.keep_alive(false);
+        response.chunked(false);
+        response.body() = result;
+        response.content_length(result.size());
+        return response;
     }
     boost::beast::http::response<boost::beast::http::string_body> response;
     response.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);

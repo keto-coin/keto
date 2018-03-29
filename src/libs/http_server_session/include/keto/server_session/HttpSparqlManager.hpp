@@ -33,7 +33,7 @@ public:
     HttpSparqlManager(const HttpSparqlManager& orig) = delete;
     virtual ~HttpSparqlManager();
     
-    std::string processTransaction(
+    std::string processQuery(
             boost::beast::http::request<boost::beast::http::string_body>& req,
             const std::string& body);
     
