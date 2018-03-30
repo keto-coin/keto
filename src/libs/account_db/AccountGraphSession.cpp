@@ -11,6 +11,7 @@
  * Created on March 28, 2018, 6:00 AM
  */
 
+#include <iostream>
 #include <sstream>
 
 #include "keto/asn1/Constants.hpp"
@@ -38,19 +39,19 @@ void AccountGraphSession::persist(keto::asn1::RDFSubjectHelperPtr& subject) {
     for (keto::asn1::RDFPredicateHelperPtr predicateHelper : subject->getPredicates()) {
         for (keto::asn1::RDFObjectHelperPtr objectHelper : predicateHelper->listObjects()) {
             librdf_statement* statement= 0;
-            if (objectHelper->getType().compare(keto::asn1::Constants::RDF_NODE::LITERAL)) {
-                    statement = librdf_new_statement_from_nodes(this->accountGraphStore->getWorld(), 
-                        librdf_new_node_from_uri_string(this->accountGraphStore->getWorld(), (const unsigned char*)subject->getSubject().c_str()),
-                        librdf_new_node_from_uri_string(this->accountGraphStore->getWorld(), (const unsigned char*)predicateHelper->getPredicate().c_str()),
-                        librdf_new_node_from_typed_literal(
-                                this->accountGraphStore->getWorld(), 
-                                (const unsigned char*)objectHelper->getValue().c_str(),
-                                NULL, 
-                                librdf_new_uri(
-                                    this->accountGraphStore->getWorld(),
-                                    (const unsigned char*)objectHelper->getType().c_str()))
-                        );
-            } else if (objectHelper->getType().compare(keto::asn1::Constants::RDF_NODE::URI)) {
+            if (objectHelper->getType().compare(keto::asn1::Constants::RDF_NODE::LITERAL) == 0) {
+                statement = librdf_new_statement_from_nodes(this->accountGraphStore->getWorld(), 
+                    librdf_new_node_from_uri_string(this->accountGraphStore->getWorld(), (const unsigned char*)subject->getSubject().c_str()),
+                    librdf_new_node_from_uri_string(this->accountGraphStore->getWorld(), (const unsigned char*)predicateHelper->getPredicate().c_str()),
+                    librdf_new_node_from_typed_literal(
+                            this->accountGraphStore->getWorld(), 
+                            (const unsigned char*)objectHelper->getValue().c_str(),
+                            NULL, 
+                            librdf_new_uri(
+                                this->accountGraphStore->getWorld(),
+                                (const unsigned char*)objectHelper->getDataType().c_str()))
+                    );
+            } else if (objectHelper->getType().compare(keto::asn1::Constants::RDF_NODE::URI) == 0) {
                     statement= librdf_new_statement_from_nodes(this->accountGraphStore->getWorld(), 
                         librdf_new_node_from_uri_string(this->accountGraphStore->getWorld(), (const unsigned char*)subject->getSubject().c_str()),
                         librdf_new_node_from_uri_string(this->accountGraphStore->getWorld(), (const unsigned char*)predicateHelper->getPredicate().c_str()),
@@ -74,7 +75,7 @@ void AccountGraphSession::remove(keto::asn1::RDFSubjectHelperPtr& subject) {
     for (keto::asn1::RDFPredicateHelperPtr predicateHelper : subject->getPredicates()) {
         for (keto::asn1::RDFObjectHelperPtr objectHelper : predicateHelper->listObjects()) {
             librdf_statement* statement= 0;
-            if (objectHelper->getType().compare(keto::asn1::Constants::RDF_NODE::LITERAL)) {
+            if (objectHelper->getType().compare(keto::asn1::Constants::RDF_NODE::LITERAL) == 0) {
                     statement = librdf_new_statement_from_nodes(this->accountGraphStore->getWorld(), 
                         librdf_new_node_from_uri_string(this->accountGraphStore->getWorld(), (const unsigned char*)subject->getSubject().c_str()),
                         librdf_new_node_from_uri_string(this->accountGraphStore->getWorld(), (const unsigned char*)predicateHelper->getPredicate().c_str()),
@@ -86,7 +87,7 @@ void AccountGraphSession::remove(keto::asn1::RDFSubjectHelperPtr& subject) {
                                     this->accountGraphStore->getWorld(),
                                     (const unsigned char*)objectHelper->getDataType().c_str()))
                         );
-            } else if (objectHelper->getType().compare(keto::asn1::Constants::RDF_NODE::URI)) {
+            } else if (objectHelper->getType().compare(keto::asn1::Constants::RDF_NODE::URI) == 0) {
                     statement= librdf_new_statement_from_nodes(this->accountGraphStore->getWorld(), 
                         librdf_new_node_from_uri_string(this->accountGraphStore->getWorld(), (const unsigned char*)subject->getSubject().c_str()),
                         librdf_new_node_from_uri_string(this->accountGraphStore->getWorld(), (const unsigned char*)predicateHelper->getPredicate().c_str()),
