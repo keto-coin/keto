@@ -89,20 +89,16 @@ GenesisLoader::~GenesisLoader() {
 }
 
 void GenesisLoader::load() {
-    //std::cout << "Dump : "  << reader.getJsonData().dump() << std::endl;
-    //std::cout << "Is object : "  << reader.getJsonData().is_object() << std::endl;
-    //std::cout << "Is array : "  << reader.getJsonData().is_array() << std::endl;
     keto::asn1::HashHelper parentHash(reader.getJsonData()["parent"],keto::common::HEX);
     
     KETO_LOG_INFO << "Value : "  << parentHash.getHash(keto::common::HEX);
-    //std::cout << "Transaction : "  << reader.getJsonData()["transactions"].is_array() << std::endl;
     nlohmann::json transactions = reader.getJsonData()["transactions"].get<nlohmann::json>();
     
     keto::block_db::BlockBuilderPtr blockBuilderPtr = 
             std::make_shared<keto::block_db::BlockBuilder>(parentHash);
     for (auto& element : transactions) {
         keto::asn1::HashHelper sourceAccount(element["account_hash"].get<std::string>().c_str(),keto::common::HEX);
-        std::cout << "Account hash : " << sourceAccount.getHash(keto::common::HEX) << std::endl;
+        KETO_LOG_INFO << "Account hash : " << sourceAccount.getHash(keto::common::HEX);
         keto::asn1::NumberHelper numberHelper(
             atol(element["value"].get<std::string>().c_str()));
         std::shared_ptr<keto::chain_common::TransactionBuilder> transactionPtr =
@@ -191,31 +187,6 @@ void GenesisLoader::load() {
     KETO_LOG_INFO << "Create the genesis BLOCK";
     keto::block_db::BlockChainStore::getInstance()->writeBlock(*signedBlockBuilderPtr);
     KETO_LOG_INFO << "Created the genesis BLOCK";
-    
-    //for (nlohmann::json::iterator iter = reader.getJsonData()["transactions"].begin();
-    //    iter != reader.getJsonData()["transactions"].end(); iter++ ) {
-    //    nlohmann::json transaction = iter.value().get<nlohmann::json>();
-    //    std::cout << "Object : "  << iter->value.is_object() << std::endl;
-    //    if (iter->is_object()) {
-    //        std::cout << "Account hash : "  << iter.value()["account_hash"] << std::endl;
-    //    }
-    //}
-    
-    //std::cout << "Transaction array : " << reader.getJsonData()["transactions"].is_array() << std::endl;
-    //for (auto& element : reader.getJsonData()["transactions"]) {
-    //    std::cout << "Elements in transaction [" << element << "]" << std::endl;
-    //}
-    //reader.getJsonData()["transactions"]
-    //for (nlohmann::json::iterator iter = reader.getJsonData()["transactions"].begin();
-    //        iter != reader.getJsonData()["transactions"].end(); iter++ ) {
-    //    std::cout << "Is array : " << iter.value().is_array() << std::endl;
-    //    std::cout << "Is boolean" << iter.value().is_boolean() << std::endl;
-    //    std::cout << "Is number" << iter.value().is_number() << std::endl;
-    //    std::cout << "Is number" << iter.value().is_object() << std::endl;
-    //    std::cout << "Is number" << iter.value().is_string() << std::endl;
-    //    std::cout << "account hash" << iter.value()["account_hash"].get<std::string>() << std::endl;
-    //}
-    
         
 }
 

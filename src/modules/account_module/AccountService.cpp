@@ -61,8 +61,6 @@ keto::event::Event AccountService::applyTransaction(const keto::event::Event& ev
     keto::account_db::AccountStore::getInstance()->applyTransaction(
         transactionProtoHelper.getTransactionMessageHelper());
     
-    std::cout << "Apply changes to the account " << std::endl;
-    
     return keto::server_common::toEvent<keto::proto::Transaction>(transaction);
 }
     
