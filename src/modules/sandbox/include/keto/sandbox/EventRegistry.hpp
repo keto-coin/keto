@@ -8,33 +8,28 @@
  * File:   EventRegistry.hpp
  * Author: ubuntu
  *
- * Created on March 3, 2018, 10:25 AM
+ * Created on March 8, 2018, 3:15 AM
  */
 
-#ifndef KETO_ROUTER_EVENTREGISTRY_HPP
-#define KETO_ROUTER_EVENTREGISTRY_HPP
-
-#include "keto/event/Event.hpp"
+#ifndef SANDBOX_EVENTREGISTRY_HPP
+#define SANDBOX_EVENTREGISTRY_HPP
 
 namespace keto {
-namespace router {
+namespace sandbox {
 
 class EventRegistry {
 public:
     EventRegistry(const EventRegistry& orig) = delete;
     virtual ~EventRegistry();
     
-    static keto::event::Event registerService(const keto::event::Event& event);
-    static keto::event::Event routeMessage(const keto::event::Event& event);
-    
     static void registerEventHandlers();
     static void deregisterEventHandlers();
+
 private:
     EventRegistry();
-
+    
 };
 
-        
 }
 }
 

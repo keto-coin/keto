@@ -12,8 +12,10 @@ enum MessageType {
 enum MessageOperation {
     MESSAGE_INIT = 0;
     MESSAGE_ROUTE = 1;
-    MESSAGE_BLOCK = 2;
-    MESSAGE_PROCESS = 3;
+    MESSAGE_BALANCE = 2;
+    MESSAGE_BLOCK = 3;
+    MESSAGE_PROCESS = 4;
+    MESSAGE_WAIT = 5;
     
     // Block Operations
     MESSAGE_PERSIST = 100;
@@ -27,8 +29,8 @@ message MessageWrapper {
     uint32 version = 1;
     bytes session_hash = 2;
     bytes account_hash = 3;
-    MessageType messageType = 4;
-    MessageOperation messageOperation = 5;
+    MessageType message_type = 4;
+    MessageOperation message_operation = 5;
     
     google.protobuf.Any msg = 6;
 }

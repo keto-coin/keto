@@ -22,6 +22,8 @@
 
 #include "keto/transaction/Transaction.hpp"
 #include "keto/server_common/TransactionHelper.hpp"
+#include "keto/server_common/Constants.hpp"
+#include "keto/server_common/ServiceRegistryHelper.hpp"
 #include "keto/block/BlockService.hpp"
 #include "keto/block/EventRegistry.hpp"
 #include "include/keto/block/BlockService.hpp"
@@ -63,6 +65,10 @@ void BlockModuleManager::postStart() {
     keto::transaction::TransactionPtr transactionPtr = keto::server_common::createTransaction();
     BlockService::getInstance()->genesis();
     transactionPtr->commit();
+    
+    KETO_LOG_INFO << "[BlockModuleManager] Register the services";
+    keto::server_common::registerService(keto::server_common::Constants::SERVICE::BLOCK);
+    KETO_LOG_INFO << "[BlockModuleManager] After registering the services";
 }
 
 void BlockModuleManager::stop() {

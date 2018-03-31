@@ -19,6 +19,10 @@
 #include "keto/common/MetaInfo.hpp"
 
 #include "keto/sandbox/SandboxModuleManager.hpp"
+#include "keto/sandbox/EventRegistry.hpp"
+#include "keto/server_common/ServiceRegistryHelper.hpp"
+#include "keto/server_common/Constants.hpp"
+
 
 namespace keto {
 namespace sandbox {
@@ -45,13 +49,21 @@ const std::string SandboxModuleManager::getVersion() const {
 // lifecycle methods
 void SandboxModuleManager::start() {
     modules["SandboxModule"] = std::make_shared<SandboxModule>();
+    EventRegistry::registerEventHandlers();
     KETO_LOG_INFO << "[SandboxModuleManager] Started the SandboxModuleManager";
 }
 
 void SandboxModuleManager::stop() {
+    EventRegistry::deregisterEventHandlers();
     modules.clear();
     KETO_LOG_INFO << "[SandboxModuleManager] The SandboxModuleManager is being stopped";
 
+}
+
+void SandboxModuleManager::postStart() {
+    KETO_LOG_INFO << "[SandboxModuleManager] The post start method has been called";
+    keto::server_common::registerService(keto::server_common::Constants::SERVICE::PROCESS);
+    KETO_LOG_INFO << "[SandboxModuleManager] The post start method is complete";
 }
 
 const std::vector<std::string> SandboxModuleManager::listModules() {

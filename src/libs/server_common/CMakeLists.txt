@@ -1,5 +1,6 @@
 file(GLOB HEADERS "include/keto/server_common/*.hpp")
 
+include_directories(${PROTOBUF_INCLUDE_DIR})
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 ## SORT .cpp by most likely to change / break compile
@@ -12,6 +13,7 @@ add_library( keto_server_common
               EventServiceHelpers.cpp
               TransactionHelper.cpp
               URLUtils.cpp
+              ServiceRegistryHelper.cpp
 
              ${HEADERS}
            )
@@ -24,6 +26,10 @@ target_include_directories( keto_server_common
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../event_service_api/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../transaction_manager_api/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../module_manager/include"
+                            
+                            PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
+                            PUBLIC "${PROTO_HDRS}"
+
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}
                             )

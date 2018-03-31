@@ -40,6 +40,7 @@ public:
     // lifecycle methods
     virtual void start();
     virtual void stop();
+    virtual void postStart();
     
     virtual const std::vector<std::string> listModules();
     virtual const std::shared_ptr<keto::module::ModuleInterface> getModule(const std::string& name);

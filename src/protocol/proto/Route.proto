@@ -2,10 +2,15 @@ syntax = "proto3";
 
 package keto.proto;
 
+message PushService {
+    bytes account = 1;
+    string service_name = 2;
+}
+
 // push the service list managed by this node to a slave node.
 message PushServiceList {
     bytes account = 1;
-    repeated string servie_name = 2;
+    repeated string service_name = 2;
 }
 
 // push a new account to 
@@ -23,10 +28,6 @@ message PushAccountList {
     repeated PushAccount accounts = 2;
 }
 
-
-/**
- * This is an example of a protobuf message.
- */
 message AccountRoutingStore {
     uint32 version = 1;
     bytes management_account_hash = 2;

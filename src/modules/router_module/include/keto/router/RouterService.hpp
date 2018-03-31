@@ -17,6 +17,9 @@
 #include <string>
 #include <memory>
 
+
+#include "Protocol.pb.h"
+
 #include "keto/event/Event.hpp"
 
 
@@ -35,9 +38,24 @@ public:
     
     
     keto::event::Event routeMessage(const keto::event::Event& event);
+    keto::event::Event registerService(const keto::event::Event& event);
     
 private:
     RouterService();
+    
+    /**
+     * This method is called to route a message locally.
+     * 
+     * @param messageWrapper The message wrapper
+     */
+    void routeLocal(keto::proto::MessageWrapper&  messageWrapper);
+    
+    /**
+     * This method is called to route a message locally.
+     * 
+     * @param messageWrapper The message wrapper
+     */
+    void routeToAccount(keto::proto::MessageWrapper&  messageWrapper);
     
 };
 

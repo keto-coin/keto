@@ -25,7 +25,15 @@ public:
     
     static const char* PUBLIC_KEY_DIR;
     static const char* ACCOUNT_HASH;
-
+    
+    class SERVICE {
+    public:
+        static const char* ROUTE;
+        static const char* BALANCE;
+        static const char* BLOCK;
+        static const char* PROCESS;
+    };
+    
 private:
 
 };

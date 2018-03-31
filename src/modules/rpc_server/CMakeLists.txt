@@ -11,19 +11,25 @@ add_library( 0030_keto_rpc_server_module
             RpcServerModuleManager.cpp
             RpcServerModule.cpp
             RpcServer.cpp
+            EventRegistry.cpp
+            RpcServerService.cpp
 
              ${HEADERS}
            )
 
 target_link_libraries( 0030_keto_rpc_server_module 
                             PRIVATE ${OPENSSL_LIBRARIES}
-                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES} )
+                            PRIVATE keto_server_common keto_asn1_common keto_asn1_protocol
+                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
+                            PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
+                             )
 target_include_directories( 0030_keto_rpc_server_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/server_common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/ssl/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"

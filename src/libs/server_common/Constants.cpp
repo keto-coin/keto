@@ -20,6 +20,10 @@ namespace server_common {
 const char* Constants::PUBLIC_KEY_DIR = "public-key-dir";
 const char* Constants::ACCOUNT_HASH = "account-hash";
 
+const char* Constants::SERVICE::ROUTE       = "route";
+const char* Constants::SERVICE::BALANCE     = "balance";
+const char* Constants::SERVICE::BLOCK       = "block";
+const char* Constants::SERVICE::PROCESS     = "process";
 
 }
 }

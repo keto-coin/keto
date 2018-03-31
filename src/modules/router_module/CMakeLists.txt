@@ -11,6 +11,7 @@ add_library( 0015_keto_router_module
             RouterService.cpp
             EventRegistry.cpp
             StorageManager.cpp
+            RouterRegistry.cpp
 
              ${HEADERS}
            )

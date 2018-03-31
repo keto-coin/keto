@@ -29,10 +29,20 @@ public:
     
     // events for the router
     static const char* ROUTE_MESSAGE;
+    static const char* REGISTER_SERVICE_MESSAGE;
     
     // account events
     static const char* CHECK_ACCOUNT_MESSAGE;
     static const char* APPLY_ACCOUNT_TRANSACTION_MESSAGE;
+    
+    // balancer
+    static const char* BALANCER_MESSAGE;
+    
+    // balancer
+    static const char* BLOCK_MESSAGE;
+    
+    // rpc messages
+    static const char* RPC_SEND_MESSAGE;
     
     // sparql events
     static const char* SPARQL_QUERY_MESSAGE;

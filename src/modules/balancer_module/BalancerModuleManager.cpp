@@ -18,6 +18,10 @@
 #include "keto/common/Log.hpp"
 #include "keto/common/MetaInfo.hpp"
 #include "keto/balancer/BalancerModuleManager.hpp"
+#include "keto/balancer/BalancerService.hpp"
+#include "keto/balancer/EventRegistry.hpp"
+#include "keto/server_common/ServiceRegistryHelper.hpp"
+#include "keto/server_common/Constants.hpp"
 
 namespace keto {
 namespace balancer {
@@ -45,12 +49,24 @@ const std::string BalancerModuleManager::getVersion() const {
 // lifecycle methods
 void BalancerModuleManager::start() {
     modules["balancerModule"] = std::make_shared<BalancerModule>();
+    BalancerService::init();
+    EventRegistry::registerEventHandlers();
     KETO_LOG_INFO << "[BalancerModuleManager] Started the BalancerModuleManager";
 }
 
 void BalancerModuleManager::stop() {
+    EventRegistry::deregisterEventHandlers();
+    BalancerService::fin();
     modules.clear();
     KETO_LOG_INFO << "[BalancerModuleManager] The BalancerModuleManager is being stopped";
+}
+
+
+void BalancerModuleManager::postStart() {
+    KETO_LOG_INFO << "[BalancerModuleManager] The postStart method has been called";
+    keto::server_common::registerService(keto::server_common::Constants::SERVICE::BALANCE);
+    KETO_LOG_INFO << "[BalancerModuleManager] The postStart is complete";
+    
 }
 
 const std::vector<std::string> BalancerModuleManager::listModules() {
