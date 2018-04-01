@@ -32,7 +32,7 @@ BlockRouting::BlockRouting() {
     
     // retrieve the host information from the configuration file
     if (config->getVariablesMap().count(Constants::DEFAULT_BLOCK) && 
-            config->getVariablesMap()[Constants::DEFAULT_BLOCK].as<int>()) {
+            config->getVariablesMap()[Constants::DEFAULT_BLOCK].as<std::string>().compare("true") == 0) {
         this->accounts.push_back(keto::server_common::ServerInfo::getInstance()->getAccountHash());
     }
 }

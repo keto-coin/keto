@@ -52,6 +52,7 @@ const std::string BalancerModuleManager::getVersion() const {
 
 // lifecycle methods
 void BalancerModuleManager::start() {
+    KETO_LOG_INFO << "[BalancerModuleManager] Starting the BalancerModuleManager";
     modules["balancerModule"] = std::make_shared<BalancerModule>();
     BalancerService::init();
     BlockRouting::init();
