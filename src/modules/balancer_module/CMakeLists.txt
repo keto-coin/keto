@@ -10,6 +10,8 @@ add_library( 0025_keto_balancer_module
             BalancerModule.cpp
             EventRegistry.cpp
             BalancerService.cpp
+            BlockRouting.cpp
+            TransactionCache.cpp
 
              ${HEADERS}
            )

@@ -22,8 +22,7 @@
 
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/environment/Config.hpp"
-#include "include/keto/server_common/ServerInfo.hpp"
-#include "include/keto/server_common/Exception.hpp"
+#include "keto/server_common/Exception.hpp"
 
 namespace keto {
 namespace server_common {

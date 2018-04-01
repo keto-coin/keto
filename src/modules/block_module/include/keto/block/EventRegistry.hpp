@@ -14,6 +14,9 @@
 #ifndef EVENTREGISTRY_HPP
 #define EVENTREGISTRY_HPP
 
+#include "keto/event/Event.hpp"
+
+
 namespace keto {
 namespace block {
 
@@ -24,7 +27,8 @@ public:
     
     static void registerEventHandlers();
     static void deregisterEventHandlers();
-
+    
+    static keto::event::Event blockMessage(const keto::event::Event& event);
 private:
     EventRegistry();
     

@@ -20,8 +20,12 @@
 #include "keto/balancer/BalancerModuleManager.hpp"
 #include "keto/balancer/BalancerService.hpp"
 #include "keto/balancer/EventRegistry.hpp"
+#include "keto/balancer/BlockRouting.hpp"
+#include "keto/balancer/TransactionCache.hpp"
 #include "keto/server_common/ServiceRegistryHelper.hpp"
 #include "keto/server_common/Constants.hpp"
+#include "include/keto/balancer/BlockRouting.hpp"
+#include "include/keto/balancer/TransactionCache.hpp"
 
 namespace keto {
 namespace balancer {
@@ -50,12 +54,16 @@ const std::string BalancerModuleManager::getVersion() const {
 void BalancerModuleManager::start() {
     modules["balancerModule"] = std::make_shared<BalancerModule>();
     BalancerService::init();
+    BlockRouting::init();
+    TransactionCache::init();
     EventRegistry::registerEventHandlers();
     KETO_LOG_INFO << "[BalancerModuleManager] Started the BalancerModuleManager";
 }
 
 void BalancerModuleManager::stop() {
     EventRegistry::deregisterEventHandlers();
+    TransactionCache::fin();
+    BlockRouting::fin();
     BalancerService::fin();
     modules.clear();
     KETO_LOG_INFO << "[BalancerModuleManager] The BalancerModuleManager is being stopped";

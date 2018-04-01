@@ -15,6 +15,8 @@
 
 #include <iostream>
 
+#include "Protocol.pb.h"
+
 #include "keto/block/BlockService.hpp"
 #include "keto/block_db/BlockChainStore.hpp"
 
@@ -24,6 +26,9 @@
 #include "keto/block/GenesisReader.hpp"
 #include "keto/block/GenesisLoader.hpp"
 #include "include/keto/block/GenesisLoader.hpp"
+
+#include "keto/server_common/Events.hpp"
+#include "keto/server_common/EventServiceHelpers.hpp"
 
 namespace keto {
 namespace block {
@@ -72,6 +77,17 @@ void BlockService::genesis() {
         GenesisLoader loader(reader);
         loader.load();
     }
+}
+
+keto::event::Event BlockService::blockMessage(const keto::event::Event& event) {
+    keto::proto::MessageWrapper  messageWrapper = 
+            keto::server_common::fromEvent<keto::proto::MessageWrapper>(event);
+    std::cout << "The block service says hi" << std::endl;
+    
+    keto::proto::MessageWrapperResponse response;
+    response.set_success(true);
+    response.set_result("balanced");
+    return keto::server_common::toEvent<keto::proto::MessageWrapperResponse>(response);
 }
 
 }

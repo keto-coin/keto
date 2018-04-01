@@ -19,6 +19,7 @@
 #include <memory>
 #include <map>
 #include <set>
+#include <mutex>
 
 namespace keto {
 namespace router {
@@ -34,7 +35,9 @@ public:
     virtual ~RouterRegistry();
     
     // singleton methods
+    static RouterRegistryPtr init();
     static RouterRegistryPtr getInstance();
+    static void fin();
     
     void registerService(const AccountHashVector& accountHash, const std::string& service);
     void registerServices(const AccountHashVector& accountHash, const std::vector<std::string>& services);

@@ -32,7 +32,7 @@ const char* Events::APPLY_ACCOUNT_TRANSACTION_MESSAGE = "APPLY_ACCOUNT_TRANSACTI
 // balancer
 const char* Events::BALANCER_MESSAGE    = "BALANCER_MESSAGE";
 
-// balancer
+// block message
 const char* Events::BLOCK_MESSAGE       = "BLOCK_MESSAGE";
 
 // rpc messages

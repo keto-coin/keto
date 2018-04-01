@@ -137,10 +137,21 @@ void RouterService::routeLocal(keto::proto::MessageWrapper&  messageWrapper) {
         if (messageWrapper.message_operation() == keto::proto::MessageOperation::MESSAGE_INIT ||
                 messageWrapper.message_operation() == keto::proto::MessageOperation::MESSAGE_ROUTE) {
             messageWrapper.set_message_operation(keto::proto::MessageOperation::MESSAGE_BALANCE);
-            
+            AccountHashVector accountHashVector = 
+                    RouterRegistry::getInstance()->getAccount(
+                    keto::server_common::Constants::SERVICE::BALANCE);
+            messageWrapper.set_account_hash(keto::server_common::VectorUtils().copyVectorToString(accountHashVector));
+            if (RouterRegistry::getInstance()->isAccountLocal(accountHashVector)) {
+                keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
+                        keto::server_common::Events::BALANCER_MESSAGE,messageWrapper));
+            } else {
+                keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
+                        keto::server_common::Events::RPC_SEND_MESSAGE,messageWrapper));
+            }
         } else if (messageWrapper.message_operation() == 
                 keto::proto::MessageOperation::MESSAGE_BALANCE) {
-            
+            keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
+                        keto::server_common::Events::BALANCER_MESSAGE,messageWrapper));
         } else if (messageWrapper.message_operation() == 
                 keto::proto::MessageOperation::MESSAGE_BLOCK) {
             

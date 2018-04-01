@@ -26,7 +26,6 @@
 namespace keto {
 namespace router {
 
-static std::mutex singletonMutex;
 static RouterRegistryPtr singleton; 
     
 RouterRegistry::RouterRegistry() {
@@ -36,13 +35,17 @@ RouterRegistry::RouterRegistry() {
 RouterRegistry::~RouterRegistry() {
 }
 
+RouterRegistryPtr RouterRegistry::init() {
+    return singleton = std::make_shared<RouterRegistry>();
+}
+
 // singleton methods
 RouterRegistryPtr RouterRegistry::getInstance() {
-    std::lock_guard<std::mutex> guard(singletonMutex);
-    if (!singleton) {
-        singleton = std::make_shared<RouterRegistry>();
-    }
     return singleton;
+}
+
+void  RouterRegistry::fin() {
+    singleton.reset();
 }
 
 void RouterRegistry::registerService(const AccountHashVector& accountHash, const std::string& service) {

@@ -12,6 +12,10 @@
  */
 
 #include "keto/block/EventRegistry.hpp"
+#include "keto/block/BlockService.hpp"
+
+#include "keto/server_common/Events.hpp"
+#include "keto/server_common/EventServiceHelpers.hpp"
 
 namespace keto {
 namespace block {
@@ -25,11 +29,19 @@ EventRegistry::~EventRegistry() {
 
 
 void EventRegistry::registerEventHandlers() {
-    
+    keto::server_common::registerEventHandler (
+            keto::server_common::Events::BLOCK_MESSAGE,
+            &keto::block::EventRegistry::blockMessage);
 }
 
 void EventRegistry::deregisterEventHandlers() {
+    keto::server_common::deregisterEventHandler (
+            keto::server_common::Events::BLOCK_MESSAGE);
     
+}
+
+keto::event::Event EventRegistry::blockMessage(const keto::event::Event& event) {
+    return BlockService::getInstance()->blockMessage(event);
 }
 
 

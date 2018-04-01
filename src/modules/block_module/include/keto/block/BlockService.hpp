@@ -16,6 +16,8 @@
 
 #include <memory>
 
+#include "keto/event/Event.hpp"
+
 namespace keto {
 namespace block {
 
@@ -31,6 +33,7 @@ public:
     
     void genesis();
     
+    keto::event::Event blockMessage(const keto::event::Event& event);
 private:
 
 };
