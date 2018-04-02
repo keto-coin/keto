@@ -15,12 +15,16 @@
 #define BLOCKSERVICE_HPP
 
 #include <memory>
+#include <mutex>
+#include <map>
 
 #include "keto/event/Event.hpp"
 
 namespace keto {
 namespace block {
 
+typedef std::vector<uint8_t> AccountHashVector;
+    
 class BlockService {
 public:
     BlockService();
@@ -35,7 +39,11 @@ public:
     
     keto::event::Event blockMessage(const keto::event::Event& event);
 private:
-
+    std::mutex classMutex;
+    std::map<AccountHashVector,std::mutex> accountLocks;
+    
+    std::mutex& getAccountLock(const AccountHashVector& accountHash);
+    
 };
 
 

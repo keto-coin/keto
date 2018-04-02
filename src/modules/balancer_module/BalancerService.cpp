@@ -51,16 +51,15 @@ keto::event::Event BalancerService::balanceMessage(const keto::event::Event& eve
             keto::server_common::fromEvent<keto::proto::MessageWrapper>(event);
     std::cout << "The balancer says hi" << std::endl;
     messageWrapper.set_message_operation(keto::proto::MessageOperation::MESSAGE_BLOCK);
-    std::vector<AccountHashVector> accountHashes = BlockRouting::getInstance()->getBlockAccounts();
-    for (AccountHashVector accountHashVector : accountHashes) {
-        messageWrapper.set_account_hash(keto::server_common::VectorUtils().copyVectorToString(accountHashVector));
-        if (accountHashVector == keto::server_common::ServerInfo::getInstance()->getAccountHash()) {
-            keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
-                        keto::server_common::Events::BLOCK_MESSAGE,messageWrapper));
-        } else {
-            keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
-                        keto::server_common::Events::RPC_SEND_MESSAGE,messageWrapper));
-        }
+    AccountHashVector accountHashVector = BlockRouting::getInstance()->getBlockAccount(
+            keto::server_common::VectorUtils().copyStringToVector(messageWrapper.account_hash()));
+    messageWrapper.set_account_hash(keto::server_common::VectorUtils().copyVectorToString(accountHashVector));
+    if (accountHashVector == keto::server_common::ServerInfo::getInstance()->getAccountHash()) {
+        keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
+                    keto::server_common::Events::BLOCK_MESSAGE,messageWrapper));
+    } else {
+        keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
+                    keto::server_common::Events::RPC_SEND_MESSAGE,messageWrapper));
     }
     keto::proto::MessageWrapperResponse response;
     response.set_success(true);

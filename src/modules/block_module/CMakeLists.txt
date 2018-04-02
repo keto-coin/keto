@@ -14,6 +14,8 @@ add_library( 0020_keto_block_module
             Constants.cpp
             GenesisReader.cpp
             GenesisLoader.cpp
+            BlockProducer.cpp
+            TransactionProcessor.cpp
 
              ${HEADERS}
            )

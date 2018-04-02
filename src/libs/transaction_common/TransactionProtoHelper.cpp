@@ -39,7 +39,7 @@ TransactionProtoHelper::TransactionProtoHelper(
         signatureHelper.operator std::vector<uint8_t>().data(),
         signatureHelper.operator std::vector<uint8_t>().size());
     hashHelper = transactionMessageHelper->getSourceAccount();
-    transaction.set_activeaccount(
+    transaction.set_active_account(
         hashHelper.operator keto::crypto::SecureVector().data(),
         hashHelper.operator keto::crypto::SecureVector().size());
     transaction.set_status(keto::proto::INIT);
@@ -65,7 +65,7 @@ TransactionProtoHelper& TransactionProtoHelper::setTransaction(
         signatureHelper.operator std::vector<uint8_t>().data(),
         signatureHelper.operator std::vector<uint8_t>().size());
     hashHelper = transactionMessageHelper->getSourceAccount();
-    transaction.set_activeaccount(
+    transaction.set_active_account(
         hashHelper.operator keto::crypto::SecureVector().data(),
         hashHelper.operator keto::crypto::SecureVector().size());
     transaction.set_status(keto::proto::INIT);

@@ -16,6 +16,7 @@
 #include <iostream>
 
 #include "Protocol.pb.h"
+#include "BlockChain.pb.h"
 
 #include "keto/block/BlockService.hpp"
 #include "keto/block_db/BlockChainStore.hpp"
@@ -29,6 +30,8 @@
 
 #include "keto/server_common/Events.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
+#include "include/keto/block/TransactionProcessor.hpp"
+#include "include/keto/block/BlockProducer.hpp"
 
 namespace keto {
 namespace block {
@@ -43,10 +46,7 @@ BlockService::~BlockService() {
 }
 
 std::shared_ptr<BlockService> BlockService::init() {
-    if (singleton) {
-        singleton = std::shared_ptr<BlockService>(new BlockService());
-    }
-    return singleton;
+    return singleton = std::make_shared<BlockService>();
 }
 
 void BlockService::fin() {
@@ -84,11 +84,32 @@ keto::event::Event BlockService::blockMessage(const keto::event::Event& event) {
             keto::server_common::fromEvent<keto::proto::MessageWrapper>(event);
     std::cout << "The block service says hi" << std::endl;
     
+    keto::proto::Transaction transaction;
+    messageWrapper.msg().UnpackTo(&transaction);
+    {
+        std::lock_guard<std::mutex> guard(getAccountLock(
+            keto::server_common::VectorUtils().copyStringToVector(transaction.active_account())));
+        transaction.set_asn1_transaction_message(
+            TransactionProcessor::getInstance()->processTransaction(
+            transaction.asn1_transaction_message()));
+        BlockProducer::getInstance()->addTransaction(transaction);
+    }
     keto::proto::MessageWrapperResponse response;
     response.set_success(true);
     response.set_result("balanced");
     return keto::server_common::toEvent<keto::proto::MessageWrapperResponse>(response);
 }
+
+
+
+std::mutex& BlockService::getAccountLock(const AccountHashVector& accountHash) {
+    std::lock_guard<std::mutex> guard(this->classMutex);
+    if (!accountLocks.count(accountHash)) {
+        accountLocks[accountHash];
+    }
+    return accountLocks[accountHash];
+}
+
 
 }
 }

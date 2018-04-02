@@ -26,7 +26,9 @@
 #include "keto/server_common/ServiceRegistryHelper.hpp"
 #include "keto/block/BlockService.hpp"
 #include "keto/block/EventRegistry.hpp"
-#include "include/keto/block/BlockService.hpp"
+#include "keto/block/TransactionProcessor.hpp"
+#include "keto/block/BlockProducer.hpp"
+#include "include/keto/block/BlockProducer.hpp"
 
 
 namespace keto {
@@ -53,9 +55,11 @@ const std::string BlockModuleManager::getVersion() const {
 
 // lifecycle methods
 void BlockModuleManager::start() {
-    BlockService::init();
+    BlockProducer::init();
+    TransactionProcessor::init();
     StorageManager::init();
     modules["blockModule"] = std::make_shared<BlockModule>();
+    BlockService::init();
     EventRegistry::registerEventHandlers();
     KETO_LOG_INFO << "[BlockModuleManager] Started the BlockModuleManager";
 }
@@ -73,9 +77,11 @@ void BlockModuleManager::postStart() {
 
 void BlockModuleManager::stop() {
     EventRegistry::deregisterEventHandlers();
-    modules.clear();
-    StorageManager::fin();
     BlockService::fin();
+    modules.clear();
+    TransactionProcessor::fin();
+    BlockProducer::fin();
+    StorageManager::fin();
     KETO_LOG_INFO << "[BlockModuleManager] The BlockModuleManager is being stopped";
 }
 

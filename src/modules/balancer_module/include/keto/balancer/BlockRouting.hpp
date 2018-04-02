@@ -19,6 +19,7 @@
 #include <memory>
 #include <mutex>
 
+
 namespace keto {
 namespace balancer {
 
@@ -37,13 +38,13 @@ public:
     static BlockRoutingPtr getInstance();
     static void fin();
     
-    std::vector<AccountHashVector> getBlockAccounts();
+    AccountHashVector getBlockAccount(const AccountHashVector& account);
     void setBlockAccounts(const std::vector<AccountHashVector>& accounts);
     
 private:
     std::mutex classMutex;
     std::vector<AccountHashVector> accounts;
-
+    std::map<AccountHashVector,AccountHashVector> targetAccountMapping;
 };
 
 

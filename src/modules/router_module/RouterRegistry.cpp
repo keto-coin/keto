@@ -18,6 +18,8 @@
 #include <vector>
 #include <sstream>
 #include <mutex>
+#include <random>
+#include <chrono>
 
 #include "keto/router/RouterRegistry.hpp"
 #include "keto/router/Exception.hpp"
@@ -29,7 +31,6 @@ namespace router {
 static RouterRegistryPtr singleton; 
     
 RouterRegistry::RouterRegistry() {
-    std::srand(std::time(0));  // needed once per program run
 }
 
 RouterRegistry::~RouterRegistry() {
@@ -96,7 +97,11 @@ AccountHashVector RouterRegistry::getAccount(const std::string& service) {
             BOOST_THROW_EXCEPTION(NoAccountsForServiceException(
                 ss.str()));
         }
-        int position = (std::rand() % accounts.size());
+        // setup the random number generator
+        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        std::minstd_rand generator (seed);
+        int position = (generator() % accounts.size());
+        
         return accounts[position];
     }
     std::stringstream ss;

@@ -68,7 +68,7 @@ std::string HttpTransactionManager::processTransaction(
     keto::proto::MessageWrapper wrapper;
     wrapper.set_version(1);
     wrapper.set_session_hash(vectorHash.data(),vectorHash.size());
-    wrapper.set_account_hash(transaction.activeaccount());
+    wrapper.set_account_hash(transaction.active_account());
     wrapper.set_message_type(keto::proto::MessageType::MESSAGE_TYPE_TRANSACTION);
     wrapper.set_message_operation(keto::proto::MessageOperation::MESSAGE_INIT);
     google::protobuf::Any* any = new google::protobuf::Any();

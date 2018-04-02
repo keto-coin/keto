@@ -47,6 +47,7 @@ public:
     static boost::shared_ptr<BlockModuleManager> create_module();
 
 private:
+    
     std::map<std::string,std::shared_ptr<keto::module::ModuleInterface>> modules;
     
 

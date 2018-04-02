@@ -21,7 +21,7 @@ enum TransactionStatus {
 message Transaction {
     bytes transaction_hash = 1;
     bytes transaction_signature = 2;
-    bytes activeAccount = 3;
+    bytes active_account = 3;
     TransactionStatus status = 4;
     bytes asn1_transaction_message = 5;
 }

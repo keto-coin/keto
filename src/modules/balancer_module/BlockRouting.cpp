@@ -11,6 +11,11 @@
  * Created on March 31, 2018, 4:25 PM
  */
 
+#include <cstdlib>
+#include <ctime>
+#include <random>
+#include <chrono>
+
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/environment/Config.hpp"
 
@@ -35,6 +40,7 @@ BlockRouting::BlockRouting() {
             config->getVariablesMap()[Constants::DEFAULT_BLOCK].as<std::string>().compare("true") == 0) {
         this->accounts.push_back(keto::server_common::ServerInfo::getInstance()->getAccountHash());
     }
+    //std::srand(std::time(0));  // needed once per program run
 }
 
 BlockRouting::~BlockRouting() {
@@ -54,8 +60,16 @@ void BlockRouting::fin() {
 }
     
 
-std::vector<AccountHashVector> BlockRouting::getBlockAccounts() {
-    return this->accounts;
+AccountHashVector BlockRouting::getBlockAccount(const AccountHashVector& account) {
+    std::lock_guard<std::mutex> guard(this->classMutex);
+    if (!targetAccountMapping.count(account)) {
+        // setup the random number generator
+        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        std::minstd_rand generator (seed);
+        int position = (generator() % accounts.size());
+        targetAccountMapping[account] = this->accounts[position];
+    }
+    return targetAccountMapping[account];
 }
 
 void BlockRouting::setBlockAccounts(const std::vector<AccountHashVector>& accounts) {
