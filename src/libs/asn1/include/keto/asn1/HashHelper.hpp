@@ -46,6 +46,7 @@ public:
     HashHelper& setHash(const std::string& hash,keto::common::StringEncoding stringEncoding);
     std::string getHash(keto::common::StringEncoding stringEncoding) const;
     
+    bool empty();
     
 private:
     keto::crypto::SecureVector hash;

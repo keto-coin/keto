@@ -102,6 +102,12 @@ TransactionMessageHelper& TransactionMessageHelper::setTargetAccount(
     return (*this);
 }
 
+TransactionMessageHelper& TransactionMessageHelper::setFeeAccount(
+    const keto::asn1::HashHelper& feeAccount) {
+    this->transactionMessage->feeAccount = feeAccount;
+    return (*this);
+}
+
 TransactionMessageHelper& TransactionMessageHelper::setStatus(const Status& status) {
     this->transactionMessage->currentStatus = status;
     return (*this);
@@ -164,6 +170,9 @@ keto::asn1::HashHelper TransactionMessageHelper::getTargetAccount() {
     return this->transactionMessage->targetAccount;
 }
 
+keto::asn1::HashHelper TransactionMessageHelper::getFeeAccount() {
+    return this->transactionMessage->feeAccount;
+}
 
 keto::asn1::HashHelper TransactionMessageHelper::getHash() {
     return this->transactionMessage->transactionHash;
@@ -173,6 +182,9 @@ keto::asn1::SignatureHelper TransactionMessageHelper::getSignature() {
     return this->transactionMessage->signature;
 }
 
+Status TransactionMessageHelper::getStatus() {
+    return (Status)this->transactionMessage->currentStatus;
+}
 
 }
 }

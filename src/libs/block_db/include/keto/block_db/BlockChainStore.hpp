@@ -19,6 +19,7 @@
 
 #include "SignedBlock.h"
 
+#include "keto/asn1/HashHelper.hpp"
 #include "keto/rocks_db/DBManager.hpp"
 #include "keto/block_db/BlockResourceManager.hpp"
 
@@ -37,13 +38,14 @@ public:
     
     bool requireGenesis();
     void writeBlock(SignedBlock& signedBlock);
-    
-    
+    keto::asn1::HashHelper getParentHash();
+    long getBlockCount();
     
 private:
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;
     BlockResourceManagerPtr blockResourceManagerPtr;
-
+    keto::asn1::HashHelper parentBlock;
+    long blockCount;
 };
 
 

@@ -48,6 +48,7 @@ TransactionMessage ::= SEQUENCE {
     -- transaction header information
     sourceAccount       Hash,
     targetAccount       Hash,
+    feeAccount          Hash,
     transactionHash     Hash,
     signature           Signature,
     -- transaction 

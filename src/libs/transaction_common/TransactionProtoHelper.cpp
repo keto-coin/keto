@@ -27,6 +27,9 @@ namespace transaction_common {
 TransactionProtoHelper::TransactionProtoHelper() {
 }
 
+TransactionProtoHelper::TransactionProtoHelper(const keto::proto::Transaction& transaction) {
+    this->transaction.CopyFrom(transaction);
+}
 
 TransactionProtoHelper::TransactionProtoHelper(
         const TransactionMessageHelperPtr& transactionMessageHelper) {

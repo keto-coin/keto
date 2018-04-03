@@ -20,6 +20,10 @@ const char* Constants::CHILD_INDEX = "childs";
 // is the initial block
 const char* Constants::GENESIS_KEY     = "22aec58889504ab835d6fc62b79cd342cf13a6202883dd013781005b49e59df2";
 
+// the parent key
+const char* Constants::PARENT_KEY      = "PARENT_KEY";
+const char* Constants::BLOCK_COUNT     = "BLOCK_COUNT";
+
 const std::vector<std::string> Constants::DB_LIST = 
     {Constants::BLOCKS_INDEX,Constants::TRANSACTIONS_INDEX,Constants::ACCOUNTS_INDEX,
     Constants::CHILD_INDEX};

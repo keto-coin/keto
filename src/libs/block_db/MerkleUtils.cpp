@@ -22,6 +22,11 @@ namespace keto {
 namespace block_db {
 
 MerkleUtils::MerkleUtils(const Block_t* block) {
+    // place the parent hash as the first hash in the merkel tree.
+    // this means that even if there are no blocks we can still produce a hash
+    hashs.push_back(keto::asn1::HashHelper(block->parent));
+    
+    // add the transaction hashes
     for (int index = 0; index < block->transactions.list.count; index++) {
         TransactionMessage* transactionMessage = block->transactions.list.array[index];
         hashs.push_back(keto::asn1::HashHelper(transactionMessage->transactionHash));

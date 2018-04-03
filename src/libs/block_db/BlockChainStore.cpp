@@ -13,6 +13,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 
 #include "keto/block_db/BlockChainStore.hpp"
 #include "keto/rocks_db/DBManager.hpp"
@@ -24,6 +25,7 @@
 #include "keto/block_db/BlockResourceManager.hpp"
 #include "keto/block_db/BlockResource.hpp"
 #include "keto/rocks_db/SliceHelper.hpp"
+#include "include/keto/block_db/Exception.hpp"
 
 
 namespace keto {
@@ -31,7 +33,7 @@ namespace block_db {
 
 static std::shared_ptr<BlockChainStore> singleton;
     
-BlockChainStore::BlockChainStore() {
+BlockChainStore::BlockChainStore() : blockCount(-1) {
     dbManagerPtr = std::shared_ptr<keto::rocks_db::DBManager>(
             new keto::rocks_db::DBManager(Constants::DB_LIST));
     blockResourceManagerPtr  =  BlockResourceManagerPtr(
@@ -70,6 +72,9 @@ bool BlockChainStore::requireGenesis() {
     if (rocksdb::Status::OK() != childTransaction->Get(readOptions,keyHelper,&value)) {
         return true;
     }
+    // init the block and header 
+    this->getBlockCount();
+    this->getParentHash();
     return false;
 }
 
@@ -91,6 +96,21 @@ void BlockChainStore::writeBlock(SignedBlock& signedBlock) {
     blockTransaction->Put(blockHashHelper,valueHelper);
     childTransaction->Put(parentHashHelper,blockHashHelper);
     
+    // update the key tracking the parent key
+    keto::rocks_db::SliceHelper parentKeyHelper((std::string(Constants::PARENT_KEY)));
+    blockTransaction->Put(parentKeyHelper,blockHashHelper);
+    
+    parentBlock = keto::asn1::HashHelper(blockHashHelper);
+    
+    // write the block count
+    if (this->blockCount == -1) {
+        this->blockCount = 0;
+    }
+    keto::rocks_db::SliceHelper blockCountKeyHelper((std::string(Constants::BLOCK_COUNT)));
+    std::stringstream ss;
+    ss << ++this->blockCount;
+    keto::rocks_db::SliceHelper blockCountValueHelper(ss.str());
+    blockTransaction->Put(blockCountKeyHelper,blockCountValueHelper);
 
     // setup the transaction indexing for the block
     for (int index = 0; index < signedBlock.block.transactions.list.count; index++) {
@@ -102,8 +122,36 @@ void BlockChainStore::writeBlock(SignedBlock& signedBlock) {
 
 }
 
+keto::asn1::HashHelper BlockChainStore::getParentHash() {
+    if (this->parentBlock.empty()) {
+        BlockResourcePtr resource = blockResourceManagerPtr->getResource();
+        keto::rocks_db::SliceHelper keyHelper((std::string(Constants::PARENT_KEY)));
+        std::string value;
+        rocksdb::Transaction* blockTransaction = resource->getTransaction(Constants::BLOCKS_INDEX);
+        rocksdb::ReadOptions readOptions;
+        if (rocksdb::Status::OK() != blockTransaction->Get(readOptions,keyHelper,&value)) {
+            BOOST_THROW_EXCEPTION(keto::block_db::InvalidParentKeyIdentifierException());
+        }
+        return this->parentBlock = keto::asn1::HashHelper(value);
+    } else {
+        return this->parentBlock;
+    }
+}
 
-
+long BlockChainStore::getBlockCount() {
+    if (blockCount == -1) {
+        BlockResourcePtr resource = blockResourceManagerPtr->getResource();
+        keto::rocks_db::SliceHelper keyHelper((std::string(Constants::BLOCK_COUNT)));
+        std::string value;
+        rocksdb::Transaction* blockTransaction = resource->getTransaction(Constants::BLOCKS_INDEX);
+        rocksdb::ReadOptions readOptions;
+        if (rocksdb::Status::OK() != blockTransaction->Get(readOptions,keyHelper,&value)) {
+            return -1;
+        }
+        return this->blockCount = atol(value.c_str());
+    }
+    return blockCount;
+}
 
 }
 }

@@ -87,11 +87,20 @@ void AccountStore::applyTransaction(
     AccountResourcePtr resource = accountResourceManagerPtr->getResource();
     keto::proto::AccountInfo accountInfo;
     AccountRDFStatementBuilderPtr accountRDFStatementBuilder;
-    if (!getAccountInfo(transactionMessageHelper->getTargetAccount(),accountInfo)) {
+    keto::asn1::HashHelper accountHash;
+    if ((transactionMessageHelper->getStatus() == Status_debit) || (transactionMessageHelper->getStatus() == Status_init)) {
+        accountHash = transactionMessageHelper->getSourceAccount();
+    } else if (transactionMessageHelper->getStatus() == Status_fee) {
+        accountHash = transactionMessageHelper->getFeeAccount();
+    } else if ((transactionMessageHelper->getStatus() == Status_credit) || (transactionMessageHelper->getStatus() == Status_complete)) {
+        accountHash = transactionMessageHelper->getTargetAccount();
+    }
+    
+    if (!getAccountInfo(accountHash,accountInfo)) {
         accountRDFStatementBuilder =  AccountRDFStatementBuilderPtr(
                 new AccountRDFStatementBuilder(
                 transactionMessageHelper,false));
-        createAccount(transactionMessageHelper,accountRDFStatementBuilder,accountInfo);
+        createAccount(accountHash,transactionMessageHelper,accountRDFStatementBuilder,accountInfo);
     } else {
         accountRDFStatementBuilder =  AccountRDFStatementBuilderPtr(
                 new AccountRDFStatementBuilder(
@@ -121,6 +130,7 @@ void AccountStore::sparqlQuery(
 }
 
 void AccountStore::createAccount(
+            const keto::asn1::HashHelper& accountHash,
             const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper,
             AccountRDFStatementBuilderPtr accountRDFStatementBuilder,
             keto::proto::AccountInfo& accountInfo) {
@@ -128,7 +138,7 @@ void AccountStore::createAccount(
                 AccountSystemOntologyTypes::ACCOUNT_CREATE_OBJECT_STATUS)) {
         std::stringstream ss;
         ss << "The account does not exist [" << 
-                transactionMessageHelper->getTargetAccount().getHash(keto::common::HEX) << "]";
+                accountHash.getHash(keto::common::HEX) << "]";
         BOOST_THROW_EXCEPTION(keto::account_db::InvalidAccountOperationException(
                 ss.str()));
     }
@@ -141,7 +151,7 @@ void AccountStore::createAccount(
         if (accountInfo.parent_account_hash().empty()) {
             accountInfo.set_graph_name(Constants::BASE_GRAPH);
         } else {
-            accountInfo.set_graph_name(transactionMessageHelper->getTargetAccount().getHash(keto::common::HEX));
+            accountInfo.set_graph_name(accountHash.getHash(keto::common::HEX));
         }
         if (!this->accountGraphStoreManagerPtr->checkForDb(accountInfo.graph_name())) {
             this->accountGraphStoreManagerPtr->createStore(accountInfo.graph_name());
@@ -154,14 +164,14 @@ void AccountStore::createAccount(
             std::stringstream ss;
             ss << "The parent account [" << parentAccountHash.getHash(keto::common::HEX) << 
                     "] was not found for the account [" << 
-                    transactionMessageHelper->getTargetAccount().getHash(keto::common::HEX) << "]["
+                    accountHash.getHash(keto::common::HEX) << "]["
                     << accountInfo.account_type() << "]";
             BOOST_THROW_EXCEPTION(keto::account_db::InvalidParentAccountException(
                     ss.str()));
         }
         accountInfo.set_graph_name(parentAccountInfo.graph_name());
     }
-    setAccountInfo(transactionMessageHelper->getTargetAccount(),accountInfo);
+    setAccountInfo(accountHash,accountInfo);
 }
 
 void AccountStore::setAccountInfo(const keto::asn1::HashHelper& accountHash,

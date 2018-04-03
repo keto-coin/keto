@@ -48,6 +48,7 @@ public:
     TransactionMessageHelper& setSignedTransaction(SignedTransaction_t* signedTransaction);
     TransactionMessageHelper& setSourceAccount(const keto::asn1::HashHelper& sourceAccount);
     TransactionMessageHelper& setTargetAccount(const keto::asn1::HashHelper& targetAccount);
+    TransactionMessageHelper& setFeeAccount(const keto::asn1::HashHelper& feeAccount);
     TransactionMessageHelper& setStatus(const Status& status);
     TransactionMessageHelper& addTransactionTrace(TransactionTrace_t* transactionTrace);
     TransactionMessageHelper& addChangeSet(SignedChangeSet_t* signedChangeSet);
@@ -61,8 +62,10 @@ public:
     
     keto::asn1::HashHelper getSourceAccount();
     keto::asn1::HashHelper getTargetAccount();
+    keto::asn1::HashHelper getFeeAccount();
     keto::asn1::HashHelper getHash();
     keto::asn1::SignatureHelper getSignature();
+    Status getStatus();
     
 private:
     TransactionMessage_t* transactionMessage;

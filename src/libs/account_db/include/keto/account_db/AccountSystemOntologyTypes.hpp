@@ -55,7 +55,7 @@ public:
     static const std::vector<std::string> ONTOLOGY_CLASSES; 
     
     static bool validateClassOperation(
-        const keto::asn1::HashHelper& targetAccount,
+        const keto::asn1::HashHelper& accountHash,
         const bool existingAccount,
         const keto::asn1::RDFSubjectHelperPtr& rdfSubjectHelperPtr);
     static bool isAccountOntologyClass(const keto::asn1::RDFSubjectHelperPtr& rdfSubjectHelperPtr);

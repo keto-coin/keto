@@ -24,6 +24,8 @@
 
 #include "BlockChain.pb.h"
 
+#include "keto/crypto/KeyLoader.hpp"
+
 namespace keto {
 namespace block {
     
@@ -60,11 +62,12 @@ private:
     std::condition_variable stateCondition;
     std::mutex classMutex;
     std::deque<keto::proto::Transaction> transactions;
+    std::shared_ptr<keto::crypto::KeyLoader> keyLoaderPtr;
     
     
     State checkState();
     std::deque<keto::proto::Transaction> getTransactions();
-    void generateBlock(const std::deque<keto::proto::Transaction>& transactions);
+    void generateBlock(std::deque<keto::proto::Transaction> transactions);
 };
 
 

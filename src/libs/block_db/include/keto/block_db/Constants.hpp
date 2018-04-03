@@ -34,6 +34,9 @@ public:
     // boot constants
     static const char* GENESIS_KEY;
     
+    // parent block
+    static const char* PARENT_KEY;
+    static const char* BLOCK_COUNT;
     
     static const std::vector<std::string> DB_LIST;
     

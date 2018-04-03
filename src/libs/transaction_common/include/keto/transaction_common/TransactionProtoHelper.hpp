@@ -31,6 +31,7 @@ typedef std::shared_ptr<TransactionProtoHelper> TransactionProtoHelperPtr;
 class TransactionProtoHelper {
 public:
     TransactionProtoHelper();
+    TransactionProtoHelper(const keto::proto::Transaction& transaction);
     TransactionProtoHelper(const TransactionMessageHelperPtr& transactionMessageHelper);
     TransactionProtoHelper(const TransactionProtoHelper& orig) = default;
     virtual ~TransactionProtoHelper();

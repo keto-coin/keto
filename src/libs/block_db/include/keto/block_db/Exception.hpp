@@ -30,6 +30,7 @@ KETO_DECLARE_DERIVED_EXCEPTION (DBException, FailedToAddTheTransactionException 
 KETO_DECLARE_DERIVED_EXCEPTION (DBException, FailedToAddTheChangeSetException , "Failed to add the change set.");
 KETO_DECLARE_DERIVED_EXCEPTION (DBException, SignedChangeSetReleasedException , "The change set has been released.");
 KETO_DECLARE_DERIVED_EXCEPTION (DBException, SignedBlockReleasedException , "The signed block has been released.");
+KETO_DECLARE_DERIVED_EXCEPTION (DBException, InvalidParentKeyIdentifierException , "The parent key identifier is invalid.");
 
     
 }

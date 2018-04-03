@@ -54,6 +54,7 @@ private:
     AccountStore();
     
     void createAccount(
+            const keto::asn1::HashHelper& accountHash,
             const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper,
             AccountRDFStatementBuilderPtr accountRDFStatementBuilder,
             keto::proto::AccountInfo& accountInfo);

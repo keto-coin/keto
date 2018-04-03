@@ -117,6 +117,9 @@ std::string HashHelper::getHash(keto::common::StringEncoding stringEncoding)  co
     }
 }
 
+bool HashHelper::empty() {
+    return this->hash.size() == 0;
+}
 
 void HashHelper::copyHashToVector(const Hash_t& hash,keto::crypto::SecureVector& vector) {
     for (int index = 0; index < hash.size; index++) {

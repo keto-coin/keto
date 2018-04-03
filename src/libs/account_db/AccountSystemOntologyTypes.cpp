@@ -53,7 +53,7 @@ bool objectEqual(const std::vector<keto::asn1::RDFObjectHelperPtr>& objectHelper
 }
 
 bool AccountSystemOntologyTypes::validateClassOperation(
-    const keto::asn1::HashHelper& targetAccount,
+    const keto::asn1::HashHelper& accountHash,
     const bool existingAccount,
     const keto::asn1::RDFSubjectHelperPtr& rdfSubjectHelperPtr) {
     
@@ -71,7 +71,7 @@ bool AccountSystemOntologyTypes::validateClassOperation(
         if (!existingAccount && (!objectEqual((*rdfSubjectHelperPtr)[ACCOUNT_PREDICATES::STATUS]->listObjects(),
             AccountSystemOntologyTypes::ACCOUNT_CREATE_OBJECT_STATUS) ||
             !objectEqual((*rdfSubjectHelperPtr)[ACCOUNT_PREDICATES::ID]->listObjects(),
-            targetAccount.getHash(keto::common::HEX)))) {
+            accountHash.getHash(keto::common::HEX)))) {
             return false;
         }
     }
