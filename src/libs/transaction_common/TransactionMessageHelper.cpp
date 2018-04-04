@@ -186,5 +186,11 @@ Status TransactionMessageHelper::getStatus() {
     return (Status)this->transactionMessage->currentStatus;
 }
 
+
+SignedTransactionHelperPtr TransactionMessageHelper::getSignedTransaction() {
+    return SignedTransactionHelperPtr(
+            new SignedTransactionHelper(&this->transactionMessage->signedTransaction));
+}
+
 }
 }

@@ -38,13 +38,6 @@
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
                      ],
-                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#value":[
-                        {
-                           "value":"1000000000",
-                           "type":"literal",
-                           "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
-                        }
-                     ],
                      "http://keto-coin.io/schema/rdf/1.0/keto/Account#type":[
                         {
                            "value":"master",
@@ -57,6 +50,45 @@
                            "value":"create",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ]
+                  }
+               },
+               {
+                  "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#AccountTransaction/D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2":{
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#id":[
+                        {
+                           "value":"D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#accountHash":[
+                        {
+                           "value":"D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#type":[
+                        {
+                           "value":"credit",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#value":[
+                        {
+                           "value":"1000000000",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#dateTime":[
+                        {
+                           "value":"2018-01-01T00:00:00",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#dateTime"
                         }
                      ]
                   }
@@ -101,13 +133,6 @@
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
                      ],
-                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#value":[
-                        {
-                           "value":"1000000000",
-                           "type":"literal",
-                           "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
-                        }
-                     ],
                      "http://keto-coin.io/schema/rdf/1.0/keto/Account#type":[
                         {
                            "value":"root",
@@ -127,6 +152,45 @@
                            "value":"D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ]
+                  }
+               },
+               {
+                  "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#AccountTransaction/95174A3E09CC7CA381A049DE7FA13F4CF6386677B04FB3A4A7CFD7161DA34306":{
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#id":[
+                        {
+                           "value":"95174A3E09CC7CA381A049DE7FA13F4CF6386677B04FB3A4A7CFD7161DA34306",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#accountHash":[
+                        {
+                           "value":"95174A3E09CC7CA381A049DE7FA13F4CF6386677B04FB3A4A7CFD7161DA34306",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#type":[
+                        {
+                           "value":"credit",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#value":[
+                        {
+                           "value":"1000000000",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#dateTime":[
+                        {
+                           "value":"2018-01-01T00:00:00",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#dateTime"
                         }
                      ]
                   }
@@ -171,13 +235,6 @@
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
                      ],
-                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#value":[
-                        {
-                           "value":"1000000000",
-                           "type":"literal",
-                           "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
-                        }
-                     ],
                      "http://keto-coin.io/schema/rdf/1.0/keto/Account#type":[
                         {
                            "value":"system",
@@ -197,6 +254,45 @@
                            "value":"D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ]
+                  }
+               },
+               {
+                  "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#AccountTransaction/2F687EED6E4656BBE100EE33AC9A02B11AD6C3DF6C56B2738230893E55C3B5F4":{
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#id":[
+                        {
+                           "value":"2F687EED6E4656BBE100EE33AC9A02B11AD6C3DF6C56B2738230893E55C3B5F4",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#accountHash":[
+                        {
+                           "value":"2F687EED6E4656BBE100EE33AC9A02B11AD6C3DF6C56B2738230893E55C3B5F4",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#type":[
+                        {
+                           "value":"credit",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#value":[
+                        {
+                           "value":"1000000000",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#dateTime":[
+                        {
+                           "value":"2018-01-01T00:00:00",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#dateTime"
                         }
                      ]
                   }
@@ -241,13 +337,6 @@
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
                      ],
-                     "http://keto-coin.io/schema/rdf/1.0/keto/Account#value":[
-                        {
-                           "value":"1000000000",
-                           "type":"literal",
-                           "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
-                        }
-                     ],
                      "http://keto-coin.io/schema/rdf/1.0/keto/Account#type":[
                         {
                            "value":"system",
@@ -267,6 +356,45 @@
                            "value":"D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ]
+                  }
+               },
+               {
+                  "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#AccountTransaction/4662805DD5FF651CD8DF40D991B6D5F118D1CB261135BB0A07FEFB83B30695A8":{
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#id":[
+                        {
+                           "value":"4662805DD5FF651CD8DF40D991B6D5F118D1CB261135BB0A07FEFB83B30695A8",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#accountHash":[
+                        {
+                           "value":"4662805DD5FF651CD8DF40D991B6D5F118D1CB261135BB0A07FEFB83B30695A8",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#type":[
+                        {
+                           "value":"credit",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#value":[
+                        {
+                           "value":"1000000000",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#decimal"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/AccountTransaction#dateTime":[
+                        {
+                           "value":"2018-01-01T00:00:00",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#dateTime"
                         }
                      ]
                   }

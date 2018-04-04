@@ -33,16 +33,6 @@ TransactionTrace ::= SEQUENCE {
 }
 
 
-LedgerEntry ::= SEQUENCE {
-    version         Version,
-    date            UTCTime,
-    value           Number,
-    transaction     Hash,
-    -- the source account for the transaction
-    account         Hash
-}
-
-
 TransactionMessage ::= SEQUENCE {
     version             Version,
     -- transaction header information

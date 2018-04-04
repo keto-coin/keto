@@ -11,6 +11,9 @@ add_library( keto_transaction_common
             SignedChangeSetBuilder.cpp
             TransactionMessageHelper.cpp
             TransactionProtoHelper.cpp
+            SignedTransactionHelper.cpp
+            TransactionHelper.cpp
+            ActionHelper.cpp
             
              ${HEADERS}
            )

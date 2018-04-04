@@ -17,6 +17,8 @@
 #include <memory>
 #include <string>
 
+#include "BlockChain.pb.h"
+
 namespace keto {
 namespace block {
 
@@ -33,7 +35,7 @@ public:
     static void fin();
     static TransactionProcessorPtr getInstance();
     
-    std::string processTransaction(std::string transaction);
+    keto::proto::Transaction processTransaction(keto::proto::Transaction& transaction);
     
 private:
     

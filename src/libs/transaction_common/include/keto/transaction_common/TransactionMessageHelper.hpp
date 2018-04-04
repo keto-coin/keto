@@ -27,6 +27,8 @@
 #include "keto/asn1/HashHelper.hpp"
 #include "keto/asn1/SignatureHelper.hpp"
 
+#include "keto/transaction_common/SignedTransactionHelper.hpp"
+
 namespace keto {
 namespace transaction_common {
 
@@ -66,6 +68,7 @@ public:
     keto::asn1::HashHelper getHash();
     keto::asn1::SignatureHelper getSignature();
     Status getStatus();
+    SignedTransactionHelperPtr getSignedTransaction();
     
 private:
     TransactionMessage_t* transactionMessage;
