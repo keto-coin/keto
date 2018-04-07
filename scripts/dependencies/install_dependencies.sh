@@ -140,23 +140,38 @@ if [ $ARCH == "ubuntu" ]; then
     cp -rf single_include/nlohmann ${HOME}/opt/nlohmann/include
     cd ${HOME}
     rm -rf ${TEMP_DIR}/json
-    
+
     # build llvm with wasm build target:
+    #cd ${TEMP_DIR}
+    #mkdir wasm-compiler
+    #cd wasm-compiler
+    #git clone --depth 1 --single-branch --branch release_40 https://github.com/llvm-mirror/llvm.git
+    #cd llvm/tools
+    #git clone --depth 1 --single-branch --branch release_40 https://github.com/llvm-mirror/clang.git
+    #cd ..
+    #mkdir build
+    #cd build
+    #cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${HOME}/opt/wasm -DLLVM_TARGETS_TO_BUILD= -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=WebAssembly -DCMAKE_BUILD_TYPE=Release ../
+    #make -j4 install
+    #rm -rf ${TEMP_DIR}/wasm-compiler
+    #WASM_LLVM_CONFIG=${HOME}/opt/wasm/bin/llvm-config
+    
+    # build wavm
     cd ${TEMP_DIR}
-    mkdir wasm-compiler
-    cd wasm-compiler
-    git clone --depth 1 --single-branch --branch release_40 https://github.com/llvm-mirror/llvm.git
-    cd llvm/tools
-    git clone --depth 1 --single-branch --branch release_40 https://github.com/llvm-mirror/clang.git
-    cd ..
-    mkdir build
-    cd build
-    cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${HOME}/opt/wasm -DLLVM_TARGETS_TO_BUILD= -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=WebAssembly -DCMAKE_BUILD_TYPE=Release ../
-    make -j4 install
-    rm -rf ${TEMP_DIR}/wasm-compiler
-    WASM_LLVM_CONFIG=${HOME}/opt/wasm/bin/llvm-config
+    git clone https://github.com/burntjam/WAVM.git
+    mkdir -p ${TEMP_DIR}/WAVM/cmake
+    cd ${TEMP_DIR}/WAVM/cmake
+    cmake .. -DCMAKE_BUILD_TYPE=RELEASE
+    make
+    mkdir -p ${HOME}/opt/wavm/lib
+    mkdir -p ${HOME}/opt/wavm/include
+    cp ${TEMP_DIR}/WAVM/cmake/lib/* ${HOME}/opt/wavm/lib/.
+    cp -rf ${TEMP_DIR}/WAVM/Include/* ${HOME}/opt/wavm/include/.
+    cd ${HOME}
+    #rm -rf ${TEMP_DIR}/WAVM
 
     cd ${HOME}
+
 fi
 
 if [ $ARCH == "darwin" ]; then
