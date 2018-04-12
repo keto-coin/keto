@@ -48,9 +48,6 @@ namespace wavm_common {
     
 bool loadTextModule(const std::string& wastString,IR::Module& outModule)
 {
-    std::cout << "Load the wast string:" << std::endl;
-    std::cout << wastString << std::endl;
-    
     std::vector<WAST::Error> parseErrors;
     WAST::parseModule(wastString.c_str(),wastString.size(),outModule,parseErrors);
     if(!parseErrors.size()) {
@@ -156,8 +153,6 @@ WavmEngineWrapper::~WavmEngineWrapper() {
 
 
 void WavmEngineWrapper::execute() {
-    std::cout << "[WavmEngineWrapper] execute in the engine wrapper" << std::endl;
-    
     Module module;
 
     // Enable some additional "features" in WAVM that are disabled by default.
@@ -181,8 +176,6 @@ void WavmEngineWrapper::execute() {
     rootResolver.moduleNameToInstanceMap["asm2wasm"] = emscriptenInstance->asm2wasm;
     rootResolver.moduleNameToInstanceMap["global"] = emscriptenInstance->global;
 
-    std::cout << "[WavmEngineWrapper] link" << std::endl;
-    
     LinkResult linkResult = linkModule(module,rootResolver);
     if(!linkResult.success)
     {
@@ -198,7 +191,6 @@ void WavmEngineWrapper::execute() {
     }
 
     // Instantiate the module.
-    std::cout << "[WavmEngineWrapper] instanciate the module" << std::endl;
     ModuleInstance* moduleInstance = instantiateModule(compartment,module,std::move(linkResult.resolvedImports));
     if(!moduleInstance) { BOOST_THROW_EXCEPTION(keto::wavm_common::LinkingFailedException()); }
 
@@ -209,15 +201,9 @@ void WavmEngineWrapper::execute() {
             invokeFunctionChecked(context,startFunction,{});
     }
 
-//    if(options.enableEmscripten)
-//    {
-            // Call the Emscripten global initalizers.
-            Emscripten::initializeGlobals(context,module,moduleInstance);
-//    }
+    Emscripten::initializeGlobals(context,module,moduleInstance);
 
     // Look up the function export to call.
-    std::cout << "[WavmEngineWrapper] get the function instance" << std::endl;
-    
     FunctionInstance* functionInstance;
 //    if(!options.functionName)
 //    {
@@ -284,8 +270,6 @@ void WavmEngineWrapper::execute() {
 
     // Invoke the function.
     //Timing::Timer executionTimer;
-    std::cout << "[WavmEngineWrapper] Execute the function" << std::endl;
-    
     Runtime::setUnhandledExceptionHandler([](Runtime::Exception&& exception)
     {
             std::cout << "Unhandled runtime exception: " << describeException(exception).c_str() << std::endl;
@@ -296,14 +280,9 @@ void WavmEngineWrapper::execute() {
         Runtime::collectGarbage();
     } catch (Runtime::Exception& ex) {
         std::cout << "Failed to handle the exception : " << describeException(ex).c_str() << std::endl;
-    } catch (const std::exception& ex) {
-        std::cout << "Caught a standard exception : " << ex.what() << std::endl; 
     } catch (...) {
         std::cout << "Caught an unknown exception while executing" << std::endl; 
     }
-    std::cout << "[WavmEngineWrapper] Execution complete" << std::endl;
-    
-    
     
     //Timing::logTimer("Invoked function",executionTimer);
 
