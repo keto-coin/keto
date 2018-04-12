@@ -35,6 +35,9 @@ const char* Events::BALANCER_MESSAGE    = "BALANCER_MESSAGE";
 // block message
 const char* Events::BLOCK_MESSAGE       = "BLOCK_MESSAGE";
 
+// block message
+const char* Events::EXECUTE_ACTION_MESSAGE  = "EXECUTE_ACTION_MESSAGE";
+
 // rpc messages
 const char* Events::RPC_SEND_MESSAGE    = "RPC_SEND_MESSAGE";
 

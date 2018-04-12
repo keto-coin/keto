@@ -7,11 +7,13 @@ add_library( 0020_keto_sandbox_module
             SandboxModuleManager.cpp
             SandboxModule.cpp
             EventRegistry.cpp
+            SandboxService.cpp
 
              ${HEADERS}
            )
 
 target_link_libraries( 0020_keto_sandbox_module 
+                            PRIVATE keto_wavm_common
                             PRIVATE keto_server_common keto_asn1_common keto_asn1_protocol
                             PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
                             PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
@@ -23,6 +25,7 @@ target_include_directories( 0020_keto_sandbox_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/module_manager/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/event_service_api/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/server_common/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../libs/wavm_common/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/"
 
                             ${Boost_INCLUDE_DIRS}

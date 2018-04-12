@@ -168,7 +168,7 @@ if [ $ARCH == "ubuntu" ]; then
     cp ${TEMP_DIR}/WAVM/cmake/lib/* ${HOME}/opt/wavm/lib/.
     cp -rf ${TEMP_DIR}/WAVM/Include/* ${HOME}/opt/wavm/include/.
     cd ${HOME}
-    #rm -rf ${TEMP_DIR}/WAVM
+    rm -rf ${TEMP_DIR}/WAVM
 
     cd ${HOME}
 

@@ -88,6 +88,7 @@ find_package(Botan REQUIRED)
 find_package(RocksDB REQUIRED)
 find_package(Librdf REQUIRED)
 find_package(Json REQUIRED)
+find_package(LibWavm REQUIRED)
 
 if( WIN32 )
 

@@ -19,9 +19,12 @@
 #include "keto/common/MetaInfo.hpp"
 
 #include "keto/sandbox/SandboxModuleManager.hpp"
+#include "keto/sandbox/SandboxService.hpp"
 #include "keto/sandbox/EventRegistry.hpp"
 #include "keto/server_common/ServiceRegistryHelper.hpp"
 #include "keto/server_common/Constants.hpp"
+#include "keto/wavm_common/WavmEngineManager.hpp"
+
 
 
 namespace keto {
@@ -49,12 +52,16 @@ const std::string SandboxModuleManager::getVersion() const {
 // lifecycle methods
 void SandboxModuleManager::start() {
     modules["SandboxModule"] = std::make_shared<SandboxModule>();
+    keto::wavm_common::WavmEngineManager::init();
+    SandboxService::init();
     EventRegistry::registerEventHandlers();
     KETO_LOG_INFO << "[SandboxModuleManager] Started the SandboxModuleManager";
 }
 
 void SandboxModuleManager::stop() {
     EventRegistry::deregisterEventHandlers();
+    SandboxService::fin();
+    keto::wavm_common::WavmEngineManager::fin();
     modules.clear();
     KETO_LOG_INFO << "[SandboxModuleManager] The SandboxModuleManager is being stopped";
 

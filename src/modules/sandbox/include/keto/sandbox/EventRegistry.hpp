@@ -14,6 +14,9 @@
 #ifndef SANDBOX_EVENTREGISTRY_HPP
 #define SANDBOX_EVENTREGISTRY_HPP
 
+#include "keto/event/Event.hpp"
+
+
 namespace keto {
 namespace sandbox {
 
@@ -24,7 +27,8 @@ public:
     
     static void registerEventHandlers();
     static void deregisterEventHandlers();
-
+    
+    static keto::event::Event executeActionMessage(const keto::event::Event& event);
 private:
     EventRegistry();
     

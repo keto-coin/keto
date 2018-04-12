@@ -83,8 +83,8 @@ if [ $ARCH == "ubuntu" ]; then
     JSON_ROOT=${HOME}/opt/nlohmann/
     export JSON_ROOT
 
-    WAVM_ROOT=${HOME}/opt/wavm/
-    export WAVM_ROOT
+    LIBWAVM_ROOT=${HOME}/opt/wavm/
+    export LIBWAVM_ROOT
 fi
 
 if [ $ARCH == "darwin" ]; then

@@ -14,9 +14,15 @@
 #include <condition_variable>
 #include <iostream>
 
+#include "Sandbox.pb.h"
+
 #include "keto/block/TransactionProcessor.hpp"
 #include "keto/transaction_common/ActionHelper.hpp"
 #include "keto/transaction_common/TransactionProtoHelper.hpp"
+
+#include "keto/server_common/EventUtils.hpp"
+#include "keto/server_common/Events.hpp"
+#include "keto/server_common/EventServiceHelpers.hpp"
 
 namespace keto {
 namespace block {
@@ -43,6 +49,13 @@ TransactionProcessorPtr TransactionProcessor::getInstance() {
 
 keto::proto::Transaction TransactionProcessor::processTransaction(keto::proto::Transaction& transaction) {
     keto::transaction_common::TransactionProtoHelper transactionProtoHelper(transaction);
+    
+    keto::proto::SandboxCommandMessage sandboxCommandMessage;
+    
+    sandboxCommandMessage = 
+            keto::server_common::fromEvent<keto::proto::SandboxCommandMessage>(
+            keto::server_common::processEvent(keto::server_common::toEvent<keto::proto::SandboxCommandMessage>(
+            keto::server_common::Events::EXECUTE_ACTION_MESSAGE,sandboxCommandMessage)));
     
     std::cout << "Before looping through the actions" << std::endl; 
     if (transactionProtoHelper.getTransactionMessageHelper() && 

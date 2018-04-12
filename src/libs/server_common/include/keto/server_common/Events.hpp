@@ -41,6 +41,9 @@ public:
     // balancer
     static const char* BLOCK_MESSAGE;
     
+    // action messages
+    static const char* EXECUTE_ACTION_MESSAGE;
+    
     // rpc messages
     static const char* RPC_SEND_MESSAGE;
     

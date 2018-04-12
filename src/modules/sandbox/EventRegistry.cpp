@@ -12,6 +12,12 @@
  */
 
 #include "keto/sandbox/EventRegistry.hpp"
+#include "keto/sandbox/SandboxService.hpp"
+
+#include "keto/server_common/Events.hpp"
+#include "keto/server_common/EventServiceHelpers.hpp"
+#include "include/keto/sandbox/SandboxService.hpp"
+
 
 namespace keto {
 namespace sandbox {
@@ -25,11 +31,17 @@ EventRegistry::~EventRegistry() {
 
 
 void EventRegistry::registerEventHandlers() {
-    
+    keto::server_common::registerEventHandler (
+            keto::server_common::Events::EXECUTE_ACTION_MESSAGE,
+            &keto::sandbox::EventRegistry::executeActionMessage);
 }
 
 void EventRegistry::deregisterEventHandlers() {
     
+}
+
+keto::event::Event EventRegistry::executeActionMessage(const keto::event::Event& event) {
+    return SandboxService::getInstance()->executeActionMessage(event);
 }
 
 

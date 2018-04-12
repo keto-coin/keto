@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package keto.proto;
+
+/**
+ * This is an example of a protobuf message.
+ */
+message SandboxCommandMessage {
+    bytes contract = 1;
+    bytes model = 2;
+    bytes transaction = 3;
+    bytes changes = 4;
+}
