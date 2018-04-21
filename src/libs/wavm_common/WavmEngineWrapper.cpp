@@ -270,19 +270,32 @@ void WavmEngineWrapper::execute() {
 
     // Invoke the function.
     //Timing::Timer executionTimer;
-    Runtime::setUnhandledExceptionHandler([](Runtime::Exception&& exception)
-    {
-            std::cout << "Unhandled runtime exception: " << describeException(exception).c_str() << std::endl;
-    });
+    Runtime::catchRuntimeExceptions(                                                                                           
+        [&]
+        {
+            Result functionResult = invokeFunctionChecked(context,functionInstance,invokeArgs);
+            Runtime::collectGarbage();
+        },
+        [&](Runtime::Exception&& exception)
+        {
+            std::stringstream ss;
+            ss << "Failed to handle the exception : " << describeException(exception).c_str();
+            
+            std::cout << ss.str() << std::endl;
+            BOOST_THROW_EXCEPTION(keto::wavm_common::ContactExecutionFailedException(ss.str()));
+        });
     
-    try {
-        Result functionResult = invokeFunctionChecked(context,functionInstance,invokeArgs);
-        Runtime::collectGarbage();
-    } catch (Runtime::Exception& ex) {
-        std::cout << "Failed to handle the exception : " << describeException(ex).c_str() << std::endl;
-    } catch (...) {
-        std::cout << "Caught an unknown exception while executing" << std::endl; 
-    }
+//    try
+//    {
+//        Result functionResult = invokeFunctionChecked(context,functionInstance,invokeArgs);
+//        Runtime::collectGarbage();
+//    } catch (Runtime::Exception& ex) {
+//        std::cout << "Failed to handle the exception : " << describeException(ex).c_str() << std::endl;
+//    } catch (Runtime::Exception* ex) {
+//        std::cout << "Failed to handle the exception : " << describeException(*ex).c_str() << std::endl;
+//    } catch (...) {
+//        std::cout << "Caught an unknown exception while executing" << std::endl; 
+//    }
     
     //Timing::logTimer("Invoked function",executionTimer);
 
