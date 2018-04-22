@@ -22,8 +22,7 @@
 #include "Inline/BasicTypes.h"
 #include "Inline/Floats.h"
 #include "Inline/Timing.h"
-#include "Runtime/Runtime.h"
-#include "Emscripten/Emscripten.h"
+#include "keto/wavm_common/Emscripten.hpp"
 #include "Inline/BasicTypes.h"
 #include "Inline/Timing.h"
 #include "IR/Module.h"
@@ -170,11 +169,14 @@ void WavmEngineWrapper::execute() {
     Compartment* compartment = Runtime::createCompartment();
     Context* context = Runtime::createContext(compartment);
     RootResolver rootResolver(compartment);
-
-    Emscripten::Instance* emscriptenInstance =  Emscripten::instantiate(compartment);
+    
+    std::cout << "Instanciate the server." << std::endl;
+    keto::Emscripten::Instance* emscriptenInstance =  keto::Emscripten::instantiate(compartment);
+    std::cout << "After getting the instance." << std::endl;
     rootResolver.moduleNameToInstanceMap["env"] = emscriptenInstance->env;
     rootResolver.moduleNameToInstanceMap["asm2wasm"] = emscriptenInstance->asm2wasm;
     rootResolver.moduleNameToInstanceMap["global"] = emscriptenInstance->global;
+    rootResolver.moduleNameToInstanceMap["Keto"] = emscriptenInstance->keto;
 
     LinkResult linkResult = linkModule(module,rootResolver);
     if(!linkResult.success)
@@ -201,13 +203,13 @@ void WavmEngineWrapper::execute() {
             invokeFunctionChecked(context,startFunction,{});
     }
 
-    Emscripten::initializeGlobals(context,module,moduleInstance);
+    keto::Emscripten::initializeGlobals(context,module,moduleInstance);
 
     // Look up the function export to call.
     FunctionInstance* functionInstance;
 //    if(!options.functionName)
 //    {
-        functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"main"));
+        functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"credit"));
         if(!functionInstance) { functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"_main")); }
         if(!functionInstance)
         {

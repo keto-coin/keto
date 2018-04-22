@@ -17,6 +17,8 @@ add_library( keto_wavm_common
             
             WavmEngineManager.cpp
             WavmEngineWrapper.cpp
+            Emscripten.cpp
+            WavmUtils.cpp
             
              ${HEADERS}
            )
