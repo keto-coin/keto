@@ -69,7 +69,7 @@ find_library(LIBWAVM_EMSCRIPTEN_LIBRARY
     PATHS ${LIBWAVM_ROOT_FOLDER}/lib)
 
 # Find an installed build of LLVM
-find_package(LLVM 6.0 REQUIRED CONFIG)
+find_package(LLVM 6.0 REQUIRED CONFIG PATHS ${WASM_LLVM})
 
 # Include the LLVM headers
 
