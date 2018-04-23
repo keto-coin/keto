@@ -21,14 +21,23 @@ namespace wavm_common {
     
 std::string WavmUtils::readUserString(Runtime::MemoryInstance* memory,I32 stringAddress) {
     // Validate the path name and make a local copy of it.
+    int offset = 0;
+    int spacing = 1;
+    if ( 0 == Runtime::memoryRef<char>(memory,stringAddress + 1) &&
+            0 == Runtime::memoryRef<char>(memory,stringAddress + 2) && 
+            0 == Runtime::memoryRef<char>(memory,stringAddress + 3) ) {
+        offset = 4;
+        spacing = 2;
+    }
+    
     std::string pathString;
     while(true)
     {
-        const char c = Runtime::memoryRef<char>(memory,stringAddress + 
-            pathString.size());
-        
-        if(c == 0) { break; }
-        else { pathString += c; }
+        char c = Runtime::memoryRef<char>(memory,stringAddress + offset +
+            (pathString.size() * spacing));
+        if(c == 0) { 
+            break; 
+        } else { pathString += c; }
     };
 
     return pathString;
