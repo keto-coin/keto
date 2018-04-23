@@ -26,7 +26,8 @@ namespace keto {
             DEFINE_INTRINSIC_MODULE(asm2wasm)
             DEFINE_INTRINSIC_MODULE(global)
             DEFINE_INTRINSIC_MODULE(keto)
-
+           
+        
             MemoryInstance* emscriptenMemoryInstance = nullptr;
 
             static U32 coerce32bitAddress(Uptr address)
@@ -414,22 +415,31 @@ namespace keto {
             {
                     return left / right;
             }
+            
+            //-------------------------------------------------------------------------------
+            // Keto method definitions
+            //-------------------------------------------------------------------------------
             DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(keto,"console",void,console,I32 msg)
             {
-                //U32 base = memoryRef<U32>(emscriptenMemoryInstance,pointer * 8);
-                //U32 len = memoryRef<U32>(emscriptenMemoryInstance,pointer * 8 + 4);
-                //unsigned char* ptr = memoryArrayPtr<U8>(emscriptenMemoryInstance,pointer);
-                //U32 base = memoryRef<U32>(emscriptenMemoryInstance,pointer);
-                //U32 len = memoryRef<U32>(emscriptenMemoryInstance,pointer + 4);
-                //std::cout << "This is here [" << asString(pointer) << "]" << std::endl;
-                //std::cout << "The base is [" << base << "]" << std::endl;
-                //std::cout << "The length [" << len << "]" << std::endl;
                 MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
                 std::string msgString = keto::wavm_common::WavmUtils::readUserString(memory,msg);
                 std::cout << "This is here [" << msgString << "]" << std::endl;
                 return;
             }
 
+            DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(keto,"log",void,log,F64 level,I32 msg)
+            {
+                MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
+                std::string msgString = keto::wavm_common::WavmUtils::readUserString(memory,msg);
+                //std::cout << "This is here [" << msgString << "]" << std::endl;
+                keto::wavm_common::WavmUtils::log(U32(level),msgString);
+                return;
+            }
+            
+            //-------------------------------------------------------------------------------
+            // End of Keto method definitions
+            //-------------------------------------------------------------------------------
+            
             EMSCRIPTEN_API keto::Emscripten::Instance* instantiate(Runtime::Compartment* compartment)
             {
                     keto::Emscripten::Instance* instance = new keto::Emscripten::Instance;

@@ -29,6 +29,7 @@ public:
     virtual ~WavmUtils() = delete;
     
     static std::string readUserString(Runtime::MemoryInstance* memory,I32 stringAddress);
+    static void log(uint32_t intLevel,const std::string& msg);
 private:
 
 };
