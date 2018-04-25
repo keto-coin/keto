@@ -21,30 +21,40 @@
 namespace keto {
 namespace wavm_common {
     
-std::string WavmUtils::readUserString(Runtime::MemoryInstance* memory,I32 stringAddress) {
+std::string WavmUtils::readCString(Runtime::MemoryInstance* memory,I32 stringAddress) {
     // Validate the path name and make a local copy of it.
-    std::string pathString;
-    if (0 == Runtime::memoryRef<char>(memory,stringAddress + 3) ) {
-        int size = Runtime::memoryRef<char>(memory,stringAddress);
-        size += Runtime::memoryRef<char>(memory,stringAddress+1) * 100;
-        size += Runtime::memoryRef<char>(memory,stringAddress+2) * 10000;
-        for (int index = 0; index < (size * 2); index++) {
-            pathString += (int)Runtime::memoryRef<char>(memory,stringAddress + 4 + index);
+    std::string returnString;
+    int index = 0;
+    while(true)
+    {
+        int c = Runtime::memoryRef<char>(memory,stringAddress + index);
+        if(c == 0) { 
+            break; 
+        } else {
+            returnString += c;
         }
-    } else {
-        int index = 0;
-        while(true)
-        {
-            int c = Runtime::memoryRef<char>(memory,stringAddress + index);
-            if(c == 0) { 
-                break; 
-            } else {
-                pathString += c;
-            }
-            index ++;
-        };
+        index ++;
+    };
+    return returnString;
+}
+
+
+std::string WavmUtils::readTypeScriptString(Runtime::MemoryInstance* memory,I32 stringAddress) {
+    // Validate the path name and make a local copy of it.
+    std::string returnString;
+    std::cout << "Get the size : " << stringAddress << std::endl;
+    int size = Runtime::memoryRef<char>(memory,stringAddress);
+    std::cout << "Get the size 2 " << size << std::endl;
+    size += Runtime::memoryRef<char>(memory,stringAddress+1) * 100;
+    std::cout << "Get the size 3 " << size << std::endl;
+    size += Runtime::memoryRef<char>(memory,stringAddress+2) * 10000;
+    std::cout << "Get the size 4 " << size << std::endl;
+    for (int index = 0; index < (size * 2); index++) {
+        std::cout << "The pos [" << (4 + index) <<  "] : " << (int)Runtime::memoryRef<char>(memory,stringAddress + 4 + index) << std::endl;
+        returnString += (int)Runtime::memoryRef<char>(memory,stringAddress + 4 + index);
     }
-    return pathString;
+    std::cout << "Get the string : " << returnString << std::endl;
+    return returnString;
 }
 
 

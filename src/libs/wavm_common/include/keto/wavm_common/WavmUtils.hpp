@@ -28,7 +28,8 @@ public:
     WavmUtils(const WavmUtils& orig) = delete;
     virtual ~WavmUtils() = delete;
     
-    static std::string readUserString(Runtime::MemoryInstance* memory,I32 stringAddress);
+    static std::string readCString(Runtime::MemoryInstance* memory,I32 stringAddress);
+    static std::string readTypeScriptString(Runtime::MemoryInstance* memory,I32 stringAddress);
     static void log(uint32_t intLevel,const std::string& msg);
 private:
 

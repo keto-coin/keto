@@ -1,10 +1,12 @@
 (module
  (type $v (func))
  (type $iv (func (param i32)))
- (type $Fiv (func (param f64 i32)))
+ (type $iiv (func (param i32 i32)))
+ (type $i (func (result i32)))
  (import "Keto" "console" (func $../typescript_contract_sdk/assembly/index/Keto.console (param i32)))
- (import "Keto" "log" (func $../typescript_contract_sdk/assembly/index/Keto.log (param f64 i32)))
- (global $HEAP_BASE i32 (i32.const 2260))
+ (import "Keto" "log" (func $../typescript_contract_sdk/assembly/index/Keto.log (param i32 i32)))
+ (import "Keto" "getAccount" (func $../typescript_contract_sdk/assembly/index/Keto.getAccount (result i32)))
+ (global $HEAP_BASE i32 (i32.const 2504))
  (memory $0 1)
  (data (i32.const 4) "\12\00\00\00[\00d\00e\00b\00i\00t\00]\00h\00e\00l\00l\00o\00 \00w\00o\00r\00l\00d\00")
  (data (i32.const 44) "6\00\00\00[\00d\00e\00b\00i\00t\00]\00a\00 \00n\00e\00w\00 \00m\00e\00s\00s\00a\00g\00e\00 \00o\00j\00h\00j\00j\00j\00l\00j\00l\00j\00l\00j\00o\00i\00w\00j\00f\00r\00o\00i\00h\00e\00p\00o\00i\00h\00p\00o\00h\00p\00o\00u\00h\00")
@@ -14,12 +16,16 @@
  (data (i32.const 2068) "\17\00\00\00[\00c\00r\00e\00d\00i\00t\00]\00w\00a\00r\00n\00i\00n\00g\00 \00m\00e\00s\00s\00a\00g\00e\00")
  (data (i32.const 2120) "\15\00\00\00[\00c\00r\00e\00d\00i\00t\00]\00e\00r\00r\00o\00r\00 \00m\00e\00s\00s\00a\00g\00e\00")
  (data (i32.const 2168) "\15\00\00\00[\00c\00r\00e\00d\00i\00t\00]\00f\00a\00t\00a\00l\00 \00m\00e\00s\00s\00a\00g\00e\00")
- (data (i32.const 2216) "\14\00\00\00[\00p\00r\00o\00c\00e\00s\00s\00]\00h\00e\00l\00l\00o\00 \00w\00o\00r\00l\00d\00")
+ (data (i32.const 2216) "\19\00\00\00[\00c\00r\00e\00d\00i\00t\00]\00 \00t\00h\00e\00 \00e\00q\00u\00a\00l\00s\00 \00w\00o\00r\00k\00s\00")
+ (data (i32.const 2272) "!\00\00\00[\00c\00r\00e\00d\00i\00t\00]\00 \00t\00h\00e\00 \00e\00q\00u\00a\00l\00s\00 \00d\00o\00e\00s\00 \00n\00o\00t\00 \00w\00o\00r\00k\00")
+ (data (i32.const 2344) "\1a\00\00\00[\00r\00e\00d\00i\00t\00]\00 \00t\00h\00e\00 \00f\00o\00r\00 \00l\00o\00o\00p\00 \00w\00o\00r\00k\00s\00")
+ (data (i32.const 2400) "\1c\00\00\00[\00r\00e\00d\00i\00t\00]\00 \00t\00h\00e\00 \00w\00h\00i\00l\00e\00 \00l\00o\00o\00p\00 \00w\00o\00r\00k\00s\00")
+ (data (i32.const 2460) "\14\00\00\00[\00p\00r\00o\00c\00e\00s\00s\00]\00h\00e\00l\00l\00o\00 \00w\00o\00r\00l\00d\00")
  (export "debit" (func $assembly/index/debit))
  (export "credit" (func $assembly/index/credit))
  (export "process" (func $assembly/index/process))
  (export "memory" (memory $0))
- (func $assembly/index/debit (; 2 ;) (type $v)
+ (func $assembly/index/debit (; 3 ;) (type $v)
   ;;@ assembly/index.ts:5:9
   (call $../typescript_contract_sdk/assembly/index/Keto.console
    ;;@ assembly/index.ts:5:17
@@ -36,48 +42,159 @@
    (i32.const 156)
   )
  )
- (func $assembly/index/credit (; 3 ;) (type $v)
+ (func $assembly/index/credit (; 4 ;) (type $v)
+  (local $0 f64)
+  (local $1 i32)
   ;;@ assembly/index.ts:11:9
   (call $../typescript_contract_sdk/assembly/index/Keto.log
    ;;@ assembly/index.ts:11:13
-   (f64.const 1)
+   (i32.const 1)
    ;;@ assembly/index.ts:11:34
    (i32.const 420)
   )
   ;;@ assembly/index.ts:12:9
   (call $../typescript_contract_sdk/assembly/index/Keto.log
    ;;@ assembly/index.ts:12:13
-   (f64.const 2)
+   (i32.const 2)
    ;;@ assembly/index.ts:12:33
    (i32.const 468)
   )
   ;;@ assembly/index.ts:13:9
   (call $../typescript_contract_sdk/assembly/index/Keto.log
    ;;@ assembly/index.ts:13:13
-   (f64.const 3)
+   (i32.const 3)
    ;;@ assembly/index.ts:13:36
    (i32.const 2068)
   )
   ;;@ assembly/index.ts:14:9
   (call $../typescript_contract_sdk/assembly/index/Keto.log
    ;;@ assembly/index.ts:14:13
-   (f64.const 4)
+   (i32.const 4)
    ;;@ assembly/index.ts:14:34
    (i32.const 2120)
   )
   ;;@ assembly/index.ts:15:9
   (call $../typescript_contract_sdk/assembly/index/Keto.log
    ;;@ assembly/index.ts:15:13
-   (f64.const 5)
+   (i32.const 5)
    ;;@ assembly/index.ts:15:34
    (i32.const 2168)
   )
+  ;;@ assembly/index.ts:16:4
+  (if
+   ;;@ assembly/index.ts:16:8
+   (i32.eq
+    (i32.const 1)
+    ;;@ assembly/index.ts:16:13
+    (i32.const 1)
+   )
+   ;;@ assembly/index.ts:17:13
+   (call $../typescript_contract_sdk/assembly/index/Keto.log
+    ;;@ assembly/index.ts:17:17
+    (i32.const 2)
+    ;;@ assembly/index.ts:17:37
+    (i32.const 2216)
+   )
+   ;;@ assembly/index.ts:19:13
+   (call $../typescript_contract_sdk/assembly/index/Keto.log
+    ;;@ assembly/index.ts:19:17
+    (i32.const 2)
+    ;;@ assembly/index.ts:19:37
+    (i32.const 2272)
+   )
+  )
+  ;;@ assembly/index.ts:22:4
+  (block $break|0
+   ;;@ assembly/index.ts:22:9
+   (set_local $0
+    ;;@ assembly/index.ts:22:29
+    (f64.const 0)
+   )
+   (loop $continue|0
+    (if
+     ;;@ assembly/index.ts:22:32
+     (f64.lt
+      (get_local $0)
+      ;;@ assembly/index.ts:22:40
+      (f64.const 10)
+     )
+     (block
+      (block
+       ;;@ assembly/index.ts:23:13
+       (call $../typescript_contract_sdk/assembly/index/Keto.log
+        ;;@ assembly/index.ts:23:17
+        (i32.const 2)
+        ;;@ assembly/index.ts:23:37
+        (i32.const 2344)
+       )
+      )
+      ;;@ assembly/index.ts:22:44
+      (set_local $0
+       (f64.add
+        (get_local $0)
+        (f64.const 1)
+       )
+      )
+      (br $continue|0)
+     )
+    )
+   )
+  )
+  ;;@ assembly/index.ts:26:4
+  (set_local $0
+   ;;@ assembly/index.ts:26:25
+   (f64.const 0)
+  )
+  ;;@ assembly/index.ts:27:4
+  (block $break|1
+   (loop $continue|1
+    (if
+     ;;@ assembly/index.ts:27:11
+     (f64.lt
+      (get_local $0)
+      ;;@ assembly/index.ts:27:19
+      (f64.const 2)
+     )
+     (block
+      (block
+       ;;@ assembly/index.ts:28:13
+       (call $../typescript_contract_sdk/assembly/index/Keto.log
+        ;;@ assembly/index.ts:28:17
+        (i32.const 2)
+        ;;@ assembly/index.ts:28:37
+        (i32.const 2400)
+       )
+       ;;@ assembly/index.ts:29:8
+       (set_local $0
+        (f64.add
+         (get_local $0)
+         (f64.const 1)
+        )
+       )
+      )
+      (br $continue|1)
+     )
+    )
+   )
+  )
+  ;;@ assembly/index.ts:31:4
+  (set_local $1
+   ;;@ assembly/index.ts:31:35
+   (call $../typescript_contract_sdk/assembly/index/Keto.getAccount)
+  )
+  ;;@ assembly/index.ts:32:9
+  (call $../typescript_contract_sdk/assembly/index/Keto.log
+   ;;@ assembly/index.ts:32:13
+   (i32.const 2)
+   ;;@ assembly/index.ts:32:33
+   (get_local $1)
+  )
  )
- (func $assembly/index/process (; 4 ;) (type $v)
-  ;;@ assembly/index.ts:18:9
+ (func $assembly/index/process (; 5 ;) (type $v)
+  ;;@ assembly/index.ts:35:9
   (call $../typescript_contract_sdk/assembly/index/Keto.console
-   ;;@ assembly/index.ts:18:17
-   (i32.const 2216)
+   ;;@ assembly/index.ts:35:17
+   (i32.const 2460)
   )
  )
 )

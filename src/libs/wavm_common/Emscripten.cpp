@@ -19,8 +19,8 @@
 namespace keto {
     namespace Emscripten
     {
-            using namespace IR;
-            using namespace Runtime;
+            //using namespace IR;
+            //using namespace Runtime;
 
             DEFINE_INTRINSIC_MODULE(env)
             DEFINE_INTRINSIC_MODULE(asm2wasm)
@@ -28,11 +28,12 @@ namespace keto {
             DEFINE_INTRINSIC_MODULE(keto)
            
         
-            MemoryInstance* emscriptenMemoryInstance = nullptr;
+            Runtime::MemoryInstance* emscriptenMemoryInstance = nullptr;
 
             static U32 coerce32bitAddress(Uptr address)
             {
-                    if(address >= UINT32_MAX) { throwException(Exception::accessViolationType); }
+                std::cout << "Get the address : " << (int)address << std::endl;
+                    if(address >= UINT32_MAX) { throwException(Runtime::Exception::accessViolationType); }
                     return (U32)address;
             }
 
@@ -49,8 +50,8 @@ namespace keto {
                     I32 _stdout;
             };
 
-            DEFINE_INTRINSIC_MEMORY(env,emscriptenMemory,memory,MemoryType(false,SizeConstraints({initialNumPages,UINT64_MAX })));
-            DEFINE_INTRINSIC_TABLE(env,table,table,TableType(TableElementType::anyfunc,false,SizeConstraints({initialNumTableElements,UINT64_MAX})));
+            DEFINE_INTRINSIC_MEMORY(env,emscriptenMemory,memory,IR::MemoryType(false,IR::SizeConstraints({initialNumPages,UINT64_MAX })));
+            DEFINE_INTRINSIC_TABLE(env,table,table,IR::TableType(IR::TableElementType::anyfunc,false,IR::SizeConstraints({initialNumTableElements,UINT64_MAX})));
 
             DEFINE_INTRINSIC_GLOBAL(env,"STACKTOP",I32,STACKTOP          ,128 * IR::numBytesPerPage);
             DEFINE_INTRINSIC_GLOBAL(env,"STACK_MAX",I32,STACK_MAX        ,256 * IR::numBytesPerPage);
@@ -80,36 +81,59 @@ namespace keto {
             static U32 sbrk(I32 numBytes)
             {
                     Platform::Lock sbrkLock(sbrkMutex);
-
                     if(!hasSbrkBeenCalled)
                     {
                             // Do some first time initialization.
                             sbrkNumPages = getMemoryNumPages(emscriptenMemoryInstance);
-                            sbrkMinBytes = sbrkNumBytes = coerce32bitAddress(sbrkNumPages << numBytesPerPageLog2);
+                            sbrkMinBytes = sbrkNumBytes = coerce32bitAddress(sbrkNumPages << IR::numBytesPerPageLog2);
                             hasSbrkBeenCalled = true;
                     }
                     else
                     {
                             // Ensure that nothing else is calling growMemory/shrinkMemory.
                             if(getMemoryNumPages(emscriptenMemoryInstance) != sbrkNumPages)
-                            { throwException(Exception::outOfMemoryType); }
+                            { throwException(Runtime::Exception::outOfMemoryType); }
                     }
-
+                            
                     const U32 previousNumBytes = sbrkNumBytes;
 
                     // Round the absolute value of numBytes to an alignment boundary, and ensure it won't allocate too much or too little memory.
                     numBytes = (numBytes + 7) & ~7;
-                    if(numBytes > 0 && previousNumBytes > UINT32_MAX - numBytes) { throwException(Exception::accessViolationType); }
-                    else if(numBytes < 0 && previousNumBytes < sbrkMinBytes - numBytes) { throwException(Exception::accessViolationType); }
+                    if(numBytes > 0 && previousNumBytes > UINT32_MAX - numBytes) { throwException(Runtime::Exception::accessViolationType); }
+                    else if(numBytes < 0 && previousNumBytes < sbrkMinBytes - numBytes) { throwException(Runtime::Exception::accessViolationType); }
 
                     // Update the number of bytes allocated, and compute the number of pages needed for it.
                     sbrkNumBytes += numBytes;
-                    const Uptr numDesiredPages = (sbrkNumBytes + numBytesPerPage - 1) >> numBytesPerPageLog2;
+                    const Uptr numDesiredPages = (sbrkNumBytes + IR::numBytesPerPage - 1) >> IR::numBytesPerPageLog2;
 
                     // Grow or shrink the memory object to the desired number of pages.
                     if(numDesiredPages > sbrkNumPages) { growMemory(emscriptenMemoryInstance,numDesiredPages - sbrkNumPages); }
                     else if(numDesiredPages < sbrkNumPages) { shrinkMemory(emscriptenMemoryInstance,sbrkNumPages - numDesiredPages); }
                     sbrkNumPages = numDesiredPages;
+
+                    return previousNumBytes;
+            }
+            
+            static U32 allocateMemory(Runtime::MemoryInstance* memory, I32 numBytes)
+            {
+                    Platform::Lock sbrkLock(sbrkMutex);
+                    
+                    int _currentPages = getMemoryNumPages(memory);
+                    int _currentNumBytes = coerce32bitAddress(_currentPages << IR::numBytesPerPageLog2);
+                            
+                    const U32 previousNumBytes = _currentNumBytes;
+
+                    // Round the absolute value of numBytes to an alignment boundary, and ensure it won't allocate too much or too little memory.
+                    numBytes = (numBytes + 7) & ~7;
+                    
+                    // Update the number of bytes allocated, and compute the number of pages needed for it.
+                    _currentNumBytes += numBytes;
+                    const Uptr numDesiredPages = (_currentNumBytes + IR::numBytesPerPage - 1) >> IR::numBytesPerPageLog2;
+
+                    // Grow or shrink the memory object to the desired number of pages.
+                    if(numDesiredPages > _currentPages) { growMemory(memory,numDesiredPages - _currentPages); }
+                    //else if(numDesiredPages < sbrkNumPages) { shrinkMemory(emscriptenMemoryInstance,sbrkNumPages - numDesiredPages); }
+                    //sbrkNumPages = numDesiredPages;
 
                     return previousNumBytes;
             }
@@ -124,7 +148,7 @@ namespace keto {
                     time_t t = time(nullptr);
                     if(address)
                     {
-                            memoryRef<I32>(emscriptenMemoryInstance,address) = (I32)t;
+                            Runtime::memoryRef<I32>(emscriptenMemoryInstance,address) = (I32)t;
                     }
                     return (I32)t;
             }
@@ -163,7 +187,7 @@ namespace keto {
                     if(vmAddress == 0)
                     {
                             vmAddress = coerce32bitAddress(sbrk(sizeof(data)));
-                            memcpy(memoryArrayPtr<U8>(emscriptenMemoryInstance,vmAddress,sizeof(data)),data,sizeof(data));
+                            memcpy(Runtime::memoryArrayPtr<U8>(emscriptenMemoryInstance,vmAddress,sizeof(data)),data,sizeof(data));
                     }
                     return vmAddress + sizeof(short)*128;
             }
@@ -174,7 +198,7 @@ namespace keto {
                     if(vmAddress == 0)
                     {
                             vmAddress = coerce32bitAddress(sbrk(sizeof(data)));
-                            memcpy(memoryArrayPtr<U8>(emscriptenMemoryInstance,vmAddress,sizeof(data)),data,sizeof(data));
+                            memcpy(Runtime::memoryArrayPtr<U8>(emscriptenMemoryInstance,vmAddress,sizeof(data)),data,sizeof(data));
                     }
                     return vmAddress + sizeof(I32)*128;
             }
@@ -185,7 +209,7 @@ namespace keto {
                     if(vmAddress == 0)
                     {
                             vmAddress = coerce32bitAddress(sbrk(sizeof(data)));
-                            memcpy(memoryArrayPtr<U8>(emscriptenMemoryInstance,vmAddress,sizeof(data)),data,sizeof(data));
+                            memcpy(Runtime::memoryArrayPtr<U8>(emscriptenMemoryInstance,vmAddress,sizeof(data)),data,sizeof(data));
                     }
                     return vmAddress + sizeof(I32)*128;
             }
@@ -200,9 +224,9 @@ namespace keto {
             }
             DEFINE_INTRINSIC_FUNCTION(env,"___cxa_guard_acquire",I32,___cxa_guard_acquire,I32 address)
             {
-                    if(!memoryRef<U8>(emscriptenMemoryInstance,address))
+                    if(!Runtime::memoryRef<U8>(emscriptenMemoryInstance,address))
                     {
-                            memoryRef<U8>(emscriptenMemoryInstance,address) = 1;
+                            Runtime::memoryRef<U8>(emscriptenMemoryInstance,address) = 1;
                             return 1;
                     }
                     else
@@ -269,7 +293,7 @@ namespace keto {
 
             DEFINE_INTRINSIC_FUNCTION(env,"_emscripten_memcpy_big",I32,_emscripten_memcpy_big,I32 a,I32 b,I32 c)
             {
-                    memcpy(memoryArrayPtr<U8>(emscriptenMemoryInstance,a,c),memoryArrayPtr<U8>(emscriptenMemoryInstance,b,c),U32(c));
+                    memcpy(Runtime::memoryArrayPtr<U8>(emscriptenMemoryInstance,a,c),Runtime::memoryArrayPtr<U8>(emscriptenMemoryInstance,b,c),U32(c));
                     return a;
             }
 
@@ -304,11 +328,11 @@ namespace keto {
             }
             DEFINE_INTRINSIC_FUNCTION(env,"_fread",I32,_fread,I32 pointer,I32 size,I32 count,I32 file)
             {
-                    return (I32)fread(memoryArrayPtr<U8>(emscriptenMemoryInstance,pointer,U64(size) * U64(count)),U64(size),U64(count),vmFile(file));
+                    return (I32)fread(Runtime::memoryArrayPtr<U8>(emscriptenMemoryInstance,pointer,U64(size) * U64(count)),U64(size),U64(count),vmFile(file));
             }
             DEFINE_INTRINSIC_FUNCTION(env,"_fwrite",I32,_fwrite,I32 pointer,I32 size,I32 count,I32 file)
             {
-                    return (I32)fwrite(memoryArrayPtr<U8>(emscriptenMemoryInstance,pointer,U64(size) * U64(count)),U64(size),U64(count),vmFile(file));
+                    return (I32)fwrite(Runtime::memoryArrayPtr<U8>(emscriptenMemoryInstance,pointer,U64(size) * U64(count)),U64(size),U64(count),vmFile(file));
             }
             DEFINE_INTRINSIC_FUNCTION(env,"_fputc",I32,_fputc,I32 character,I32 file)
             {
@@ -360,15 +384,15 @@ namespace keto {
             DEFINE_INTRINSIC_FUNCTION(env,"___syscall146",I32,___syscall146,I32 file,I32 argsPtr)
             {
                     // writev
-                    U32* args = memoryArrayPtr<U32>(emscriptenMemoryInstance,argsPtr,3);
+                    U32* args = Runtime::memoryArrayPtr<U32>(emscriptenMemoryInstance,argsPtr,3);
                     U32 iov = args[1];
                     U32 iovcnt = args[2];
     #ifdef _WIN32
                     U32 count = 0;
                     for(U32 i = 0; i < iovcnt; i++)
                     {
-                            U32 base = memoryRef<U32>(emscriptenMemoryInstance,iov + i * 8);
-                            U32 len = memoryRef<U32>(emscriptenMemoryInstance,iov + i * 8 + 4);
+                            U32 base = Runtime::memoryRef<U32>(emscriptenMemoryInstance,iov + i * 8);
+                            U32 len = Runtime::memoryRef<U32>(emscriptenMemoryInstance,iov + i * 8 + 4);
                             U32 size = (U32)fwrite(memoryArrayPtr<U8>(emscriptenMemoryInstance,base,len), 1, len, vmFile(file));
                             count += size;
                             if (size < len)
@@ -378,10 +402,10 @@ namespace keto {
                     struct iovec *native_iovec = new(alloca(sizeof(iovec)*iovcnt)) struct iovec [iovcnt];
                     for(U32 i = 0; i < iovcnt; i++)
                     {
-                            U32 base = memoryRef<U32>(emscriptenMemoryInstance,iov + i * 8);
-                            U32 len = memoryRef<U32>(emscriptenMemoryInstance,iov + i * 8 + 4);
+                            U32 base = Runtime::memoryRef<U32>(emscriptenMemoryInstance,iov + i * 8);
+                            U32 len = Runtime::memoryRef<U32>(emscriptenMemoryInstance,iov + i * 8 + 4);
 
-                            native_iovec[i].iov_base = memoryArrayPtr<U8>(emscriptenMemoryInstance,base,len);
+                            native_iovec[i].iov_base = Runtime::memoryArrayPtr<U8>(emscriptenMemoryInstance,base,len);
                             native_iovec[i].iov_len = len;
                     }
                     Iptr count = writev(fileno(vmFile(file)), native_iovec, iovcnt);
@@ -419,18 +443,71 @@ namespace keto {
             //-------------------------------------------------------------------------------
             // Keto method definitions
             //-------------------------------------------------------------------------------
-            DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(keto,"console",void,console,I32 msg)
+            // type script method mappings
+            DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(keto,"console",void,typescript_console,I32 msg)
             {
-                MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
-                std::string msgString = keto::wavm_common::WavmUtils::readUserString(memory,msg);
+                Runtime::MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
+                std::string msgString = keto::wavm_common::WavmUtils::readTypeScriptString(memory,msg);
                 std::cout << "This is here [" << msgString << "]" << std::endl;
                 return;
             }
 
-            DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(keto,"log",void,log,F64 level,I32 msg)
+            DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(keto,"log",void,typescript_log,I32 level,I32 msg)
             {
-                MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
-                std::string msgString = keto::wavm_common::WavmUtils::readUserString(memory,msg);
+                std::cout << "Memory address is :" << (int)msg << std::endl;
+                Runtime::MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
+                std::string msgString = keto::wavm_common::WavmUtils::readTypeScriptString(memory,msg);
+                keto::wavm_common::WavmUtils::log(U32(level),msgString);
+                return;
+            }
+            
+            DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(keto,"getAccount",I32,typescript_getAccount)
+            {
+                Runtime::MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
+                std::cout << "The sbk is : " << sbrkNumBytes << std::endl;
+                std::cout << "Build the account" << std::endl;
+                std::string account = "test";
+                int size = 4 + account.size()*2;
+                I32 base = coerce32bitAddress(allocateMemory(memory,size));
+                //std::cout << "Previous :" << (int)previous << std::endl;
+                //I32 base = coerce32bitAddress(previous);
+                std::cout << "Base is :" << (int)base << std::endl;
+                char buffer[size];
+                memset( &buffer, 0, size );
+                buffer[0] = account.size();
+                for (int index = 0; index < account.size(); index++) {
+                    std::cout << "The buffer is : " << (4 + index * 2) << std::endl;
+                    buffer[4 + index * 2] = (int)account[index];
+                    std::cout << "The character : " << account[index] << std::endl;
+                    std::cout << "The character : " << buffer[4 + index * 2] << std::endl;
+                }
+                std::cout << "Copy the memory pointers : " << size << std::endl;
+                memcpy(Runtime::memoryArrayPtr<U8>(memory,base,size),buffer,size);
+                
+                //MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
+                //std::string msgString = keto::wavm_common::WavmUtils::readTypeScriptString(memory,msg);
+                //keto::wavm_common::WavmUtils::log(U32(level),msgString);
+                std::cout << "Return the memory" << std::endl;
+                std::cout << "The base address is : " << (int)base << std::endl;
+                return base;
+            }
+            
+            
+            
+            
+            // C/CPP method mappings
+            DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(env,"console",void,c_console,I32 msg)
+            {
+                Runtime::MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
+                std::string msgString = keto::wavm_common::WavmUtils::readTypeScriptString(memory,msg);
+                std::cout << "This is here [" << msgString << "]" << std::endl;
+                return;
+            }
+
+            DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(env,"log",void,c_log,I64 level,I32 msg)
+            {
+                Runtime::MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
+                std::string msgString = keto::wavm_common::WavmUtils::readTypeScriptString(memory,msg);
                 //std::cout << "This is here [" << msgString << "]" << std::endl;
                 keto::wavm_common::WavmUtils::log(U32(level),msgString);
                 return;
@@ -448,7 +525,7 @@ namespace keto {
                     instance->global = Intrinsics::instantiateModule(compartment,INTRINSIC_MODULE_REF(global));
                     instance->keto = Intrinsics::instantiateModule(compartment,INTRINSIC_MODULE_REF(keto));
 
-                    MutableGlobals& mutableGlobals = memoryRef<MutableGlobals>(
+                    MutableGlobals& mutableGlobals = Runtime::memoryRef<MutableGlobals>(
                             emscriptenMemory.getInstance(instance->env),
                             MutableGlobals::address);
 
@@ -461,12 +538,12 @@ namespace keto {
                     return instance;
             }
 
-            EMSCRIPTEN_API void initializeGlobals(Context* context,const Module& module,ModuleInstance* moduleInstance)
+            EMSCRIPTEN_API void initializeGlobals(Runtime::Context* context,const IR::Module& module,Runtime::ModuleInstance* moduleInstance)
             {
                     // Call the establishStackSpace function to set the Emscripten module's internal stack pointers.
-                    FunctionInstance* establishStackSpace = asFunctionNullable(getInstanceExport(moduleInstance,"establishStackSpace"));
+                    Runtime::FunctionInstance* establishStackSpace = asFunctionNullable(getInstanceExport(moduleInstance,"establishStackSpace"));
                     if(establishStackSpace
-                    && getFunctionType(establishStackSpace) == FunctionType::get(ResultType::none,{ValueType::i32,ValueType::i64}))
+                    && getFunctionType(establishStackSpace) == IR::FunctionType::get(IR::ResultType::none,{IR::ValueType::i32,IR::ValueType::i64}))
                     {
                             std::vector<Runtime::Value> parameters =
                             {
@@ -479,10 +556,10 @@ namespace keto {
                     // Call the global initializer functions.
                     for(Uptr exportIndex = 0;exportIndex < module.exports.size();++exportIndex)
                     {
-                            const Export& functionExport = module.exports[exportIndex];
+                            const IR::Export& functionExport = module.exports[exportIndex];
                             if(functionExport.kind == IR::ObjectKind::function && !strncmp(functionExport.name.c_str(),"__GLOBAL__",10))
                             {
-                                    FunctionInstance* functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,functionExport.name));
+                                    Runtime::FunctionInstance* functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,functionExport.name));
                                     if(functionInstance) { Runtime::invokeFunctionChecked(context,functionInstance,{}); }
                             }
                     }
