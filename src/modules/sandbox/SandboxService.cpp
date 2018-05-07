@@ -17,6 +17,13 @@
 
 #include <condition_variable>
 
+
+#include "Sandbox.pb.h"
+
+#include "keto/server_common/EventUtils.hpp"
+#include "keto/server_common/Events.hpp"
+#include "keto/server_common/EventServiceHelpers.hpp"
+
 #include "keto/sandbox/SandboxService.hpp"
 #include "keto/wavm_common/WavmEngineManager.hpp"
 #include "keto/environment/EnvironmentManager.hpp"
@@ -33,7 +40,6 @@ SandboxService::SandboxService() {
             keto::environment::EnvironmentManager::getInstance()->getEnv()->getInstallDir() / 
             "config/helloworld.wast";
     std::ifstream ifs(helloFile.string());
-    char buffer[1024];
     char character;
     std::stringstream ss;
     while (ifs.get(character)) {
@@ -59,6 +65,10 @@ SandboxServicePtr SandboxService::getInstance() {
 }
 
 keto::event::Event SandboxService::executeActionMessage(const keto::event::Event& event) {
+    std::cout << "Extract the event information" << std::endl;
+    keto::proto::SandboxCommandMessage sandboxCommandMessage =
+            keto::server_common::fromEvent<keto::proto::SandboxCommandMessage>(event);
+    std::cout << "After extracting the event information" << std::endl;
     
     keto::wavm_common::WavmEngineManager::getInstance()->getEngine(code)->execute();
     

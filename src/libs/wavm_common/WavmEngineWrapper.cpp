@@ -207,70 +207,16 @@ void WavmEngineWrapper::execute() {
 
     // Look up the function export to call.
     FunctionInstance* functionInstance;
-//    if(!options.functionName)
-//    {
-        functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"credit"));
-        if(!functionInstance) { functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"_main")); }
-        if(!functionInstance)
-        {
-            BOOST_THROW_EXCEPTION(keto::wavm_common::MissingEntryPointException());
-        }
-//    }
-//    else
-//    {
-//        functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,options.functionName));
-//        if(!functionInstance)
-//        {
-//            std::cerr << "Module does not export '" << options.functionName << "'" << std::endl;
-//            return EXIT_FAILURE;
-//        }
-//    }
+    functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"credit"));
+    if(!functionInstance) { functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"_main")); }
+    if(!functionInstance)
+    {
+        BOOST_THROW_EXCEPTION(keto::wavm_common::MissingEntryPointException());
+    }
     const FunctionType* functionType = getFunctionType(functionInstance);
 
     // Set up the arguments for the invoke.
     std::vector<Value> invokeArgs;
-//    if(!options.functionName)
-//    {
-//            if(functionType->parameters.size() == 2)
-//            {
-//                    MemoryInstance* defaultMemory = Runtime::getDefaultMemory(moduleInstance);
-//                    if(!defaultMemory)
-//                    {
-//                            std::cerr << "Module does not declare a default memory object to put arguments in." << std::endl;
-//                            return EXIT_FAILURE;
-//                    }
-//
-//                    std::vector<const char*> argStrings;
-//                    argStrings.push_back(options.filename);
-//                    char** args = options.args;
-//                    while(*args) { argStrings.push_back(*args++); };
-//
-//                    Emscripten::injectCommandArgs(emscriptenInstance,argStrings,invokeArgs);
-//            }
-//            else if(functionType->parameters.size() > 0)
-//            {
-//                    std::cerr << "WebAssembly function requires " << functionType->parameters.size() << " argument(s), but only 0 or 2 can be passed!" << std::endl;
-//                    return EXIT_FAILURE;
-//            }
-//    }
-//    else
-//    {
-//            for(U32 i = 0; options.args[i]; ++i)
-//            {
-//                    Value value;
-//                    switch(functionType->parameters[i])
-//                    {
-//                    case ValueType::i32: value = (U32)atoi(options.args[i]); break;
-//                    case ValueType::i64: value = (U64)atol(options.args[i]); break;
-//                    case ValueType::f32: value = (F32)atof(options.args[i]); break;
-//                    case ValueType::f64: value = atof(options.args[i]); break;
-//                    default: Errors::unreachable();
-//                    }
-//                    invokeArgs.push_back(value);
-//            }
-//    }
-
-    // Invoke the function.
     //Timing::Timer executionTimer;
     Runtime::catchRuntimeExceptions(                                                                                           
         [&]
@@ -287,31 +233,6 @@ void WavmEngineWrapper::execute() {
             BOOST_THROW_EXCEPTION(keto::wavm_common::ContactExecutionFailedException(ss.str()));
         });
     
-//    try
-//    {
-//        Result functionResult = invokeFunctionChecked(context,functionInstance,invokeArgs);
-//        Runtime::collectGarbage();
-//    } catch (Runtime::Exception& ex) {
-//        std::cout << "Failed to handle the exception : " << describeException(ex).c_str() << std::endl;
-//    } catch (Runtime::Exception* ex) {
-//        std::cout << "Failed to handle the exception : " << describeException(*ex).c_str() << std::endl;
-//    } catch (...) {
-//        std::cout << "Caught an unknown exception while executing" << std::endl; 
-//    }
-    
-    //Timing::logTimer("Invoked function",executionTimer);
-
-    //if(options.functionName)
-    //{
-    //        Log::printf(
-//                    Log::Category::debug,
-//                    "%s returned: %s\n",
-//                    options.functionName,
-//                    asString(functionResult).c_str());
-//            return EXIT_SUCCESS;
-//    }
-//    else if(functionResult.type == ResultType::i32) { return functionResult.i32; }
-//    else { return EXIT_SUCCESS; }
 }
 
 }

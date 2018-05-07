@@ -35,6 +35,7 @@ public:
     // the keto configuration file files
     static constexpr const char* KETOD_CONFIG_FILE = "config.ini";
     static constexpr const char* KETO_CLI_CONFIG_FILE = "cli_config.ini";
+    static constexpr const char* KETO_CONTRACT_TOOLS_FILE = "keto_contract_tools.ini";
     
     // the keto configuration file files
     static constexpr const char* KETOD_LOG_FILE = "ketod_%N.log";

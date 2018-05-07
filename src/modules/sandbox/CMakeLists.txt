@@ -1,5 +1,7 @@
 file(GLOB HEADERS "include/keto/rpc_server/*.hpp")
 
+include_directories(${PROTOBUF_INCLUDE_DIR})
+
 ## SORT .cpp by most likely to change / break compile
 add_library( 0020_keto_sandbox_module
             SHARED

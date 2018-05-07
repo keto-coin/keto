@@ -52,6 +52,8 @@ keto::proto::Transaction TransactionProcessor::processTransaction(keto::proto::T
     
     keto::proto::SandboxCommandMessage sandboxCommandMessage;
     
+    
+    
     sandboxCommandMessage = 
             keto::server_common::fromEvent<keto::proto::SandboxCommandMessage>(
             keto::server_common::processEvent(keto::server_common::toEvent<keto::proto::SandboxCommandMessage>(
