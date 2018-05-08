@@ -39,6 +39,9 @@
 
 #include "keto/contract/Constants.hpp"
 
+#include "keto/account_utils/AccountGenerator.hpp"
+
+
 namespace ketoEnv = keto::environment;
 namespace ketoCommon = keto::common;
 
@@ -50,6 +53,7 @@ boost::program_options::options_description generateOptionDescriptions() {
             ("help,h", "Print this help message and exit.")
             ("version,v", "Print version information.")
             ("encodeWast,e", "Encode a wast file as hexadecimal.")
+            ("generateHash,g", "Generate a contract hash code.")
             ("source,s", po::value<std::string>(),"Source file.")
             ("target,t",po::value<std::string>(), "Target file.");
     
@@ -98,6 +102,12 @@ void encodeWastFile(std::shared_ptr<ketoEnv::Config> config,
     out.close();
 }
 
+void generateHash(std::shared_ptr<ketoEnv::Config> config,
+        boost::program_options::options_description optionDescription) {
+    std::cout << 
+            Botan::hex_encode(
+            (keto::account_utils::AccountGenerator().getAccountHash()),true) << std::endl;
+}
 
 /*
  * The main method responsible for  
@@ -127,6 +137,9 @@ int main(int argc, char** argv) {
         
         if (config->getVariablesMap().count(keto::contract::Constants::ENCODE_WAST)) {
             encodeWastFile(config,optionDescription);
+            return 0;
+        }else if (config->getVariablesMap().count(keto::contract::Constants::GENERATE_HASH)) {
+            generateHash(config,optionDescription);
             return 0;
         }
         

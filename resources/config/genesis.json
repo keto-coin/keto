@@ -94,10 +94,24 @@
                   }
                },
                {
-                  "http://keto-coin.io/schema/rdf/1.0/keto/Contract#Contract/D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2":{
+                  "http://keto-coin.io/schema/rdf/1.0/keto/Contract#Contract/E181F4277D8463C43039D5DCFE3DC79CE6D444162866287BBE3990421EEEC5CC":{
                      "http://keto-coin.io/schema/rdf/1.0/keto/Contract#id":[
                         {
-                           "value":"D594F22DC389E38B3DE7FA5630DBD9DCA16DA8A77097516FD37F9E25C6BE24D2",
+                           "value":"E181F4277D8463C43039D5DCFE3DC79CE6D444162866287BBE3990421EEEC5CC",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Contract#hash":[
+                        {
+                           "value":"E181F4277D8463C43039D5DCFE3DC79CE6D444162866287BBE3990421EEEC5CC",
+                           "type":"literal",
+                           "datatype":"http://www.w3.org/2001/XMLSchema#string"
+                        }
+                     ],
+                     "http://keto-coin.io/schema/rdf/1.0/keto/Contract#name":[
+                        {
+                           "value":"transaction",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }
