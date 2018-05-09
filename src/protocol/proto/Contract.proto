@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package keto.proto;
+
+/**
+ * This is an example of a protobuf message.
+ */
+message ContractMessage {
+    bytes account_hash = 1;
+    bytes contract_hash = 2;
+    string contract_name = 3;
+    string contract = 4;
+}

@@ -111,7 +111,7 @@
                      ],
                      "http://keto-coin.io/schema/rdf/1.0/keto/Contract#name":[
                         {
-                           "value":"transaction",
+                           "value":"base_account_transaction",
                            "type":"literal",
                            "datatype":"http://www.w3.org/2001/XMLSchema#string"
                         }

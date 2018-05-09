@@ -41,6 +41,10 @@ keto::event::Event EventRegistry::sparqlQuery(const keto::event::Event& event) {
     return AccountService::getInstance()->sparqlQuery(event);
 }
 
+keto::event::Event EventRegistry::getContract(const keto::event::Event& event) {
+    return AccountService::getInstance()->getContract(event);
+}
+
 void EventRegistry::registerEventHandlers() {
     keto::server_common::registerEventHandler (
             keto::server_common::Events::CHECK_ACCOUNT_MESSAGE,
@@ -51,9 +55,14 @@ void EventRegistry::registerEventHandlers() {
     keto::server_common::registerEventHandler (
             keto::server_common::Events::SPARQL_QUERY_MESSAGE,
             &keto::account::EventRegistry::sparqlQuery);
+    keto::server_common::registerEventHandler (
+            keto::server_common::Events::GET_CONTRACT,
+            &keto::account::EventRegistry::getContract);
 }
 
 void EventRegistry::deregisterEventHandlers() {
+    keto::server_common::deregisterEventHandler(
+            keto::server_common::Events::GET_CONTRACT);
     keto::server_common::deregisterEventHandler(
             keto::server_common::Events::SPARQL_QUERY_MESSAGE);
     keto::server_common::deregisterEventHandler(

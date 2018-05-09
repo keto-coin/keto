@@ -16,6 +16,7 @@
 
 #include "Account.pb.h"
 #include "Sparql.pb.h"
+#include "Contract.pb.h"
 
 #include "keto/asn1/HashHelper.hpp"
 #include "keto/rocks_db/DBManager.hpp"
@@ -44,7 +45,9 @@ public:
     void sparqlQuery(
         const keto::proto::AccountInfo& accountInfo,
         keto::proto::SparqlQuery& sparlQuery);
-    
+    void getContract(
+        const keto::proto::AccountInfo& accountInfo,
+        keto::proto::ContractMessage& contractMessage);
     
 private:
     std::shared_ptr<keto::rocks_db::DBManager> dbManagerPtr;

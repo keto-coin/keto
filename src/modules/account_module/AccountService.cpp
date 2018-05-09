@@ -17,8 +17,11 @@
 #include "Account.pb.h"
 #include "BlockChain.pb.h"
 #include "Sparql.pb.h"
+#include "Contract.pb.h"
+
 
 #include "keto/asn1/HashHelper.hpp"
+#include "keto/asn1/ContractHelper.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
 #include "keto/account/AccountService.hpp"
 #include "keto/account_db/AccountStore.hpp"
@@ -94,6 +97,19 @@ keto::event::Event AccountService::sparqlQuery(const keto::event::Event& event) 
     }
     
     return keto::server_common::toEvent<keto::proto::SparqlQuery>(sparqlQuery);
+}
+
+keto::event::Event AccountService::getContract(const keto::event::Event& event) {
+    keto::proto::ContractMessage  contractMessage = 
+            keto::server_common::fromEvent<keto::proto::ContractMessage>(event);
+    keto::proto::AccountInfo accountInfo;
+    keto::asn1::HashHelper accountHashHelper(contractMessage.account_hash());
+    if (keto::account_db::AccountStore::getInstance()->getAccountInfo(accountHashHelper,
+            accountInfo)) {
+        keto::account_db::AccountStore::getInstance()->getContract(accountInfo,contractMessage);
+    }
+    
+    return keto::server_common::toEvent<keto::proto::ContractMessage>(contractMessage);
 }
 
 }

@@ -34,6 +34,12 @@ public:
         static const char* PROCESS;
     };
     
+    class CONTRACTS {
+    public:
+        static const char* BASE_ACCOUNT_CONTRACT;
+        
+    };
+    
 private:
 
 };

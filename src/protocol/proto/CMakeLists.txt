@@ -6,7 +6,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS BlockChain.proto 
     HandShake.proto Protocol.proto Route.proto Balancer.proto KeyStore.proto Account.proto
-    Sparql.proto Sandbox.proto)
+    Sparql.proto Sandbox.proto Contract.proto)
 
 add_library(keto_proto_environment ${PROTO_SRCS} )
 

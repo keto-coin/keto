@@ -12,7 +12,6 @@ Contract ::= SEQUENCE {
     id              Hash,
     name            UTF8String,
     owner           Hash,
-    parent          Hash,
     permissions     SEQUENCE OF Hash,
     code            OCTET STRING
 }

@@ -41,6 +41,8 @@ const char* Events::EXECUTE_ACTION_MESSAGE  = "EXECUTE_ACTION_MESSAGE";
 // rpc messages
 const char* Events::RPC_SEND_MESSAGE    = "RPC_SEND_MESSAGE";
 
+// request the contract by name or hash
+const char* Events::GET_CONTRACT  = "GET_CONTRACT";
 
 // sparql events
 const char* Events::SPARQL_QUERY_MESSAGE = "SPARQL_QUERY_MESSAGE";

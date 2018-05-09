@@ -47,6 +47,9 @@ public:
     // rpc messages
     static const char* RPC_SEND_MESSAGE;
     
+    // retrieve the contract
+    static const char* GET_CONTRACT;
+    
     // sparql events
     static const char* SPARQL_QUERY_MESSAGE;
     

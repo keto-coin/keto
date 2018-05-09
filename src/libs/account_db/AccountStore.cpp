@@ -129,6 +129,23 @@ void AccountStore::sparqlQuery(
     sparlQuery.set_result(sessionPtr->query(sparlQuery.query()));
 }
 
+void AccountStore::getContract(
+        const keto::proto::AccountInfo& accountInfo,
+        keto::proto::ContractMessage& contractMessage) {
+    AccountResourcePtr resource = accountResourceManagerPtr->getResource();
+    AccountGraphSessionPtr sessionPtr = resource->getGraphSession(accountInfo.graph_name());
+    std::stringstream ss;
+    ss << "SELECT ?code WHERE { ?contract <http://keto-coin.io/schema/rdf/1.0/keto/Contract#name> '" << 
+            contractMessage.contract_name() << "'^^<http://www.w3.org/2001/XMLSchema#string> . " << 
+            "?contract <http://keto-coin.io/schema/rdf/1.0/keto/Contract#value> ?code . } ";
+    ResultVectorMap result = sessionPtr->executeQuery(ss.str());
+    if (result.size() == 1) {
+        contractMessage.set_contract(result[0]["code"]);
+    }
+    
+}
+
+
 void AccountStore::createAccount(
             const keto::asn1::HashHelper& accountHash,
             const keto::transaction_common::TransactionMessageHelperPtr& transactionMessageHelper,

@@ -25,5 +25,8 @@ const char* Constants::SERVICE::BALANCE     = "balance";
 const char* Constants::SERVICE::BLOCK       = "block";
 const char* Constants::SERVICE::PROCESS     = "process";
 
+
+const char* Constants::CONTRACTS::BASE_ACCOUNT_CONTRACT     = "base_account_transaction";
+
 }
 }

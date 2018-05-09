@@ -132,6 +132,39 @@ std::string AccountGraphSession::query(const std::string& queryStr) {
     return strResult;
 }
 
+ResultVectorMap AccountGraphSession::executeQuery(const std::string& queryStr) {
+    librdf_query* query;
+    librdf_query_results* results;
+    query = librdf_new_query(this->accountGraphStore->getWorld(), "sparql", 
+            NULL, (const unsigned char *)queryStr.c_str(), NULL);
+    results = librdf_model_query_execute(this->accountGraphStore->getModel(), query);
+    ResultVectorMap resultVectorMap;
+    if (!results) {
+        librdf_free_query(query);
+        return resultVectorMap;
+    }
+    const char **names=NULL;
+    
+    if(!librdf_query_results_get_bindings(results, &names, NULL)) {
+        int bindingCount = librdf_query_results_get_bindings_count(results);
+        while (!librdf_query_results_finished(results)) {
+            ResultMap resultMap;
+            for (int index = 0; index < bindingCount; index++) {
+                librdf_node* node = librdf_query_results_get_binding_value_by_name(results,
+                        names[index]);
+                unsigned char* value = librdf_node_get_literal_value(node);
+                resultMap[names[index]] = std::string((const char*)value);
+                librdf_free_node(node);
+            }
+            resultVectorMap.push_back(resultMap);
+            librdf_query_results_next(results);
+        }
+    }
+    librdf_free_query_results(results);
+    librdf_free_query(query);
+    
+    return resultVectorMap;
+}
 
 AccountGraphSession::AccountGraphSession(const AccountGraphStorePtr& accountGraphStore) :
     activeTransaction(true), accountGraphStore(accountGraphStore) {

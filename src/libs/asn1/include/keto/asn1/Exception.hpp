@@ -39,6 +39,7 @@ KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, SubjectNotFoundInModelException ,
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddChangeToChangeSetException , "Could not add Change to ChangeSet");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, PredicateNotFoundException , "Predicate not found");
 KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, UnsupportedChangeTypeFormatException , "This change type is not currently supported");
+KETO_DECLARE_DERIVED_EXCEPTION (ASN1Exception, FailedToAddPermission , "Failed to add the permissions");
 
 
 }

@@ -15,6 +15,7 @@
 #include <iostream>
 
 #include "Sandbox.pb.h"
+#include "Contract.pb.h"
 
 #include "keto/block/TransactionProcessor.hpp"
 #include "keto/transaction_common/ActionHelper.hpp"
@@ -23,6 +24,8 @@
 #include "keto/server_common/EventUtils.hpp"
 #include "keto/server_common/Events.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
+#include "keto/server_common/Constants.hpp"
+
 
 namespace keto {
 namespace block {
@@ -50,9 +53,18 @@ TransactionProcessorPtr TransactionProcessor::getInstance() {
 keto::proto::Transaction TransactionProcessor::processTransaction(keto::proto::Transaction& transaction) {
     keto::transaction_common::TransactionProtoHelper transactionProtoHelper(transaction);
     
+    // get the transaction from the account store
+    keto::proto::ContractMessage contractMessage;
+    contractMessage.set_account_hash(transaction.active_account());
+    contractMessage.set_contract_name(keto::server_common::Constants::CONTRACTS::BASE_ACCOUNT_CONTRACT);
+    
+    contractMessage = 
+            keto::server_common::fromEvent<keto::proto::ContractMessage>(
+            keto::server_common::processEvent(keto::server_common::toEvent<keto::proto::ContractMessage>(
+            keto::server_common::Events::GET_CONTRACT,contractMessage)));
+    
     keto::proto::SandboxCommandMessage sandboxCommandMessage;
-    
-    
+    sandboxCommandMessage.set_contract(contractMessage.contract());
     
     sandboxCommandMessage = 
             keto::server_common::fromEvent<keto::proto::SandboxCommandMessage>(
