@@ -19,7 +19,6 @@ add_library( keto_asn1_common
             RDFSubjectHelper.cpp
             RDFModelHelper.cpp
             ChangeSetHelper.cpp
-            ContractHelper.cpp
 
              ${HEADERS}
            )

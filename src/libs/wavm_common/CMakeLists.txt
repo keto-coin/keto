@@ -19,6 +19,9 @@ add_library( keto_wavm_common
             WavmEngineWrapper.cpp
             Emscripten.cpp
             WavmUtils.cpp
+            RDFMemorySession.cpp
+            WavmSession.cpp
+            WavmSessionManager.cpp
             
              ${HEADERS}
            )
@@ -42,11 +45,15 @@ target_include_directories( keto_wavm_common
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../crypto/include/"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../server_common/include/"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../transaction_common/include/"
                             PUBLIC "${PROTO_HDRS}"
                             ${Boost_INCLUDE_DIRS}
                             ${BOTAN_INCLUDE_DIR}
                             ${LIBWAVM_INCLUDE_DIR}
                             ${LIBWAVM_LLVM_INCLUDE_DIRS}
+                            ${LIBRDF_INCLUDE_DIR}
+                            ${LIBRDF_RAPTOR_INCLUDE_DIR}
+                            ${LIBRDF_RASQAL_INCLUDE_DIR}
                             )
 
 #if(MSVC)

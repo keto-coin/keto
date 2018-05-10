@@ -13,12 +13,32 @@
 
 #include "keto/wavm_common/WavmSession.hpp"
 
-WavmSession::WavmSession() {
-}
+namespace keto {
+namespace wavm_common {
 
-WavmSession::WavmSession(const WavmSession& orig) {
+WavmSession::WavmSession(const keto::proto::SandboxCommandMessage& sandboxCommandMessage) :
+    sandboxCommandMessage(sandboxCommandMessage) {
+    transactionProtoHelper.setTransaction(sandboxCommandMessage.transaction());
+    transactionMessageHelperPtr = transactionProtoHelper.getTransactionMessageHelper();
+    rdfSessionPtr = std::make_shared<RDFMemorySession>();
+    
 }
 
 WavmSession::~WavmSession() {
+    
 }
 
+
+keto::asn1::ChangeSetHelper WavmSession::getChangeSet() {
+    
+}
+
+
+keto::proto::SandboxCommandMessage WavmSession::getSandboxCommandMessage() {
+    return this->sandboxCommandMessage;
+}
+
+
+
+}
+}

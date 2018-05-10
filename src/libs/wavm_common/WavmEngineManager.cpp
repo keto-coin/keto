@@ -15,6 +15,8 @@
 
 #include "keto/wavm_common/WavmEngineManager.hpp"
 #include "keto/wavm_common/WavmEngineWrapper.hpp"
+#include "keto/wavm_common/WavmSessionManager.hpp"
+#include "include/keto/wavm_common/WavmSessionManager.hpp"
 
 namespace keto {
 namespace wavm_common {
@@ -29,11 +31,14 @@ WavmEngineManager::~WavmEngineManager() {
 }
 
 WavmEngineManagerPtr WavmEngineManager::init() {
-    return singleton = std::make_shared<WavmEngineManager>();
+    singleton = std::make_shared<WavmEngineManager>();
+    WavmSessionManager::init();
+    return singleton;
 }
 
 
 void WavmEngineManager::fin() {
+    WavmSessionManager::fin();
     singleton.reset();
 }
 

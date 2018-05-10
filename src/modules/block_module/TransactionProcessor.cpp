@@ -65,11 +65,14 @@ keto::proto::Transaction TransactionProcessor::processTransaction(keto::proto::T
     
     keto::proto::SandboxCommandMessage sandboxCommandMessage;
     sandboxCommandMessage.set_contract(contractMessage.contract());
+    sandboxCommandMessage.set_transaction((std::string)transactionProtoHelper);
     
     sandboxCommandMessage = 
             keto::server_common::fromEvent<keto::proto::SandboxCommandMessage>(
             keto::server_common::processEvent(keto::server_common::toEvent<keto::proto::SandboxCommandMessage>(
             keto::server_common::Events::EXECUTE_ACTION_MESSAGE,sandboxCommandMessage)));
+    
+    
     
     std::cout << "Before looping through the actions" << std::endl; 
     if (transactionProtoHelper.getTransactionMessageHelper() && 

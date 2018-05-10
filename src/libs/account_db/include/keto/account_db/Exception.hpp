@@ -33,6 +33,7 @@ KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, FailedToInitGraphTransactio
 KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, FailedToCommitGraphTransactionException , "Failed to rollback a graph transaction.");
 KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, FailedToRollbackGraphTransactionException , "Failed to rollback a graph transaction.");
 KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, UnsupportedDataTypeTransactionException , "Failed to rollback a graph transaction.");
+KETO_DECLARE_DERIVED_EXCEPTION (AccountsDBException, UnknownContractException , "The contract was not found to execute.");
 
 }
 }

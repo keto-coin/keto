@@ -21,7 +21,6 @@
 
 
 #include "keto/asn1/HashHelper.hpp"
-#include "keto/asn1/ContractHelper.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
 #include "keto/account/AccountService.hpp"
 #include "keto/account_db/AccountStore.hpp"

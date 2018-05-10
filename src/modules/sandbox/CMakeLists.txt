@@ -15,10 +15,15 @@ add_library( 0020_keto_sandbox_module
            )
 
 target_link_libraries( 0020_keto_sandbox_module 
-                            PRIVATE keto_wavm_common
-                            PRIVATE keto_server_common keto_asn1_common keto_asn1_protocol
-                            PRIVATE keto_proto_environment ${PROTOBUF_LIBRARIES}
+                            PRIVATE keto_wavm_common keto_server_common
+                            PRIVATE keto_transaction_common keto_proto_environment ${PROTOBUF_LIBRARIES}
+                            PRIVATE keto_asn1_common keto_asn1_protocol
                             PRIVATE keto_crypto ${BOTAN_LIBRARIES} 
+                            PRIVATE ${LIBRDF_LIBRARY} ${LIBRDF_RAPTOR_LIBRARY} 
+                            PRIVATE ${LIBRDF_RASQAL_LIBRARY} 
+                            PRIVATE ${LIBRDF_EXTRA_LIBRARY} ${LIBRDF_XML_EXTRA_LIBRARY} 
+                            PRIVATE ${LIBRDF_PCRE_EXTRA_LIBRARY} ${LIBRDF_LTDL_EXTRA_LIBRARY}
+                            PRIVATE ${LIBRDF_GMP_EXTRA_LIBRARY}
                             PRIVATE ${OPENSSL_LIBRARIES} )
 target_include_directories( 0020_keto_sandbox_module
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"

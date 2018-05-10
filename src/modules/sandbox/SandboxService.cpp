@@ -17,6 +17,7 @@
 
 #include <condition_variable>
 
+#include <botan/hex.h>
 
 #include "Sandbox.pb.h"
 
@@ -26,8 +27,9 @@
 
 #include "keto/sandbox/SandboxService.hpp"
 #include "keto/wavm_common/WavmEngineManager.hpp"
+#include "keto/wavm_common/WavmSessionManager.hpp"
 #include "keto/environment/EnvironmentManager.hpp"
-#include "include/keto/sandbox/SandboxService.hpp"
+#include "keto/server_common/VectorUtils.hpp"
 
 
 namespace keto {
@@ -68,8 +70,14 @@ keto::event::Event SandboxService::executeActionMessage(const keto::event::Event
     std::cout << "Extract the event information" << std::endl;
     keto::proto::SandboxCommandMessage sandboxCommandMessage =
             keto::server_common::fromEvent<keto::proto::SandboxCommandMessage>(event);
-    std::cout << "After extracting the event information" << std::endl;
+    std::cout << "After extracting the event information : " << sandboxCommandMessage.contract() << std::endl;
     
+    keto::wavm_common::WavmSessionManager::getInstance()->initWavmSession(sandboxCommandMessage);
+    std::string buffer = sandboxCommandMessage.contract();
+    std::cout << "The buffer : " << buffer << std::endl;
+    std::string code = keto::server_common::VectorUtils().copyVectorToString(Botan::hex_decode(
+            buffer,true));
+    std::cout << "The code : " << code << std::endl;
     keto::wavm_common::WavmEngineManager::getInstance()->getEngine(code)->execute();
     
     return event;

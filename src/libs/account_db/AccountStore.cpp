@@ -135,12 +135,20 @@ void AccountStore::getContract(
     AccountResourcePtr resource = accountResourceManagerPtr->getResource();
     AccountGraphSessionPtr sessionPtr = resource->getGraphSession(accountInfo.graph_name());
     std::stringstream ss;
-    ss << "SELECT ?code WHERE { ?contract <http://keto-coin.io/schema/rdf/1.0/keto/Contract#name> '" << 
-            contractMessage.contract_name() << "'^^<http://www.w3.org/2001/XMLSchema#string> . " << 
-            "?contract <http://keto-coin.io/schema/rdf/1.0/keto/Contract#value> ?code . } ";
+    if (!contractMessage.contract_name().empty()) {
+        ss << "SELECT ?code WHERE { ?contract <http://keto-coin.io/schema/rdf/1.0/keto/Contract#name> '" << 
+                contractMessage.contract_name() << "'^^<http://www.w3.org/2001/XMLSchema#string> . " << 
+                "?contract <http://keto-coin.io/schema/rdf/1.0/keto/Contract#value> ?code . } ";
+    } else {
+        ss << "SELECT ?code WHERE { ?contract <http://keto-coin.io/schema/rdf/1.0/keto/Contract#hash> '" << 
+                contractMessage.account_hash() << "'^^<http://www.w3.org/2001/XMLSchema#string> . " << 
+                "?contract <http://keto-coin.io/schema/rdf/1.0/keto/Contract#value> ?code . } ";
+    }
     ResultVectorMap result = sessionPtr->executeQuery(ss.str());
     if (result.size() == 1) {
         contractMessage.set_contract(result[0]["code"]);
+    } else {
+        BOOST_THROW_EXCEPTION(keto::account_db::UnknownContractException());
     }
     
 }

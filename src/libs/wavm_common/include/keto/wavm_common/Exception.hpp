@@ -29,6 +29,7 @@ KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, InvalidContractException , 
 KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, LinkingFailedException , "Linking failed.");
 KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, MissingEntryPointException , "The entry point to the web assembly was not found.");
 KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, ContactExecutionFailedException , "Contract execution failed.");
+KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, UnsupportedDataTypeTransactionException , "Unsupported data type transactions.");
 
 }
 }
