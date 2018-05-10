@@ -88,14 +88,14 @@ void encodeWastFile(std::shared_ptr<ketoEnv::Config> config,
     boost::filesystem::path targetFile = config->getVariablesMap()[keto::contract::Constants::TARGET_FILE].as<std::string>();
     
     std::ifstream in(sourceFile.string());
-    std::string line;
     std::stringstream ss;
+    char character = in.get();
     while (!in.eof()) {
-        in >> line;
-        ss << line << std::endl;
+        ss << character;
+        character = in.get();
     }
     in.close();
-    
+    std::cout << "The line is : " <<ss.str() << std::endl;
     std::ofstream out(targetFile.string());
     out << Botan::hex_encode(
             keto::server_common::VectorUtils().copyStringToVector(ss.str()));
