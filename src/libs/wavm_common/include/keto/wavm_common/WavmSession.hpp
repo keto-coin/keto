@@ -39,7 +39,7 @@ typedef std::shared_ptr<WavmSession> WavmSessionPtr;
 class WavmSession {
 public:
     WavmSession(const keto::proto::SandboxCommandMessage& sandboxCommandMessage,
-            keto::crypto::KeyLoaderPtr keyLoaderPtr);
+            const keto::crypto::KeyLoaderPtr& keyLoaderPtr);
     WavmSession(const WavmSession& orig) = delete;
     virtual ~WavmSession();
     

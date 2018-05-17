@@ -29,6 +29,7 @@ thread_local WavmSessionPtr WavmSessionManager::wavmSessionPtr;
 
 
 WavmSessionManager::WavmSessionManager() {
+    std::cout << "From the wavm session" << std::endl;
     std::shared_ptr<keto::environment::Config> config = 
             keto::environment::EnvironmentManager::getInstance()->getConfig();
     if (!config->getVariablesMap().count(keto::server_common::Constants::PRIVATE_KEY)) {
@@ -49,7 +50,7 @@ WavmSessionManager::~WavmSessionManager() {
 }
 
 WavmSessionManagerPtr WavmSessionManager::init() {
-    return singleton = std::shared_ptr<WavmSessionManager>();
+    return singleton = std::make_shared<WavmSessionManager>();
 }
 
 

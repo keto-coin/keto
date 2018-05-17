@@ -33,7 +33,7 @@ namespace keto {
 namespace wavm_common {
 
 WavmSession::WavmSession(const keto::proto::SandboxCommandMessage& sandboxCommandMessage,
-        keto::crypto::KeyLoaderPtr keyLoaderPtr) : 
+        const keto::crypto::KeyLoaderPtr& keyLoaderPtr) : 
     sandboxCommandMessage(sandboxCommandMessage) , keyLoaderPtr(keyLoaderPtr) {
     transactionProtoHelper.setTransaction(sandboxCommandMessage.transaction());
     transactionMessageHelperPtr = transactionProtoHelper.getTransactionMessageHelper();
