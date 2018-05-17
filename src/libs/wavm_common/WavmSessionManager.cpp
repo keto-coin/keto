@@ -13,7 +13,12 @@
 
 #include <condition_variable>
 
+#include "keto/environment/EnvironmentManager.hpp"
+#include "keto/environment/Config.hpp"
+
 #include "keto/wavm_common/WavmSessionManager.hpp"
+#include "keto/server_common/Constants.hpp"
+#include "keto/wavm_common/Exception.hpp"
 
 
 namespace keto {
@@ -24,6 +29,20 @@ thread_local WavmSessionPtr WavmSessionManager::wavmSessionPtr;
 
 
 WavmSessionManager::WavmSessionManager() {
+    std::shared_ptr<keto::environment::Config> config = 
+            keto::environment::EnvironmentManager::getInstance()->getConfig();
+    if (!config->getVariablesMap().count(keto::server_common::Constants::PRIVATE_KEY)) {
+        BOOST_THROW_EXCEPTION(keto::wavm_common::PrivateKeyNotFoundException());
+    }
+    std::string privateKeyPath = 
+            config->getVariablesMap()[keto::server_common::Constants::PRIVATE_KEY].as<std::string>();
+    if (!config->getVariablesMap().count(keto::server_common::Constants::PUBLIC_KEY)) {
+        BOOST_THROW_EXCEPTION(keto::wavm_common::PublicKeyNotFoundException());
+    }
+    std::string publicKeyPath = 
+            config->getVariablesMap()[keto::server_common::Constants::PUBLIC_KEY].as<std::string>();
+    this->keyLoaderPtr = std::make_shared<keto::crypto::KeyLoader>(privateKeyPath,
+            publicKeyPath);
 }
 
 WavmSessionManager::~WavmSessionManager() {
@@ -46,7 +65,8 @@ WavmSessionManagerPtr WavmSessionManager::getInstance() {
 
 WavmSessionPtr WavmSessionManager::initWavmSession(
     const keto::proto::SandboxCommandMessage& sandboxCommandMessage) {
-    return wavmSessionPtr = std::make_shared<WavmSession>(sandboxCommandMessage);
+    return wavmSessionPtr = std::make_shared<WavmSession>(sandboxCommandMessage,
+            this->keyLoaderPtr);
 }
 
 

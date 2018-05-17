@@ -25,9 +25,13 @@
 #include "keto/server_common/Events.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
 
+#include "keto/common/Log.hpp"
+#include "keto/common/Exception.hpp"
+
 #include "keto/sandbox/SandboxService.hpp"
 #include "keto/wavm_common/WavmEngineManager.hpp"
 #include "keto/wavm_common/WavmSessionManager.hpp"
+#include "keto/wavm_common/WavmSessionScope.hpp"
 #include "keto/environment/EnvironmentManager.hpp"
 #include "keto/server_common/VectorUtils.hpp"
 
@@ -72,15 +76,32 @@ keto::event::Event SandboxService::executeActionMessage(const keto::event::Event
             keto::server_common::fromEvent<keto::proto::SandboxCommandMessage>(event);
     std::cout << "After extracting the event information : " << sandboxCommandMessage.contract() << std::endl;
     
-    keto::wavm_common::WavmSessionManager::getInstance()->initWavmSession(sandboxCommandMessage);
-    std::string buffer = sandboxCommandMessage.contract();
-    std::cout << "The buffer : " << buffer << std::endl;
-    std::string code = keto::server_common::VectorUtils().copyVectorToString(Botan::hex_decode(
-            buffer,true));
-    std::cout << "The code : " << code << std::endl;
-    keto::wavm_common::WavmEngineManager::getInstance()->getEngine(code)->execute();
-    
-    return event;
+    try {
+        keto::wavm_common::WavmSessionScope wavmSessionScope(sandboxCommandMessage);
+        std::string buffer = sandboxCommandMessage.contract();
+        std::cout << "The buffer : " << buffer << std::endl;
+        std::string code = keto::server_common::VectorUtils().copyVectorToString(Botan::hex_decode(
+                buffer,true));
+        std::cout << "The code : " << code << std::endl;
+        keto::wavm_common::WavmEngineManager::getInstance()->getEngine(code)->execute();
+        
+        sandboxCommandMessage = wavmSessionScope.getSession()->getSandboxCommandMessage();
+        
+    } catch (keto::common::Exception& ex) {
+        KETO_LOG_ERROR << "Failed to process the contract : " << ex.what();
+        KETO_LOG_ERROR << "Cause: " << boost::diagnostic_information(ex,true);
+        throw ex;
+    } catch (boost::exception& ex) {
+        KETO_LOG_ERROR << "Failed to process the contract : " << boost::diagnostic_information(ex,true);
+        throw;
+    } catch (std::exception& ex) {
+        KETO_LOG_ERROR << "Failed to process the contract : " << ex.what();
+        throw ex;
+    } catch (...) {
+        KETO_LOG_INFO << "Failed to process the contract";
+        throw;
+    }
+    return keto::server_common::toEvent<keto::proto::SandboxCommandMessage>(sandboxCommandMessage);
 }
 
 }

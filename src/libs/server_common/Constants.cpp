@@ -20,6 +20,11 @@ namespace server_common {
 const char* Constants::PUBLIC_KEY_DIR = "public-key-dir";
 const char* Constants::ACCOUNT_HASH = "account-hash";
 
+// keys for server
+const char* Constants::PRIVATE_KEY    = "server-private-key";
+const char* Constants::PUBLIC_KEY     = "server-public-key";
+
+
 const char* Constants::SERVICE::ROUTE       = "route";
 const char* Constants::SERVICE::BALANCE     = "balance";
 const char* Constants::SERVICE::BLOCK       = "block";
@@ -27,6 +32,9 @@ const char* Constants::SERVICE::PROCESS     = "process";
 
 
 const char* Constants::CONTRACTS::BASE_ACCOUNT_CONTRACT     = "base_account_transaction";
+
+const char* Constants::ACCOUNT_ACTIONS::DEBIT     = "dr";
+const char* Constants::ACCOUNT_ACTIONS::CREDIT     = "cr";
 
 }
 }

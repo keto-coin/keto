@@ -30,6 +30,10 @@ KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, LinkingFailedException , "L
 KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, MissingEntryPointException , "The entry point to the web assembly was not found.");
 KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, ContactExecutionFailedException , "Contract execution failed.");
 KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, UnsupportedDataTypeTransactionException , "Unsupported data type transactions.");
+KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, NodeNotFoundRDFException , "The rdf node was not found.");
+KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, UnrecognisedTransactionStatusException , "The status of the transaction is not recognised.");
+KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, PrivateKeyNotFoundException , "The private key for this node was not found.");
+KETO_DECLARE_DERIVED_EXCEPTION (WavmCommonException, PublicKeyNotFoundException , "The public key for this node was not found.");
 
 }
 }

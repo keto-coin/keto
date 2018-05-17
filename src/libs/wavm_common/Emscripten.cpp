@@ -458,6 +458,13 @@ namespace keto {
             keto::wavm_common::WavmUtils::log(U32(level),msgString);
             return;
         }
+        
+        DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(keto,"buildString",void,typescript_buildString ,I32 msg)
+        {
+            Runtime::MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
+            std::string msgString = keto::wavm_common::WavmUtils::readTypeScriptString(memory,msg);
+            return;
+        }
 
         DEFINE_INTRINSIC_FUNCTION_WITH_MEM_AND_TABLE(keto,"getAccount",I32,typescript_getAccount)
         {

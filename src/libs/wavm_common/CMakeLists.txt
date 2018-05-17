@@ -22,6 +22,9 @@ add_library( keto_wavm_common
             RDFMemorySession.cpp
             WavmSession.cpp
             WavmSessionManager.cpp
+            WavmSessionScope.cpp
+            RDFURLUtils.cpp
+            RDFConstants.cpp
             
              ${HEADERS}
            )
@@ -43,6 +46,7 @@ target_include_directories( keto_wavm_common
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/" 
                             PUBLIC "${CMAKE_BINARY_DIR}/src/libs/common/include/" 
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../environment/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../crypto/include/"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../server_common/include/"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../transaction_common/include/"

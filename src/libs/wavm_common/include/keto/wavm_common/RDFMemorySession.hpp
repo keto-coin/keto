@@ -18,6 +18,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <ctime>
 
 #include <librdf.h>
 #include <redland.h>
@@ -43,6 +44,26 @@ public:
     
     void persist(keto::asn1::RDFSubjectHelperPtr& subject);
     ResultVectorMap executeQuery(const std::string& queryStr);
+    
+    // get methods
+    std::string getStringValue(const std::string& subject, const std::string& predicate);
+    long getLongValue(const std::string& subject, const std::string& predicate);
+    float getFloatValue(const std::string& subject, const std::string& predicate);
+    bool getBooleanValue(const std::string& subject, const std::string& predicate);
+    time_t getDateTimeValue(const std::string& subject, const std::string& predicate);
+    
+    // set method
+    void setStringValue(const std::string& subject, const std::string& predicate,
+            const std::string& value);
+    void setLongValue(const std::string& subject, const std::string& predicate,
+            const long value);
+    void setFloatValue(const std::string& subject, const std::string& predicate,
+            const float value);
+    void setBooleanValue(const std::string& subject, const std::string& predicate,
+            const bool value);
+    void setDateTimeValue(const std::string& subject, const std::string& predicate,
+            const time_t value);
+    
     
 private:
     librdf_world* world;

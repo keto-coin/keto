@@ -20,6 +20,7 @@
 #include "Sandbox.pb.h"
 
 #include "keto/wavm_common/WavmSession.hpp"
+#include "keto/crypto/KeyLoader.hpp"
 
 namespace keto {
 namespace wavm_common {
@@ -42,7 +43,11 @@ public:
     void finWavmSession();
     
 private:
+    // thread local reference to a wavm session. This is effectively a map indexed on thread id.
     static thread_local WavmSessionPtr wavmSessionPtr;
+    
+    // private member variables
+    keto::crypto::KeyLoaderPtr keyLoaderPtr;
 };
 
 

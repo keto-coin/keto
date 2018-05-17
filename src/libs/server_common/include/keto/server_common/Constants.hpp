@@ -26,6 +26,11 @@ public:
     static const char* PUBLIC_KEY_DIR;
     static const char* ACCOUNT_HASH;
     
+    // keys for server
+    static const char* PRIVATE_KEY;
+    static const char* PUBLIC_KEY;
+
+    
     class SERVICE {
     public:
         static const char* ROUTE;
@@ -38,6 +43,12 @@ public:
     public:
         static const char* BASE_ACCOUNT_CONTRACT;
         
+    };
+    
+    class ACCOUNT_ACTIONS {
+    public:
+        static const char* DEBIT;
+        static const char* CREDIT;
     };
     
 private:

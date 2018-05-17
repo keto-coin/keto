@@ -30,6 +30,8 @@
 namespace keto {
 namespace crypto {
 
+class KeyLoader;
+typedef std::shared_ptr<KeyLoader> KeyLoaderPtr;
 
 class KeyLoader {
 public:
