@@ -15,6 +15,7 @@
 #define WAVMUTILS_HPP
 
 #include <string>
+#include <vector>
 
 #include "Inline/BasicTypes.h"
 #include "Runtime/Runtime.h"
@@ -30,6 +31,7 @@ public:
     
     static std::string readCString(Runtime::MemoryInstance* memory,I32 stringAddress);
     static std::string readTypeScriptString(Runtime::MemoryInstance* memory,I32 stringAddress);
+    static std::vector<char> buildTypeScriptString(const std::string& string);
     static void log(uint32_t intLevel,const std::string& msg);
 private:
 

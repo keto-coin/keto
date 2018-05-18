@@ -60,7 +60,8 @@ keto::asn1::NumberHelper WavmSession::getTransactionValue() {
 }
 
 keto::asn1::NumberHelper WavmSession::getTransactionFee() {
-    
+    keto::asn1::NumberHelper numberHelper((const long)0);
+    return numberHelper;
 }
 
 // request methods
@@ -303,14 +304,13 @@ void WavmSession::addDateTimeModelEntry(const std::string& subjectUrl, const std
 
 
 keto::asn1::HashHelper WavmSession::getCurrentAccountHash() {
-    switch(transactionMessageHelperPtr->getStatus()) {
-        Status_init:
-        Status_debit:
-            return transactionMessageHelperPtr->getSourceAccount();
-        Status_credit:
-            return transactionMessageHelperPtr->getTargetAccount();
-        Status_fee:
-            return transactionMessageHelperPtr->getFeeAccount();
+    if ((transactionMessageHelperPtr->getStatus() == Status_init) ||
+        (transactionMessageHelperPtr->getStatus() == Status_debit)){
+        return transactionMessageHelperPtr->getSourceAccount();
+    } else if (transactionMessageHelperPtr->getStatus() == Status_credit) {
+        return transactionMessageHelperPtr->getTargetAccount();
+    } else if (transactionMessageHelperPtr->getStatus() == Status_fee) {      
+        return transactionMessageHelperPtr->getFeeAccount();
     }
     std::stringstream ss;
     ss << "Unrecognised status [" << transactionMessageHelperPtr->getStatus() << "]";

@@ -51,6 +51,22 @@ std::string WavmUtils::readTypeScriptString(Runtime::MemoryInstance* memory,I32 
     return returnString;
 }
 
+std::vector<char> WavmUtils::buildTypeScriptString(const std::string& value) {
+    int currentValue = value.length();
+    std::vector<char> result;
+    for (int count = 0 ; count < 4; count++) {
+        int mod = currentValue % 100;
+        result.push_back((char)mod);
+        currentValue = currentValue / 100;
+    }
+    
+    for (const char character : value) {
+        result.push_back(character);
+        result.push_back(0);
+    }
+    return result;
+}
+
 
 void WavmUtils::log(uint32_t intLevel,const std::string& msg) {
     switch(intLevel) {
