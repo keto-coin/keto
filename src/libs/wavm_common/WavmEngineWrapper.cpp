@@ -35,6 +35,9 @@
 
 #include "keto/wavm_common/WavmEngineWrapper.hpp"
 #include "keto/wavm_common/Exception.hpp"
+#include "keto/wavm_common/WavmSession.hpp"
+#include "keto/wavm_common/WavmSessionManager.hpp"
+
 
 
 using namespace IR;
@@ -207,7 +210,18 @@ void WavmEngineWrapper::execute() {
 
     // Look up the function export to call.
     FunctionInstance* functionInstance;
-    functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"credit"));
+    Status currentStatus = WavmSessionManager::getInstance()->getWavmSession()->getStatus();
+    if ((currentStatus == Status_init) ||
+        (currentStatus == Status_debit)){
+        functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"debit"));
+    } else if (currentStatus == Status_credit) {
+        functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"credit"));
+    } else if (currentStatus == Status_fee) {      
+        functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"fee"));
+    } else if (currentStatus == Status_processing) {      
+        functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"process"));
+    }
+    
     if(!functionInstance) { functionInstance = asFunctionNullable(getInstanceExport(moduleInstance,"_main")); }
     if(!functionInstance)
     {

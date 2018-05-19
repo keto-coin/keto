@@ -14,7 +14,7 @@
 #include "keto/asn1/RDFSubjectHelper.hpp"
 #include "keto/asn1/Exception.hpp"
 #include "keto/asn1/CloneHelper.hpp"
-
+#include "keto/asn1/StringUtils.hpp"
 
 
 namespace keto {
@@ -73,7 +73,8 @@ RDFSubjectHelper::operator ANY_t*() {
 
 bool RDFSubjectHelper::containsPredicate(const std::string& predicate) {
     for (int index = 0; index < this->rdfSubject->rdfPredicates.list.count; index++) {
-        std::string name = (const char*)this->rdfSubject->rdfPredicates.list.array[index]->predicate.buf;
+        std::string name = 
+                StringUtils::copyBuffer(this->rdfSubject->rdfPredicates.list.array[index]->predicate);
         if (name.compare(predicate) == 0) {
             return true;
         }
@@ -83,7 +84,8 @@ bool RDFSubjectHelper::containsPredicate(const std::string& predicate) {
 
 RDFPredicateHelperPtr RDFSubjectHelper::operator [](const std::string& predicate) {
     for (int index = 0; index < this->rdfSubject->rdfPredicates.list.count; index++) {
-        std::string name = (const char*)this->rdfSubject->rdfPredicates.list.array[index]->predicate.buf;
+        std::string name = StringUtils::copyBuffer(
+                this->rdfSubject->rdfPredicates.list.array[index]->predicate);
         if (name.compare(predicate) == 0) {
             return RDFPredicateHelperPtr(new RDFPredicateHelper(
                     this->rdfSubject->rdfPredicates.list.array[index],false));
@@ -126,8 +128,8 @@ std::vector<RDFPredicateHelperPtr> RDFSubjectHelper::getPredicates() {
 std::vector<std::string> RDFSubjectHelper::listPredicates() {
     std::vector<std::string> result;
     for (int index = 0; index < this->rdfSubject->rdfPredicates.list.count; index++) {
-        result.push_back((const char*)
-                this->rdfSubject->rdfPredicates.list.array[index]->predicate.buf);
+        result.push_back(StringUtils::copyBuffer(
+                this->rdfSubject->rdfPredicates.list.array[index]->predicate));
     }
     return result;
 }

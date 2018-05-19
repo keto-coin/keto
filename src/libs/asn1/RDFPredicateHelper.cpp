@@ -15,6 +15,7 @@
 #include "keto/asn1/Exception.hpp"
 #include "keto/asn1/RDFObjectHelper.hpp"
 #include "keto/asn1/CloneHelper.hpp"
+#include "keto/asn1/StringUtils.hpp"
 
 namespace keto {
 namespace asn1 {
@@ -85,7 +86,7 @@ RDFPredicateHelper& RDFPredicateHelper::setPredicate(const std::string& predicat
 }
 
 std::string RDFPredicateHelper::getPredicate() {
-    return std::string((const char*)this->rdfPredicate->predicate.buf);
+    return StringUtils::copyBuffer(this->rdfPredicate->predicate);
 }
 
 std::vector<RDFObjectHelperPtr> RDFPredicateHelper::listObjects() {
