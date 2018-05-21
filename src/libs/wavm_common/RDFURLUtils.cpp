@@ -25,8 +25,6 @@ RDFURLUtils::RDFURLUtils(const std::string& url) {
     int pos = url.find("#");
     this->modelBaseUrl = url.substr(0,pos);
     this->modelName = url.substr(pos+1);
-    std::cout << "Base url [" << this->modelBaseUrl << "][" << 
-            this->modelName << "]" << std::endl;
 }
 
 RDFURLUtils::~RDFURLUtils() {

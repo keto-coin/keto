@@ -85,6 +85,7 @@ keto::proto::Transaction TransactionProcessor::processTransaction(keto::proto::T
         }
         
     }
+    transactionProtoHelper.setTransaction(sandboxCommandMessage.transaction());
     
     //transactionProtoHelper.getTransactionMessageHelper()
     return transactionProtoHelper;

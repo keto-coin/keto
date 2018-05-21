@@ -71,18 +71,14 @@ SandboxServicePtr SandboxService::getInstance() {
 }
 
 keto::event::Event SandboxService::executeActionMessage(const keto::event::Event& event) {
-    std::cout << "Extract the event information" << std::endl;
     keto::proto::SandboxCommandMessage sandboxCommandMessage =
             keto::server_common::fromEvent<keto::proto::SandboxCommandMessage>(event);
-    std::cout << "After extracting the event information : " << sandboxCommandMessage.contract() << std::endl;
     
     try {
         keto::wavm_common::WavmSessionScope wavmSessionScope(sandboxCommandMessage);
         std::string buffer = sandboxCommandMessage.contract();
-        std::cout << "The buffer : " << buffer << std::endl;
         std::string code = keto::server_common::VectorUtils().copyVectorToString(Botan::hex_decode(
                 buffer,true));
-        std::cout << "The code : " << code << std::endl;
         keto::wavm_common::WavmEngineManager::getInstance()->getEngine(code)->execute();
         
         sandboxCommandMessage = wavmSessionScope.getSession()->getSandboxCommandMessage();

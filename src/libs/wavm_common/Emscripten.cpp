@@ -507,7 +507,6 @@ namespace keto {
             Runtime::MemoryInstance* memory = getMemoryFromRuntimeData(contextRuntimeData,defaultMemoryId.id);
             std::string accountModelString = keto::wavm_common::WavmUtils::readTypeScriptString(memory,accountModel);
             std::string transactionValueModelString = keto::wavm_common::WavmUtils::readTypeScriptString(memory,transactionValueModel);
-            std::cout << "The account [" << accountModelString << "][" << transactionValueModelString << "][" << (U64)value << "]" << std::endl;
             
             keto::wavm_common::WavmSessionManager::getInstance()->getWavmSession()->createDebitEntry(accountModelString,transactionValueModelString,(U64)value);
         }

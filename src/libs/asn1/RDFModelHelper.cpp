@@ -105,7 +105,6 @@ bool RDFModelHelper::contains(const std::string& subject) {
 }
 
 RDFSubjectHelperPtr RDFModelHelper::operator [](const std::string& subject) {
-    std::cout << "Loop through entries : " << this->rdfModel->rdfDataFormat.list.count << std::endl;
     for (int index = 0; index < this->rdfModel->rdfDataFormat.list.count; index++) {
         if (this->rdfModel->rdfDataFormat.list.array[index]->present != RDFDataFormat_PR_rdfSubject) {
             continue;
@@ -113,18 +112,14 @@ RDFSubjectHelperPtr RDFModelHelper::operator [](const std::string& subject) {
         
         std::string subjectName = StringUtils::copyBuffer(
                 this->rdfModel->rdfDataFormat.list.array[index]->choice.rdfSubject.subject);
-        std::cout << "Compare subjects [" << subjectName << "][" << subject << "]" << std::endl;
         if (subjectName.compare(subject) != 0) {
             continue;
         }
-        std::cout << "Return the entries[" << subject << "]" << std::endl;
         
-        return RDFSubjectHelperPtr(new RDFSubjectHelper(keto::asn1::clone<RDFSubject>(
-                &this->rdfModel->rdfDataFormat.list.array[index]->choice.rdfSubject,
-                &asn_DEF_RDFSubject)));
+        return RDFSubjectHelperPtr(new RDFSubjectHelper(
+                &this->rdfModel->rdfDataFormat.list.array[index]->choice.rdfSubject,false));
     }
     std::stringstream ss;
-    ss << "The subject was not found [" << subject.size() << "][" << subject << "]";
     BOOST_THROW_EXCEPTION(keto::asn1::SubjectNotFoundInModelException(ss.str()));
 }
 

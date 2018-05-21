@@ -113,6 +113,7 @@ void AccountStore::applyTransaction(
         keto::asn1::RDFModelHelperPtr rdfModel = accountRDFStatement->getModel();
         for (keto::asn1::RDFSubjectHelperPtr rdfSubject : rdfModel->getSubjects()) {
             if (accountRDFStatement->getOperation() == PERSIST) {
+                std::cout << "This is an attempt to persist the subject" << std::endl;
                 sessionPtr->persist(rdfSubject);
             } else {
                 sessionPtr->remove(rdfSubject);

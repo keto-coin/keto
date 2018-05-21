@@ -46,7 +46,9 @@ std::string WavmUtils::readTypeScriptString(Runtime::MemoryInstance* memory,I32 
     size += Runtime::memoryRef<char>(memory,stringAddress+1) * 100;
     size += Runtime::memoryRef<char>(memory,stringAddress+2) * 10000;
     for (int index = 0; index < (size * 2); index++) {
-        returnString += (int)Runtime::memoryRef<char>(memory,stringAddress + 4 + index);
+        if ((int)Runtime::memoryRef<char>(memory,stringAddress + 4 + index) != 0) {
+            returnString += (int)Runtime::memoryRef<char>(memory,stringAddress + 4 + index);
+        }
     }
     return returnString;
 }

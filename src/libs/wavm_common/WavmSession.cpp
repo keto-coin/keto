@@ -13,6 +13,8 @@
 
 #include <cstdlib>
 
+#include "RDFChange.h"
+
 #include "keto/server_common/Constants.hpp"
 #include "keto/wavm_common/WavmSession.hpp"
 #include "keto/wavm_common/RDFURLUtils.hpp"
@@ -34,7 +36,8 @@ namespace wavm_common {
 
 WavmSession::WavmSession(const keto::proto::SandboxCommandMessage& sandboxCommandMessage,
         const keto::crypto::KeyLoaderPtr& keyLoaderPtr) : 
-    sandboxCommandMessage(sandboxCommandMessage) , keyLoaderPtr(keyLoaderPtr) {
+    sandboxCommandMessage(sandboxCommandMessage) , modelHelper(RDFChange_persist),
+        keyLoaderPtr(keyLoaderPtr) {
     transactionProtoHelper.setTransaction(sandboxCommandMessage.transaction());
     transactionMessageHelperPtr = transactionProtoHelper.getTransactionMessageHelper();
     rdfSessionPtr = std::make_shared<RDFMemorySession>();
@@ -106,21 +109,16 @@ void WavmSession::createDebitEntry(const std::string& accountModel, const std::s
     std::string id = this->getTransaction();
     std::string hash = this->getAccount();
     std::string subjectUrl = transactionUrl.buildSubjectUrl(id);
-    std::cout << "Added id" << std::endl;
     this->addModelEntry(
         subjectUrl,transactionUrl.buildPredicateUrl(RDFConstants::ACCOUNT_TRANSACTION_SUBJECTS::ID),id);
-    std::cout << "Added date" << std::endl;
     this->addDateTimeModelEntry(
         subjectUrl,transactionUrl.buildPredicateUrl(RDFConstants::ACCOUNT_TRANSACTION_SUBJECTS::DATE_TIME),time(0));
-    std::cout << "add the type of transaction" << std::endl;
     this->addModelEntry(
         subjectUrl,transactionUrl.buildPredicateUrl(RDFConstants::ACCOUNT_TRANSACTION_SUBJECTS::TYPE),
             keto::server_common::Constants::Constants::ACCOUNT_ACTIONS::DEBIT);
-    std::cout << "add the account" << std::endl;
     this->addModelEntry(
         subjectUrl,transactionUrl.buildPredicateUrl(RDFConstants::ACCOUNT_TRANSACTION_SUBJECTS::ACCOUNT_HASH),
             hash);
-    std::cout << "add the subject" << std::endl;
     this->addModelEntry(
         subjectUrl,transactionUrl.buildPredicateUrl(RDFConstants::ACCOUNT_TRANSACTION_SUBJECTS::VALUE),
             value.operator long());
@@ -167,7 +165,7 @@ void WavmSession::setResponseFloatValue(const std::string& subject, const std::s
 
 void WavmSession::setResponseBooleanValue(const std::string& subject, const std::string& predicate,
         const bool value) {
-    this->addModelEntry(subject,predicate,value);
+    this->addBooleanModelEntry(subject,predicate,value);
 }
 
 
@@ -195,11 +193,9 @@ keto::proto::SandboxCommandMessage WavmSession::getSandboxCommandMessage() {
 
 keto::asn1::RDFSubjectHelperPtr WavmSession::getSubject(const std::string& subjectUrl) {
     if (!this->modelHelper.contains(subjectUrl)) {
-        std::cout << "Add the subject [" << subjectUrl << "]" << std::endl;
         keto::asn1::RDFSubjectHelper subject(subjectUrl);
         this->modelHelper.addSubject(subject);
     }
-    std::cout << "Find the subject" << std::endl;
     return this->modelHelper[subjectUrl];
 }
 
@@ -214,7 +210,6 @@ keto::asn1::RDFPredicateHelperPtr WavmSession::getPredicate(
 
 void WavmSession::addModelEntry(const std::string& subjectUrl, const std::string predicateUrl,
         const std::string& value) {
-    std::cout << "Subject[" << subjectUrl << "][" << predicateUrl << "][" << value << "]" << std::endl;
     keto::asn1::RDFSubjectHelperPtr subjectHelperPtr = getSubject(subjectUrl);
     keto::asn1::RDFPredicateHelperPtr predicate = getPredicate(subjectHelperPtr,predicateUrl);
     
@@ -268,7 +263,7 @@ void WavmSession::addModelEntry(const std::string& subjectUrl, const std::string
     
 }
 
-void WavmSession::addModelEntry(const std::string& subjectUrl, const std::string predicateUrl,
+void WavmSession::addBooleanModelEntry(const std::string& subjectUrl, const std::string predicateUrl,
         const bool value) {
     keto::asn1::RDFSubjectHelperPtr subjectHelperPtr = getSubject(subjectUrl);
     keto::asn1::RDFPredicateHelperPtr predicate = getPredicate(subjectHelperPtr,predicateUrl);

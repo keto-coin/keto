@@ -33,8 +33,8 @@ const char* Constants::SERVICE::PROCESS     = "process";
 
 const char* Constants::CONTRACTS::BASE_ACCOUNT_CONTRACT     = "base_account_transaction";
 
-const char* Constants::ACCOUNT_ACTIONS::DEBIT     = "dr";
-const char* Constants::ACCOUNT_ACTIONS::CREDIT     = "cr";
+const char* Constants::ACCOUNT_ACTIONS::DEBIT     = "debit";
+const char* Constants::ACCOUNT_ACTIONS::CREDIT     = "credit";
 
 }
 }

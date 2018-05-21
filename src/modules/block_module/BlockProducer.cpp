@@ -11,6 +11,8 @@
  * Created on April 2, 2018, 10:38 AM
  */
 
+#include <iostream>
+
 #include "keto/block/BlockProducer.hpp"
 
 #include "keto/common/Log.hpp"
@@ -106,7 +108,7 @@ void BlockProducer::terminate() {
 }
 
 void BlockProducer::addTransaction(keto::proto::Transaction transaction) {
-    std::lock_guard<std::mutex> guard(this->classMutex);
+    std::lock_guard<std::mutex> uniqueLock(this->classMutex);
     if (this->currentState == State::terminated) {
         BOOST_THROW_EXCEPTION(keto::block::BlockProducerTerminatedException());
     }
@@ -137,6 +139,7 @@ void BlockProducer::generateBlock(std::deque<keto::proto::Transaction> transacti
     keto::block_db::BlockBuilderPtr blockBuilderPtr = 
             std::make_shared<keto::block_db::BlockBuilder>(parentHash);
     for (keto::proto::Transaction& transaction : transactions) {
+        std::cout << "The transaction" << std::endl;
         keto::transaction_common::TransactionProtoHelper transactionProtoHelper(
             keto::server_common::fromEvent<keto::proto::Transaction>(
             keto::server_common::processEvent(keto::server_common::toEvent<keto::proto::Transaction>(

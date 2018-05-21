@@ -97,7 +97,7 @@ private:
         const long value);
     void addModelEntry(const std::string& subjectUrl, const std::string predicateUrl,
         const float value);
-    void addModelEntry(const std::string& subjectUrl, const std::string predicateUrl,
+    void addBooleanModelEntry(const std::string& subjectUrl, const std::string predicateUrl,
         const bool value);
     void addDateTimeModelEntry(const std::string& subjectUrl, const std::string predicateUrl,
         const time_t value);

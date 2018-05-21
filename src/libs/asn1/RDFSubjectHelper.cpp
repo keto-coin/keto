@@ -88,7 +88,7 @@ RDFPredicateHelperPtr RDFSubjectHelper::operator [](const std::string& predicate
                 this->rdfSubject->rdfPredicates.list.array[index]->predicate);
         if (name.compare(predicate) == 0) {
             return RDFPredicateHelperPtr(new RDFPredicateHelper(
-                    this->rdfSubject->rdfPredicates.list.array[index],false));
+                        this->rdfSubject->rdfPredicates.list.array[index],false));
         }
     }
     BOOST_THROW_EXCEPTION(keto::asn1::PredicateNotFoundException());
@@ -113,7 +113,7 @@ std::string RDFSubjectHelper::getOntologyClass() {
 }
 
 std::string RDFSubjectHelper::getSubject() {
-    return (const char*)this->rdfSubject->subject.buf;
+    return StringUtils::copyBuffer(this->rdfSubject->subject);
 }
 
 std::vector<RDFPredicateHelperPtr> RDFSubjectHelper::getPredicates() {
