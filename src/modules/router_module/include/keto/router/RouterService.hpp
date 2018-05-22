@@ -39,6 +39,8 @@ public:
     
     keto::event::Event routeMessage(const keto::event::Event& event);
     keto::event::Event registerService(const keto::event::Event& event);
+    keto::event::Event updateStateRouteMessage(const keto::event::Event& event);
+    
     
 private:
     RouterService();

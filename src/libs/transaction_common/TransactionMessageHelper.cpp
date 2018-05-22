@@ -187,6 +187,37 @@ Status TransactionMessageHelper::getStatus() {
 }
 
 
+keto::asn1::HashHelper TransactionMessageHelper::getCurrentAccount() {
+    if ((getStatus() == Status_init) ||
+        (getStatus() == Status_debit ) ||
+        (getStatus() == Status_processing)){
+        return getSourceAccount();
+    } else if (getStatus() == Status_credit || getStatus() == Status_complete) {
+        return getTargetAccount();
+    } else if (getStatus() == Status_fee) {      
+        return getFeeAccount();
+    }
+    std::stringstream ss;
+    ss << "Unrecognised status [" << getStatus() << "]";
+    BOOST_THROW_EXCEPTION(keto::transaction_common::UnrecognisedTransactionStatusException(
+                        ss.str()));
+}
+
+
+Status TransactionMessageHelper::incrementStatus() {
+    if ((this->transactionMessage->currentStatus == Status_init) ||
+        (this->transactionMessage->currentStatus == Status_debit)){
+        this->transactionMessage->currentStatus = Status_processing;
+    } else if (this->transactionMessage->currentStatus == Status_processing) {
+        this->transactionMessage->currentStatus = Status_credit;
+    } else if (this->transactionMessage->currentStatus == Status_credit) {
+        this->transactionMessage->currentStatus = Status_fee;
+    } else if (this->transactionMessage->currentStatus == Status_fee) {      
+        this->transactionMessage->currentStatus = Status_complete;
+    }
+    return (Status)this->transactionMessage->currentStatus;
+}
+
 SignedTransactionHelperPtr TransactionMessageHelper::getSignedTransaction() {
     return SignedTransactionHelperPtr(
             new SignedTransactionHelper(&this->transactionMessage->signedTransaction));

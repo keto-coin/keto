@@ -30,8 +30,11 @@
 
 #include "keto/server_common/Events.hpp"
 #include "keto/server_common/EventServiceHelpers.hpp"
-#include "include/keto/block/TransactionProcessor.hpp"
-#include "include/keto/block/BlockProducer.hpp"
+#include "keto/block/TransactionProcessor.hpp"
+#include "keto/block/BlockProducer.hpp"
+
+#include "keto/transaction_common/MessageWrapperProtoHelper.hpp"
+#include "keto/transaction_common/TransactionProtoHelper.hpp"
 
 namespace keto {
 namespace block {
@@ -84,15 +87,28 @@ keto::event::Event BlockService::blockMessage(const keto::event::Event& event) {
             keto::server_common::fromEvent<keto::proto::MessageWrapper>(event);
     std::cout << "The block service says hi" << std::endl;
     
-    keto::proto::Transaction transaction;
-    messageWrapper.msg().UnpackTo(&transaction);
+    keto::transaction_common::MessageWrapperProtoHelper messageWrapperProtoHelper(
+        messageWrapper);
+    
+    keto::transaction_common::TransactionProtoHelperPtr transactionProtoHelperPtr
+            = messageWrapperProtoHelper.getTransaction();
     {
         std::lock_guard<std::mutex> guard(getAccountLock(
-            keto::server_common::VectorUtils().copyStringToVector(transaction.active_account())));
-        transaction = 
-            TransactionProcessor::getInstance()->processTransaction(transaction);
-        BlockProducer::getInstance()->addTransaction(transaction);
+            keto::server_common::VectorUtils().copyStringToVector(
+        transactionProtoHelperPtr->operator keto::proto::Transaction&().active_account())));
+        transactionProtoHelperPtr->operator =(
+            TransactionProcessor::getInstance()->processTransaction(
+            transactionProtoHelperPtr->operator keto::proto::Transaction&()));
+        BlockProducer::getInstance()->addTransaction(
+            transactionProtoHelperPtr->operator keto::proto::Transaction&());
     }
+    // move transaction to next phase and submit to router
+    messageWrapper = messageWrapperProtoHelper.operator keto::proto::MessageWrapper();
+    messageWrapperProtoHelper.setTransaction(transactionProtoHelperPtr);
+    keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
+            keto::server_common::Events::UPDATE_STATUS_ROUTE_MESSSAGE,
+            messageWrapper));
+    
     keto::proto::MessageWrapperResponse response;
     response.set_success(true);
     response.set_result("balanced");

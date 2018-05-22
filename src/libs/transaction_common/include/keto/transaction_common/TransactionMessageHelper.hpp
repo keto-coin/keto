@@ -65,9 +65,11 @@ public:
     keto::asn1::HashHelper getSourceAccount();
     keto::asn1::HashHelper getTargetAccount();
     keto::asn1::HashHelper getFeeAccount();
+    keto::asn1::HashHelper getCurrentAccount();
     keto::asn1::HashHelper getHash();
     keto::asn1::SignatureHelper getSignature();
     Status getStatus();
+    Status incrementStatus();
     SignedTransactionHelperPtr getSignedTransaction();
     
 private:

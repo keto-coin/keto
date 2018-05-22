@@ -25,6 +25,7 @@ target_include_directories( keto_http_server_session
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../event_service_api/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../server_common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../module_manager/include"
+                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../transaction_common/include"
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../asn1/include"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/proto/"
                             PUBLIC "${CMAKE_BINARY_DIR}/src/protocol/asn1/"

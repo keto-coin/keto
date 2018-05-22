@@ -29,6 +29,7 @@ KETO_DECLARE_DERIVED_EXCEPTION (TransactionCommonException, ChangeSequenceAddFai
 KETO_DECLARE_DERIVED_EXCEPTION (TransactionCommonException, TransactionTraceSequenceAddFailedException , "Failed to add a transaction trace to the sequence.");
 KETO_DECLARE_DERIVED_EXCEPTION (TransactionCommonException, SignedChangeSetSequenceAddFailedException , "Failed to add a signed change to the sequence.");
 KETO_DECLARE_DERIVED_EXCEPTION (TransactionCommonException, ANYSerializationFailedException , "Failed to serialize object.");
+KETO_DECLARE_DERIVED_EXCEPTION (TransactionCommonException, UnrecognisedTransactionStatusException , "The transaction is in an unrecognised state.");
 
 }
 }

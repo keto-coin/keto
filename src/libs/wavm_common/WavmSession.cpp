@@ -309,18 +309,7 @@ void WavmSession::addDateTimeModelEntry(const std::string& subjectUrl, const std
 
 
 keto::asn1::HashHelper WavmSession::getCurrentAccountHash() {
-    if ((transactionMessageHelperPtr->getStatus() == Status_init) ||
-        (transactionMessageHelperPtr->getStatus() == Status_debit)){
-        return transactionMessageHelperPtr->getSourceAccount();
-    } else if (transactionMessageHelperPtr->getStatus() == Status_credit) {
-        return transactionMessageHelperPtr->getTargetAccount();
-    } else if (transactionMessageHelperPtr->getStatus() == Status_fee) {      
-        return transactionMessageHelperPtr->getFeeAccount();
-    }
-    std::stringstream ss;
-    ss << "Unrecognised status [" << transactionMessageHelperPtr->getStatus() << "]";
-    BOOST_THROW_EXCEPTION(keto::wavm_common::UnrecognisedTransactionStatusException(
-                        ss.str()));
+    return transactionMessageHelperPtr->getCurrentAccount();
 }
 
 }

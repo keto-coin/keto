@@ -31,6 +31,7 @@
 #include "keto/server_session/Exception.hpp"
 #include "keto/crypto/SecureVectorUtils.hpp"
 
+#include "keto/transaction_common/MessageWrapperProtoHelper.hpp"
 
 namespace keto {
 namespace server_session {
@@ -65,20 +66,14 @@ std::string HttpTransactionManager::processTransaction(
                 "Failed to deserialized the transaction message."));
     }
     
-    keto::proto::MessageWrapper wrapper;
-    wrapper.set_version(1);
-    wrapper.set_session_hash(vectorHash.data(),vectorHash.size());
-    wrapper.set_account_hash(transaction.active_account());
-    wrapper.set_message_type(keto::proto::MessageType::MESSAGE_TYPE_TRANSACTION);
-    wrapper.set_message_operation(keto::proto::MessageOperation::MESSAGE_INIT);
-    google::protobuf::Any* any = new google::protobuf::Any();
-    any->PackFrom(transaction);
-    wrapper.set_allocated_msg(any);
+    keto::transaction_common::MessageWrapperProtoHelper messageWrapperProtoHelper;
+    messageWrapperProtoHelper.setSessionHash(hashHelper).setTransaction(transaction);
     
+    keto::proto::MessageWrapper messageWrapper = messageWrapperProtoHelper;
     keto::proto::MessageWrapperResponse  messageWrapperResponse = 
             keto::server_common::fromEvent<keto::proto::MessageWrapperResponse>(
             keto::server_common::processEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
-            keto::server_common::Events::ROUTE_MESSAGE,wrapper)));
+            keto::server_common::Events::ROUTE_MESSAGE,messageWrapper)));
     
     return messageWrapperResponse.result();
 }

@@ -17,6 +17,7 @@
 #include "keto/crypto/HashGenerator.hpp"
 #include "keto/crypto/SignatureGenerator.hpp"
 #include "keto/crypto/SecureVectorUtils.hpp"
+
 #include "include/keto/transaction_common/TransactionProtoHelper.hpp"
 
 
@@ -41,7 +42,7 @@ TransactionProtoHelper::TransactionProtoHelper(
     transaction.set_transaction_signature(
         signatureHelper.operator std::vector<uint8_t>().data(),
         signatureHelper.operator std::vector<uint8_t>().size());
-    hashHelper = transactionMessageHelper->getSourceAccount();
+    hashHelper = transactionMessageHelper->getCurrentAccount();
     transaction.set_active_account(
         hashHelper.operator keto::crypto::SecureVector().data(),
         hashHelper.operator keto::crypto::SecureVector().size());
@@ -67,7 +68,7 @@ TransactionProtoHelper& TransactionProtoHelper::setTransaction(
     transaction.set_transaction_signature(
         signatureHelper.operator std::vector<uint8_t>().data(),
         signatureHelper.operator std::vector<uint8_t>().size());
-    hashHelper = transactionMessageHelper->getSourceAccount();
+    hashHelper = transactionMessageHelper->getCurrentAccount();
     transaction.set_active_account(
         hashHelper.operator keto::crypto::SecureVector().data(),
         hashHelper.operator keto::crypto::SecureVector().size());

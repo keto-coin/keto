@@ -31,6 +31,10 @@
 #include "Route.pb.h"
 #include "include/keto/router/RouterRegistry.hpp"
 
+#include "keto/transaction_common/MessageWrapperProtoHelper.hpp"
+#include "keto/transaction_common/TransactionProtoHelper.hpp"
+#include "keto/transaction_common/TransactionMessageHelper.hpp"
+
 namespace keto {
 namespace router {
 
@@ -116,6 +120,32 @@ keto::event::Event RouterService::routeMessage(const keto::event::Event& event) 
     response.set_result("to peer");
     return keto::server_common::toEvent<keto::proto::MessageWrapperResponse>(response);
 }
+
+keto::event::Event RouterService::updateStateRouteMessage(const keto::event::Event& event) {
+    keto::proto::MessageWrapper  messageWrapper = 
+            keto::server_common::fromEvent<keto::proto::MessageWrapper>(event);
+    
+    keto::transaction_common::MessageWrapperProtoHelper messageWrapperProtoHelper(messageWrapper);
+    
+    
+    
+    keto::transaction_common::TransactionProtoHelperPtr transactionProtoHelper =
+            messageWrapperProtoHelper.getTransaction();
+            
+    keto::transaction_common::TransactionMessageHelperPtr transactionMessageHelper =
+            transactionProtoHelper->getTransactionMessageHelper();
+    transactionMessageHelper->incrementStatus();
+    
+    transactionProtoHelper->setTransaction(transactionMessageHelper);
+    
+    
+    
+    keto::proto::MessageWrapperResponse response;
+    response.set_success(true);
+    response.set_result("to peer");
+    return keto::server_common::toEvent<keto::proto::MessageWrapperResponse>(response);
+}
+    
 
 keto::event::Event RouterService::registerService(const keto::event::Event& event) {
     keto::proto::PushService  pushService = 

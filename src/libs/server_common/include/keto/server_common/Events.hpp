@@ -28,6 +28,7 @@ public:
     static const char* REMOVE_SESSION_KEY;
     
     // events for the router
+    static const char* UPDATE_STATUS_ROUTE_MESSSAGE;
     static const char* ROUTE_MESSAGE;
     static const char* REGISTER_SERVICE_MESSAGE;
     
