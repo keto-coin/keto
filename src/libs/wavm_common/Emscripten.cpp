@@ -517,7 +517,8 @@ namespace keto {
             std::string accountModelString = keto::wavm_common::WavmUtils::readTypeScriptString(memory,accountModel);
             std::string transactionValueModelString = keto::wavm_common::WavmUtils::readTypeScriptString(memory,transactionValueModel);
             
-            
+            std::cout << "The [" << accountModelString << "][" << transactionValueModelString << "]["
+                    << (U64)value << "]" << std::endl;
             keto::wavm_common::WavmSessionManager::getInstance()->getWavmSession()->createCreditEntry(accountModelString,transactionValueModelString,(U64)value);
         }
         

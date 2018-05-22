@@ -12,6 +12,7 @@
  */
 
 #include <cstdlib>
+#include <sstream>
 
 #include "RDFChange.h"
 
@@ -108,7 +109,10 @@ void WavmSession::createDebitEntry(const std::string& accountModel, const std::s
     keto::wavm_common::RDFURLUtils transactionUrl(transactionValueModel);
     std::string id = this->getTransaction();
     std::string hash = this->getAccount();
-    std::string subjectUrl = transactionUrl.buildSubjectUrl(id);
+    
+    std::stringstream ss;
+    ss << "debit_" << hash << "_" << id;
+    std::string subjectUrl = transactionUrl.buildSubjectUrl(ss.str());
     this->addModelEntry(
         subjectUrl,transactionUrl.buildPredicateUrl(RDFConstants::ACCOUNT_TRANSACTION_SUBJECTS::ID),id);
     this->addDateTimeModelEntry(
@@ -131,7 +135,9 @@ void WavmSession::createCreditEntry(const std::string& accountModel, const std::
     keto::wavm_common::RDFURLUtils transactionUrl(transactionValueModel);
     std::string id = this->getTransaction();
     std::string hash = this->getAccount();
-    std::string subjectUrl = transactionUrl.buildSubjectUrl(id);
+    std::stringstream ss;
+    ss << "credit_" << hash << "_" << id;
+    std::string subjectUrl = transactionUrl.buildSubjectUrl(ss.str());
     this->addModelEntry(
         subjectUrl,transactionUrl.buildPredicateUrl(RDFConstants::ACCOUNT_TRANSACTION_SUBJECTS::ID),id);
     this->addDateTimeModelEntry(
