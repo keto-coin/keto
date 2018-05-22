@@ -35,6 +35,10 @@
 #include "keto/transaction_common/TransactionProtoHelper.hpp"
 #include "keto/transaction_common/TransactionMessageHelper.hpp"
 
+#include "keto/server_common/Events.hpp"
+#include "keto/server_common/EventServiceHelpers.hpp"
+
+
 namespace keto {
 namespace router {
 
@@ -67,8 +71,6 @@ keto::event::Event RouterService::routeMessage(const keto::event::Event& event) 
             keto::server_common::fromEvent<keto::proto::MessageWrapper>(event);
     
     keto::asn1::HashHelper accountHash(messageWrapper.account_hash());
-    std::cout << "The account hash : " << accountHash.getHash(keto::common::HEX) << std::endl;
-    
     // look to see if the message account is for this server
     if (keto::crypto::SecureVectorUtils().copyFromSecure(
             accountHash.operator keto::crypto::SecureVector()) == keto::server_common::ServerInfo::getInstance()->getAccountHash()) {
@@ -113,8 +115,6 @@ keto::event::Event RouterService::routeMessage(const keto::event::Event& event) 
     }
     
     
-    std::cout << "Process the message : " << messageWrapper.message_type() << std::endl;
-    
     keto::proto::MessageWrapperResponse response;
     response.set_success(true);
     response.set_result("to peer");
@@ -122,6 +122,7 @@ keto::event::Event RouterService::routeMessage(const keto::event::Event& event) 
 }
 
 keto::event::Event RouterService::updateStateRouteMessage(const keto::event::Event& event) {
+    
     keto::proto::MessageWrapper  messageWrapper = 
             keto::server_common::fromEvent<keto::proto::MessageWrapper>(event);
     
@@ -134,16 +135,20 @@ keto::event::Event RouterService::updateStateRouteMessage(const keto::event::Eve
             
     keto::transaction_common::TransactionMessageHelperPtr transactionMessageHelper =
             transactionProtoHelper->getTransactionMessageHelper();
-    transactionMessageHelper->incrementStatus();
+    if (transactionMessageHelper->incrementStatus() == Status_processing) {
+        transactionMessageHelper->incrementStatus();
+    }
     
     transactionProtoHelper->setTransaction(transactionMessageHelper);
+    keto::proto::Transaction transaction = transactionProtoHelper->operator keto::proto::Transaction&();
+    messageWrapperProtoHelper.setTransaction(transactionProtoHelper);
     
+    messageWrapper = messageWrapperProtoHelper.operator keto::proto::MessageWrapper();
+    messageWrapper.set_message_operation(keto::proto::MessageOperation::MESSAGE_INIT);
     
-    
-    keto::proto::MessageWrapperResponse response;
-    response.set_success(true);
-    response.set_result("to peer");
-    return keto::server_common::toEvent<keto::proto::MessageWrapperResponse>(response);
+    return routeMessage(
+            keto::server_common::toEvent<keto::proto::MessageWrapper>(
+            messageWrapper));
 }
     
 
@@ -191,7 +196,31 @@ void RouterService::routeLocal(keto::proto::MessageWrapper&  messageWrapper) {
         }
         
     } else if (transaction.status() == keto::proto::TransactionStatus::CREDIT) {
-        
+        if (messageWrapper.message_operation() == keto::proto::MessageOperation::MESSAGE_INIT ||
+                messageWrapper.message_operation() == keto::proto::MessageOperation::MESSAGE_ROUTE) {
+            messageWrapper.set_message_operation(keto::proto::MessageOperation::MESSAGE_BALANCE);
+            AccountHashVector accountHashVector = 
+                    RouterRegistry::getInstance()->getAccount(
+                    keto::server_common::Constants::SERVICE::BALANCE);
+            messageWrapper.set_account_hash(keto::server_common::VectorUtils().copyVectorToString(accountHashVector));
+            if (RouterRegistry::getInstance()->isAccountLocal(accountHashVector)) {
+                keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
+                        keto::server_common::Events::BALANCER_MESSAGE,messageWrapper));
+            } else {
+                keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
+                        keto::server_common::Events::RPC_SEND_MESSAGE,messageWrapper));
+            }
+        } else if (messageWrapper.message_operation() == 
+                keto::proto::MessageOperation::MESSAGE_BALANCE) {
+            keto::server_common::triggerEvent(keto::server_common::toEvent<keto::proto::MessageWrapper>(
+                        keto::server_common::Events::BALANCER_MESSAGE,messageWrapper));
+        } else if (messageWrapper.message_operation() == 
+                keto::proto::MessageOperation::MESSAGE_BLOCK) {
+            
+        } else if (messageWrapper.message_operation() == 
+                keto::proto::MessageOperation::MESSAGE_PROCESS) {
+            
+        }
         
     }
 }

@@ -8,6 +8,7 @@ enum TransactionStatus {
     DEBIT = 2;
     PROCESS = 3;
     CREDIT = 4;
+    FEE = 5;
     COMPLETE = 10;
     
     FAILURE = 100;

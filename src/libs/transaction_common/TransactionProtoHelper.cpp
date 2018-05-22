@@ -46,7 +46,21 @@ TransactionProtoHelper::TransactionProtoHelper(
     transaction.set_active_account(
         hashHelper.operator keto::crypto::SecureVector().data(),
         hashHelper.operator keto::crypto::SecureVector().size());
-    transaction.set_status(keto::proto::INIT);
+    
+    if (transactionMessageHelper->getStatus() == Status_init) {
+        transaction.set_status(keto::proto::TransactionStatus::INIT);
+    } else if (transactionMessageHelper->getStatus() == Status_debit) {
+        transaction.set_status(keto::proto::TransactionStatus::DEBIT);
+    } else if (transactionMessageHelper->getStatus() == Status_processing) {
+        transaction.set_status(keto::proto::TransactionStatus::PROCESS);
+    } else if (transactionMessageHelper->getStatus() == Status_fee) {
+        transaction.set_status(keto::proto::TransactionStatus::FEE);
+    } else if (transactionMessageHelper->getStatus() == Status_credit) {
+        transaction.set_status(keto::proto::TransactionStatus::CREDIT);
+    } else if (transactionMessageHelper->getStatus() == Status_complete) {
+        transaction.set_status(keto::proto::TransactionStatus::COMPLETE);
+    }
+    
     std::vector<uint8_t> serializedTransaction = 
         transactionMessageHelper->operator std::vector<uint8_t>();
     transaction.set_asn1_transaction_message(
@@ -72,7 +86,22 @@ TransactionProtoHelper& TransactionProtoHelper::setTransaction(
     transaction.set_active_account(
         hashHelper.operator keto::crypto::SecureVector().data(),
         hashHelper.operator keto::crypto::SecureVector().size());
-    transaction.set_status(keto::proto::INIT);
+    
+    
+    if (transactionMessageHelper->getStatus() == Status_init) {
+        transaction.set_status(keto::proto::TransactionStatus::INIT);
+    } else if (transactionMessageHelper->getStatus() == Status_debit) {
+        transaction.set_status(keto::proto::TransactionStatus::DEBIT);
+    } else if (transactionMessageHelper->getStatus() == Status_processing) {
+        transaction.set_status(keto::proto::TransactionStatus::PROCESS);
+    } else if (transactionMessageHelper->getStatus() == Status_fee) {
+        transaction.set_status(keto::proto::TransactionStatus::FEE);
+    } else if (transactionMessageHelper->getStatus() == Status_credit) {
+        transaction.set_status(keto::proto::TransactionStatus::CREDIT);
+    } else if (transactionMessageHelper->getStatus() == Status_complete) {
+        transaction.set_status(keto::proto::TransactionStatus::COMPLETE);
+    }
+    
     std::vector<uint8_t> serializedTransaction = 
         transactionMessageHelper->operator std::vector<uint8_t>();
     transaction.set_asn1_transaction_message(
